@@ -42,11 +42,11 @@ export function Navbar() {
         >
           {/* Brand */}
           <Link href="/" className="group flex items-center gap-2.5 pl-1">
-            <span className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-ghost-violet to-ghost-indigo shadow-lg shadow-ghost-violet/40">
-              <Ghost className="h-5 w-5 text-white" />
+            <span className="relative grid h-9 w-9 place-items-center rounded-xl border border-white/12 bg-white/[0.06]">
+              <Ghost className="h-5 w-5 text-foreground" />
               <span
                 className="absolute -inset-1.5 rounded-2xl opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100"
-                style={{ background: "radial-gradient(circle, rgba(139,92,246,0.7), transparent 70%)" }}
+                style={{ background: "radial-gradient(circle, rgba(255,255,255,0.35), transparent 70%)" }}
               />
             </span>
             <span className="text-[15px] font-bold tracking-tight">
@@ -87,7 +87,7 @@ export function Navbar() {
           <div className="flex items-center gap-2.5">
             <Link
               href="/dashboard"
-              className="shimmer rounded-xl bg-gradient-to-r from-ghost-violet to-ghost-indigo px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_30px_-8px_rgba(139,92,246,0.7)] transition hover:-translate-y-0.5 hover:brightness-110"
+              className="shimmer rounded-xl bg-[#fafafa] px-4 py-2 text-sm font-semibold text-[#0a0a0b] shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_10px_30px_-12px_rgba(0,0,0,0.9)] transition hover:-translate-y-0.5 hover:bg-white"
             >
               Launch
             </Link>

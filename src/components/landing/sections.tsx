@@ -84,7 +84,7 @@ export function Features() {
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {FEATURES.map((f, i) => (
           <motion.div key={f.title} {...reveal(i % 3)} className="group rounded-2xl glass p-5 transition hover:bg-white/[0.06]">
-            <span className="grid h-11 w-11 place-items-center rounded-xl transition group-hover:scale-110" style={{ background: `${f.color}1a`, color: f.color }}>
+            <span className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-foreground/80 transition group-hover:scale-110 group-hover:text-foreground">
               <f.icon className="h-5 w-5" />
             </span>
             <p className="mt-3 font-semibold">{f.title}</p>

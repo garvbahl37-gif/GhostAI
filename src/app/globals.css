@@ -2,24 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================================
+   Black Graphite design system
+   Layered graphite surfaces, silver typography, signal-colour accents only.
+   Inspired by Linear / Apple Vision Pro / Palantir.
+   ============================================================================ */
+
 @layer base {
   :root {
-    --background: 245 40% 3.5%;
-    --foreground: 220 22% 97%;
-    --card: 245 32% 7%;
-    --card-foreground: 220 20% 96%;
-    --primary: 258 90% 66%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 245 22% 13%;
-    --secondary-foreground: 220 20% 92%;
-    --muted: 245 18% 15%;
-    --muted-foreground: 222 14% 64%;
-    --accent: 187 92% 53%;
-    --accent-foreground: 245 40% 5%;
-    --border: 245 20% 16%;
-    --input: 245 20% 16%;
-    --ring: 258 90% 66%;
-    --radius: 1rem;
+    --background: 240 7% 3%;      /* #050506 */
+    --foreground: 240 10% 98%;    /* #FAFAFA */
+    --card: 240 6% 7.5%;          /* graphite surface */
+    --card-foreground: 240 10% 97%;
+    --primary: 240 10% 96%;       /* near-white primary */
+    --primary-foreground: 240 8% 6%;
+    --secondary: 240 5% 12%;
+    --secondary-foreground: 240 8% 92%;
+    --muted: 240 5% 14%;
+    --muted-foreground: 240 5% 56%; /* #8A8A8A */
+    --accent: 199 85% 74%;        /* signal blue */
+    --accent-foreground: 240 10% 6%;
+    --border: 240 6% 17%;
+    --input: 240 6% 17%;
+    --ring: 199 85% 70%;
+    --radius: 1.25rem;
   }
 
   * {
@@ -35,11 +41,16 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
     overflow-x: hidden;
+    background-color: #050506;
+    background-image:
+      radial-gradient(48rem 48rem at 12% -12%, rgba(255, 255, 255, 0.05), transparent 55%),
+      radial-gradient(40rem 40rem at 96% 0%, rgba(255, 255, 255, 0.03), transparent 55%);
+    background-attachment: fixed;
   }
 
   ::selection {
-    background: hsl(258 90% 66% / 0.4);
-    color: white;
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
   }
 
   h1, h2, h3 {
@@ -48,32 +59,35 @@
 }
 
 @layer components {
+  /* graphite glass per the design spec */
   .glass {
-    @apply border border-white/[0.08] bg-white/[0.035] backdrop-blur-xl;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
+    @apply border border-white/[0.07] backdrop-blur-xl;
   }
   .glass-strong {
-    @apply border border-white/[0.1] bg-white/[0.06] backdrop-blur-2xl;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    @apply border border-white/[0.1] backdrop-blur-2xl;
   }
-  .neon-text {
-    text-shadow: 0 0 24px hsl(258 90% 66% / 0.6);
-  }
+  /* silver text gradient (no rainbow) */
   .gradient-text {
-    @apply bg-gradient-to-r from-ghost-violet via-ghost-cyan to-ghost-emerald bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-white via-[#cfcfd4] to-[#7d7d86] bg-clip-text text-transparent;
     background-size: 200% auto;
   }
   .text-glow {
-    text-shadow: 0 0 40px hsl(258 90% 66% / 0.45), 0 0 12px hsl(187 92% 53% / 0.3);
+    text-shadow: 0 0 32px rgba(255, 255, 255, 0.18);
   }
   .card-glow {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 30px 80px -30px rgba(99, 102, 241, 0.4);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 24px 60px -34px rgba(0, 0, 0, 0.85);
   }
   .grid-bg {
     background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
-    background-size: 46px 46px;
+      linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
   }
-  /* premium gradient ring border (static) */
+  /* static silver hairline border */
   .ring-border {
     position: relative;
   }
@@ -83,13 +97,13 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.6), rgba(34, 211, 238, 0.25), rgba(255, 255, 255, 0.05));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04) 60%, transparent);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
   }
-  /* animated conic glow border */
+  /* slow silver glint that rotates round a surface */
   .conic-border {
     position: relative;
     isolation: isolate;
@@ -99,19 +113,19 @@
     position: absolute;
     inset: -1px;
     border-radius: inherit;
-    padding: 1.5px;
+    padding: 1px;
     background: conic-gradient(
       from var(--angle, 0deg),
       transparent 0deg,
-      hsl(258 90% 66%) 70deg,
-      hsl(187 92% 53%) 140deg,
-      transparent 200deg,
+      rgba(255, 255, 255, 0.55) 60deg,
+      rgba(255, 255, 255, 0.08) 130deg,
+      transparent 210deg,
       transparent 360deg
     );
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    animation: spin-angle 6s linear infinite;
+    animation: spin-angle 9s linear infinite;
     z-index: -1;
   }
   .shimmer {
@@ -122,7 +136,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.18) 50%, transparent 70%);
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.12) 50%, transparent 70%);
     transform: translateX(-130%);
     transition: transform 0.7s ease;
   }
@@ -135,111 +149,58 @@
   }
 }
 
-/* @property enables animating the conic gradient angle smoothly */
 @property --angle {
   syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
 }
 
-@keyframes spin-angle {
-  to {
-    --angle: 360deg;
-  }
-}
-@keyframes spin-slow {
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes spin-slow-rev {
-  to {
-    transform: rotate(-360deg);
-  }
-}
-@keyframes aurora-shift {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) scale(1);
-    opacity: 0.7;
-  }
-  50% {
-    transform: translate3d(4%, -3%, 0) scale(1.15);
-    opacity: 1;
-  }
-}
+@keyframes spin-angle { to { --angle: 360deg; } }
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+@keyframes spin-slow-rev { to { transform: rotate(-360deg); } }
 @keyframes glow-pulse {
-  0%, 100% {
-    opacity: 0.5;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.06);
-  }
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.04); }
 }
 @keyframes scan-line {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(2000%);
-  }
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(2000%); }
+}
+@keyframes ambient-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.6; }
+  50% { transform: translate3d(3%, -2%, 0) scale(1.1); opacity: 0.9; }
 }
 
-.anim-spin-slow {
-  animation: spin-slow 18s linear infinite;
-}
-.anim-spin-slow-rev {
-  animation: spin-slow-rev 24s linear infinite;
-}
-.anim-glow-pulse {
-  animation: glow-pulse 3.5s ease-in-out infinite;
-}
+.anim-spin-slow { animation: spin-slow 22s linear infinite; }
+.anim-spin-slow-rev { animation: spin-slow-rev 30s linear infinite; }
+.anim-glow-pulse { animation: glow-pulse 4s ease-in-out infinite; }
 
 /* grain overlay */
 .grain {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: hsl(245 18% 24%);
+  background: hsl(240 5% 22%);
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(258 60% 52%);
-  background-clip: content-box;
-}
+::-webkit-scrollbar-thumb:hover { background: hsl(240 5% 32%); background-clip: content-box; }
 
-/* reduce-motion respect */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
 
-/* Print styles for the executive report export */
 @media print {
-  .no-print {
-    display: none !important;
-  }
-  body {
-    background: white !important;
-    color: black !important;
-  }
+  .no-print { display: none !important; }
+  body { background: white !important; color: black !important; }
   .print-card {
     border: 1px solid #e5e7eb !important;
     background: white !important;

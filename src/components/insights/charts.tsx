@@ -77,7 +77,7 @@ export function RoleBar({ data }: { data: Insights["roleBreakdown"] }) {
             {chart.map((d) => (
               <Cell
                 key={d.role}
-                fill={d.purchaseProbability > 60 ? "#34d399" : d.purchaseProbability > 45 ? "#fbbf24" : "#fb7185"}
+                fill={d.purchaseProbability > 60 ? "#6ee7b7" : d.purchaseProbability > 45 ? "#fbbf24" : "#fb7185"}
               />
             ))}
           </Bar>
@@ -105,7 +105,7 @@ export function ConfusionRadar({ zones }: { zones: HeatmapZone[] }) {
 }
 
 export function RiskGauge({ value }: { value: number }) {
-  const color = value > 66 ? "#fb7185" : value > 40 ? "#fbbf24" : "#34d399";
+  const color = value > 66 ? "#fb7185" : value > 40 ? "#fbbf24" : "#6ee7b7";
   const data = [{ name: "risk", value, fill: color }];
   return (
     <div className="relative h-56">

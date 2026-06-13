@@ -12,10 +12,19 @@ export interface SwarmNode {
 }
 
 interface Particle {
+  // beeswarm
   x: number;
   y: number;
   vx: number;
   vy: number;
+  // sphere (unit vector)
+  bx: number;
+  by: number;
+  bz: number;
+  // projected (both modes) for hover
+  sx: number;
+  sy: number;
+  depth: number;
   r: number;
   phase: number;
   color: string;
@@ -28,63 +37,101 @@ function hashId(s: string): number {
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
   return Math.abs(h);
 }
-
 function intentOf(n: SwarmNode): number {
   if (typeof n.intent === "number") return n.intent;
-  // unsimulated / decorative → hover near the "deciding" middle with a little spread
   return 44 + (hashId(n.id) % 13);
 }
 
 /**
- * A living "customer swarm". Each AI customer is a glowing node that flows to a
- * horizontal position by purchase intent (left = won't buy → right = will buy)
- * with node-node repulsion (a beeswarm) so the cloud spreads and the buying
- * distribution is readable at a glance. Pure canvas — fast, no Three.js.
+ * Living customer swarm. Two modes:
+ *  - "beeswarm" (default): nodes flow to an x-position by purchase intent
+ *    (left = won't buy → right = will buy) with repulsion. Readable distribution.
+ *  - "sphere": a slowly-rotating "Customer Intelligence Core" — nodes on a
+ *    projected 3D sphere with depth shading + parallax. Pure canvas, no Three.js.
  */
 export function CustomerSwarm({
   nodes,
   height = 340,
   interactive = false,
   showAxis = false,
+  variant = "beeswarm",
   className,
 }: {
   nodes: SwarmNode[];
   height?: number;
   interactive?: boolean;
   showAxis?: boolean;
+  variant?: "beeswarm" | "sphere";
   className?: string;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const partsRef = useRef<Particle[]>([]);
+  const edgesRef = useRef<[number, number][]>([]);
+  const rotRef = useRef({ ry: 0, rx: 0, tx: 0, ty: 0 });
   const mouseRef = useRef({ x: -9999, y: -9999, active: false });
   const sizeRef = useRef({ w: 0, h: height });
   const [hover, setHover] = useState<{ node: SwarmNode; x: number; y: number } | null>(null);
 
-  // Reconcile particles with the incoming node list (add/remove/update colour).
+  // Reconcile particles + (for sphere) fibonacci positions and edges.
   useEffect(() => {
     const parts = partsRef.current;
     const { w, h } = sizeRef.current;
-    for (let i = 0; i < nodes.length; i++) {
+    const N = nodes.length;
+    for (let i = 0; i < N; i++) {
+      // fibonacci sphere unit vector
+      const phi = Math.acos(1 - (2 * (i + 0.5)) / N);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
+      const bx = Math.sin(phi) * Math.cos(theta);
+      const by = Math.cos(phi);
+      const bz = Math.sin(phi) * Math.sin(theta);
       if (parts[i]) {
         parts[i].color = nodes[i].color;
         parts[i].node = nodes[i];
+        parts[i].bx = bx;
+        parts[i].by = by;
+        parts[i].bz = bz;
       } else {
         parts[i] = {
           x: (w || 500) * (0.3 + Math.random() * 0.4),
           y: (h || height) * (0.3 + Math.random() * 0.4),
           vx: 0,
           vy: 0,
-          r: 3 + Math.random() * 2.2,
-          phase: Math.random() * Math.PI * 2,
+          bx,
+          by,
+          bz,
+          sx: 0,
+          sy: 0,
+          depth: 0,
+          r: 2.8 + (hashId(nodes[i].id) % 10) / 6,
+          phase: (hashId(nodes[i].id) % 628) / 100,
           color: nodes[i].color,
           node: nodes[i],
           jitter: (hashId(nodes[i].id) % 100) / 100 - 0.5,
         };
       }
     }
-    parts.length = nodes.length;
-  }, [nodes, height]);
+    parts.length = N;
+
+    // sphere connection edges (3D-near unit vectors), capped per node
+    if (variant === "sphere") {
+      const edges: [number, number][] = [];
+      const perNode = new Array(N).fill(0);
+      for (let i = 0; i < N; i++) {
+        for (let j = i + 1; j < N; j++) {
+          const a = parts[i];
+          const b = parts[j];
+          const d2 = (a.bx - b.bx) ** 2 + (a.by - b.by) ** 2 + (a.bz - b.bz) ** 2;
+          if (d2 < 0.34 && perNode[i] < 3 && perNode[j] < 3) {
+            edges.push([i, j]);
+            perNode[i]++;
+            perNode[j]++;
+          }
+        }
+      }
+      edgesRef.current = edges;
+    }
+  }, [nodes, height, variant]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -114,101 +161,16 @@ export function CustomerSwarm({
     let t = 0;
     const tick = () => {
       const { w, h } = sizeRef.current;
-      const cy = h / 2;
       t += 0.016;
       ctx.clearRect(0, 0, w, h);
       const parts = partsRef.current;
       const m = mouseRef.current;
 
-      // targets + light forces
-      for (const p of parts) {
-        const tx = PAD + (intentOf(p.node) / 100) * (w - 2 * PAD);
-        const ty = cy + p.jitter * h * 0.5;
-        p.vx += (tx - p.x) * 0.02; // strong: hold the intent column
-        p.vy += (ty - p.y) * 0.012; // softer vertical
-        p.vx += (Math.random() - 0.5) * 0.05;
-        p.vy += (Math.random() - 0.5) * 0.05;
-        if (interactive && m.active) {
-          const dx = p.x - m.x;
-          const dy = p.y - m.y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < 8000 && d2 > 1) {
-            const f = (8000 - d2) / 8000;
-            const d = Math.sqrt(d2);
-            p.vx += (dx / d) * f * 0.8;
-            p.vy += (dy / d) * f * 0.8;
-          }
-        }
+      if (variant === "sphere") {
+        drawSphere(ctx, parts, edgesRef.current, w, h, t, m, rotRef.current, interactive);
+      } else {
+        drawBeeswarm(ctx, parts, w, h, t, m, PAD, interactive);
       }
-
-      // pairwise: repulsion (spread) + connection lines
-      let lines = 0;
-      ctx.lineWidth = 1;
-      for (let i = 0; i < parts.length; i++) {
-        const a = parts[i];
-        for (let j = i + 1; j < parts.length; j++) {
-          const b = parts[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < 784 && d2 > 0.5) {
-            // repel within ~28px so nodes don't pile up
-            const d = Math.sqrt(d2);
-            const f = ((28 - d) / 28) * 0.7;
-            const nx = dx / d;
-            const ny = dy / d;
-            a.vx += nx * f;
-            a.vy += ny * f;
-            b.vx -= nx * f;
-            b.vy -= ny * f;
-          }
-          if (d2 < 4200 && lines < 460) {
-            const alpha = (1 - d2 / 4200) * 0.16;
-            ctx.strokeStyle = `rgba(148,163,184,${alpha.toFixed(3)})`;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-            lines++;
-          }
-        }
-      }
-
-      // integrate + contain
-      for (const p of parts) {
-        p.vx *= 0.9;
-        p.vy *= 0.9;
-        const sp = Math.hypot(p.vx, p.vy);
-        if (sp > 1.6) {
-          p.vx = (p.vx / sp) * 1.6;
-          p.vy = (p.vy / sp) * 1.6;
-        }
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < PAD) { p.x = PAD; p.vx *= -0.4; }
-        if (p.x > w - PAD) { p.x = w - PAD; p.vx *= -0.4; }
-        if (p.y < 18) { p.y = 18; p.vy *= -0.4; }
-        if (p.y > h - 18) { p.y = h - 18; p.vy *= -0.4; }
-      }
-
-      // draw nodes
-      for (const p of parts) {
-        const pr = p.r + Math.sin(t * 2 + p.phase) * 0.7;
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = pr * 2.8;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, pr, 0, Math.PI * 2);
-        ctx.fill();
-        // bright core
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = "rgba(255,255,255,0.85)";
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, pr * 0.32, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.shadowBlur = 0;
-
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -218,7 +180,7 @@ export function CustomerSwarm({
       ro.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [height, interactive]);
+  }, [height, interactive, variant]);
 
   function onMove(e: React.PointerEvent) {
     const rect = canvasRef.current!.getBoundingClientRect();
@@ -229,13 +191,13 @@ export function CustomerSwarm({
     let best: Particle | null = null;
     let bestD = 18 * 18;
     for (const p of partsRef.current) {
-      const d = (p.x - x) ** 2 + (p.y - y) ** 2;
+      const d = (p.sx - x) ** 2 + (p.sy - y) ** 2;
       if (d < bestD) {
         bestD = d;
         best = p;
       }
     }
-    setHover(best ? { node: best.node, x: best.x, y: best.y } : null);
+    setHover(best ? { node: best.node, x: best.sx, y: best.sy } : null);
   }
 
   return (
@@ -251,17 +213,17 @@ export function CustomerSwarm({
     >
       {showAxis && (
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-y-0 left-0 w-2/5" style={{ background: "linear-gradient(90deg, rgba(251,113,133,0.07), transparent)" }} />
-          <div className="absolute inset-y-0 right-0 w-2/5" style={{ background: "linear-gradient(270deg, rgba(52,211,153,0.08), transparent)" }} />
-          <span className="absolute bottom-2 left-3 text-[10px] font-medium uppercase tracking-wider text-ghost-rose/70">Won&apos;t buy</span>
+          <div className="absolute inset-y-0 left-0 w-2/5" style={{ background: "linear-gradient(90deg, rgba(251,113,133,0.06), transparent)" }} />
+          <div className="absolute inset-y-0 right-0 w-2/5" style={{ background: "linear-gradient(270deg, rgba(110,231,183,0.07), transparent)" }} />
+          <span className="absolute bottom-2 left-3 text-[10px] font-medium uppercase tracking-wider text-[#fb7185]/70">Won&apos;t buy</span>
           <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-wider text-muted-foreground/60">purchase intent →</span>
-          <span className="absolute bottom-2 right-3 text-[10px] font-medium uppercase tracking-wider text-ghost-emerald/80">Will buy</span>
+          <span className="absolute bottom-2 right-3 text-[10px] font-medium uppercase tracking-wider text-[#6ee7b7]/80">Will buy</span>
         </div>
       )}
       <canvas ref={canvasRef} className="relative block" />
       {hover && (
         <div
-          className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-xl border border-white/15 bg-[#0a0a16]/95 px-3 py-2 shadow-xl backdrop-blur"
+          className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-xl border border-white/12 bg-[#0c0c0e]/95 px-3 py-2 shadow-xl backdrop-blur"
           style={{ left: hover.x, top: hover.y - 12, minWidth: 150 }}
         >
           <p className="text-xs font-semibold text-white">{hover.node.name}</p>
@@ -276,4 +238,171 @@ export function CustomerSwarm({
       )}
     </div>
   );
+}
+
+// ---------------------------------------------------------------------------
+function drawBeeswarm(
+  ctx: CanvasRenderingContext2D,
+  parts: Particle[],
+  w: number,
+  h: number,
+  t: number,
+  m: { x: number; y: number; active: boolean },
+  PAD: number,
+  interactive: boolean,
+) {
+  const cy = h / 2;
+  for (const p of parts) {
+    const tx = PAD + (intentOf(p.node) / 100) * (w - 2 * PAD);
+    const ty = cy + p.jitter * h * 0.5;
+    p.vx += (tx - p.x) * 0.02;
+    p.vy += (ty - p.y) * 0.012;
+    p.vx += (Math.random() - 0.5) * 0.05;
+    p.vy += (Math.random() - 0.5) * 0.05;
+    if (interactive && m.active) {
+      const dx = p.x - m.x;
+      const dy = p.y - m.y;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < 8000 && d2 > 1) {
+        const f = (8000 - d2) / 8000;
+        const d = Math.sqrt(d2);
+        p.vx += (dx / d) * f * 0.8;
+        p.vy += (dy / d) * f * 0.8;
+      }
+    }
+  }
+  let lines = 0;
+  ctx.lineWidth = 1;
+  for (let i = 0; i < parts.length; i++) {
+    const a = parts[i];
+    for (let j = i + 1; j < parts.length; j++) {
+      const b = parts[j];
+      const dx = a.x - b.x;
+      const dy = a.y - b.y;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < 784 && d2 > 0.5) {
+        const d = Math.sqrt(d2);
+        const f = ((28 - d) / 28) * 0.7;
+        const nx = dx / d;
+        const ny = dy / d;
+        a.vx += nx * f;
+        a.vy += ny * f;
+        b.vx -= nx * f;
+        b.vy -= ny * f;
+      }
+      if (d2 < 4200 && lines < 460) {
+        const alpha = (1 - d2 / 4200) * 0.14;
+        ctx.strokeStyle = `rgba(180,180,190,${alpha.toFixed(3)})`;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+        lines++;
+      }
+    }
+  }
+  for (const p of parts) {
+    p.vx *= 0.9;
+    p.vy *= 0.9;
+    const sp = Math.hypot(p.vx, p.vy);
+    if (sp > 1.6) { p.vx = (p.vx / sp) * 1.6; p.vy = (p.vy / sp) * 1.6; }
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < PAD) { p.x = PAD; p.vx *= -0.4; }
+    if (p.x > w - PAD) { p.x = w - PAD; p.vx *= -0.4; }
+    if (p.y < 18) { p.y = 18; p.vy *= -0.4; }
+    if (p.y > h - 18) { p.y = h - 18; p.vy *= -0.4; }
+    p.sx = p.x;
+    p.sy = p.y;
+  }
+  for (const p of parts) {
+    const pr = p.r + Math.sin(t * 2 + p.phase) * 0.6;
+    drawNode(ctx, p.x, p.y, pr, p.color, 1);
+  }
+  ctx.shadowBlur = 0;
+}
+
+function drawSphere(
+  ctx: CanvasRenderingContext2D,
+  parts: Particle[],
+  edges: [number, number][],
+  w: number,
+  h: number,
+  t: number,
+  m: { x: number; y: number; active: boolean },
+  rot: { ry: number; rx: number; tx: number; ty: number },
+  interactive: boolean,
+) {
+  const cx = w / 2;
+  const cy = h / 2;
+  const R = Math.min(w, h) * 0.42;
+  const focal = 2.4;
+
+  // slow auto-rotation + smoothed parallax toward mouse
+  rot.ry += 0.0026;
+  if (interactive && m.active) {
+    rot.tx = (m.y / h - 0.5) * 0.7;
+    rot.ty = (m.x / w - 0.5) * 0.7;
+  } else {
+    rot.tx *= 0.96;
+    rot.ty *= 0.96;
+  }
+  rot.rx += (rot.tx - rot.rx) * 0.06;
+  const ry = rot.ry + rot.ty;
+  const cosY = Math.cos(ry), sinY = Math.sin(ry);
+  const cosX = Math.cos(rot.rx), sinX = Math.sin(rot.rx);
+
+  for (const p of parts) {
+    // rotate around Y then X
+    let X = p.bx * cosY + p.bz * sinY;
+    let Z = -p.bx * sinY + p.bz * cosY;
+    let Y = p.by * cosX - Z * sinX;
+    Z = p.by * sinX + Z * cosX;
+    const persp = focal / (focal - Z);
+    p.sx = cx + X * R * persp;
+    p.sy = cy + Y * R * persp;
+    p.depth = Z;
+  }
+
+  // edges (behind nodes), alpha by depth
+  ctx.lineWidth = 1;
+  for (const [i, j] of edges) {
+    const a = parts[i];
+    const b = parts[j];
+    if (!a || !b) continue;
+    const da = (a.depth + b.depth) / 2;
+    const alpha = Math.max(0, (da + 1) / 2) * 0.18;
+    ctx.strokeStyle = `rgba(190,190,200,${alpha.toFixed(3)})`;
+    ctx.beginPath();
+    ctx.moveTo(a.sx, a.sy);
+    ctx.lineTo(b.sx, b.sy);
+    ctx.stroke();
+  }
+
+  // draw back-to-front
+  const order = parts.map((_, i) => i).sort((a, b) => parts[a].depth - parts[b].depth);
+  for (const i of order) {
+    const p = parts[i];
+    const persp = focal / (focal - p.depth);
+    const pr = (p.r + Math.sin(t * 1.6 + p.phase) * 0.5) * persp;
+    const alpha = 0.35 + ((p.depth + 1) / 2) * 0.65;
+    drawNode(ctx, p.sx, p.sy, pr, p.color, alpha);
+  }
+  ctx.shadowBlur = 0;
+}
+
+function drawNode(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string, alpha: number) {
+  ctx.globalAlpha = alpha;
+  ctx.shadowColor = color;
+  ctx.shadowBlur = r * 2.6;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, Math.max(0.6, r), 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = "rgba(255,255,255,0.9)";
+  ctx.beginPath();
+  ctx.arc(x, y, Math.max(0.4, r * 0.32), 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
 }

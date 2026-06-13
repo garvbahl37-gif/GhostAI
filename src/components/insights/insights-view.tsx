@@ -99,10 +99,10 @@ export function InsightsView({ runId }: { runId: string }) {
 
       {/* Metric tiles */}
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Metric label="Avg purchase intent" value={ins.avgPurchaseProbability} suffix="%" color="#34d399" />
+        <Metric label="Avg purchase intent" value={ins.avgPurchaseProbability} suffix="%" color="#6ee7b7" />
         <Metric label="Avg confusion" value={ins.avgConfusion} suffix="%" color="#fbbf24" />
         <Metric label="Avg churn risk" value={ins.avgChurnRisk} suffix="%" color="#fb7185" />
-        <Metric label="Est. conversion uplift" value={ins.estConversionUplift} suffix="%" color="#22d3ee" />
+        <Metric label="Est. conversion uplift" value={ins.estConversionUplift} suffix="%" color="#7dd3fc" />
       </div>
 
       {/* Charts row */}

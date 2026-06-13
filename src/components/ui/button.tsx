@@ -7,15 +7,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        // near-white primary — Linear/Vercel style
         default:
-          "bg-gradient-to-r from-ghost-violet to-ghost-indigo text-white shadow-[0_8px_30px_-8px_rgba(139,92,246,0.6)] hover:shadow-[0_12px_40px_-8px_rgba(139,92,246,0.85)] hover:brightness-110",
+          "bg-[#fafafa] text-[#0a0a0b] shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_10px_30px_-12px_rgba(0,0,0,0.9)] hover:bg-white",
+        // restrained signal-blue accent on graphite
         accent:
-          "bg-gradient-to-r from-ghost-cyan to-ghost-emerald text-slate-950 shadow-[0_8px_30px_-8px_rgba(34,211,238,0.6)] hover:shadow-[0_12px_40px_-8px_rgba(34,211,238,0.85)] hover:brightness-110",
+          "border border-[#7dd3fc]/30 bg-[#7dd3fc]/[0.08] text-[#7dd3fc] shadow-[0_0_24px_-10px_rgba(125,211,252,0.6)] hover:bg-[#7dd3fc]/[0.14] hover:border-[#7dd3fc]/50",
         outline:
-          "border border-white/15 bg-white/5 text-foreground hover:bg-white/10 backdrop-blur",
-        ghost: "text-foreground/80 hover:bg-white/10 hover:text-foreground",
-        destructive: "bg-ghost-rose/90 text-white hover:bg-ghost-rose",
-        link: "text-ghost-cyan underline-offset-4 hover:underline",
+          "border border-white/12 bg-white/[0.04] text-foreground hover:bg-white/[0.08] hover:border-white/20 backdrop-blur",
+        ghost: "text-foreground/75 hover:bg-white/[0.06] hover:text-foreground",
+        destructive: "border border-[#fb7185]/30 bg-[#fb7185]/10 text-[#fb7185] hover:bg-[#fb7185]/16",
+        link: "text-[#7dd3fc] underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-5 py-2",

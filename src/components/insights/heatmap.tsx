@@ -8,7 +8,7 @@ function heatColor(c: number): string {
   if (c >= 70) return "#fb7185";
   if (c >= 50) return "#fb923c";
   if (c >= 35) return "#fbbf24";
-  return "#34d399";
+  return "#6ee7b7";
 }
 
 export function Heatmap({ zones }: { zones: HeatmapZone[] }) {

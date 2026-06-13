@@ -89,22 +89,22 @@ export function severityColor(s: string): string {
     case "high":
       return "#fbbf24";
     case "medium":
-      return "#22d3ee";
+      return "#7dd3fc";
     default:
-      return "#34d399";
+      return "#6ee7b7";
   }
 }
 
 export function verdictColor(v: string): string {
   switch (v) {
     case "Convert":
-      return "#34d399";
+      return "#6ee7b7"; // signal green
     case "Maybe":
-      return "#fbbf24";
+      return "#fbbf24"; // signal amber
     case "Churn Risk":
-      return "#fb7185";
+      return "#fb7185"; // signal red
     default:
-      return "#94a3b8"; // Bounce
+      return "#8a8a8a"; // Bounce — graphite grey
   }
 }
 

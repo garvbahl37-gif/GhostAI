@@ -19,15 +19,17 @@ export interface AgentMeta {
   phases: RunPhase[]; // phases during which this agent is "active"
 }
 
+// Monochrome graphite scale with two restrained signal accents
+// (Revenue Leak = red, Insight = blue) — matches the "OpenAI reasoning trace" feel.
 export const AGENTS: AgentMeta[] = [
-  { name: "Website Analyzer", short: "Analyzer", icon: Globe, color: "#22d3ee", phases: ["analyzing"] },
-  { name: "Persona Generator", short: "Personas", icon: Users, color: "#8b5cf6", phases: ["generating_personas"] },
-  { name: "Customer Simulator", short: "Swarm", icon: Activity, color: "#6366f1", phases: ["simulating"] },
-  { name: "Sales Agent", short: "Sales", icon: DollarSign, color: "#34d399", phases: ["sales_support"] },
-  { name: "Support Agent", short: "Support", icon: LifeBuoy, color: "#fbbf24", phases: ["sales_support"] },
+  { name: "Website Analyzer", short: "Analyzer", icon: Globe, color: "#e5e5e7", phases: ["analyzing"] },
+  { name: "Persona Generator", short: "Personas", icon: Users, color: "#d4d4d8", phases: ["generating_personas"] },
+  { name: "Customer Simulator", short: "Swarm", icon: Activity, color: "#c8c8cc", phases: ["simulating"] },
+  { name: "Sales Agent", short: "Sales", icon: DollarSign, color: "#bcbcc4", phases: ["sales_support"] },
+  { name: "Support Agent", short: "Support", icon: LifeBuoy, color: "#b0b0b8", phases: ["sales_support"] },
   { name: "Revenue Leak Agent", short: "Revenue", icon: TrendingDown, color: "#fb7185", phases: ["revenue_churn"] },
-  { name: "Insight Agent", short: "Insights", icon: Sparkles, color: "#a78bfa", phases: ["synthesizing"] },
-  { name: "Report Generator", short: "Report", icon: FileText, color: "#2dd4bf", phases: ["reporting"] },
+  { name: "Insight Agent", short: "Insights", icon: Sparkles, color: "#7dd3fc", phases: ["synthesizing"] },
+  { name: "Report Generator", short: "Report", icon: FileText, color: "#d4d4d8", phases: ["reporting"] },
 ];
 
 export const AGENT_BY_NAME: Record<AgentName, AgentMeta> = Object.fromEntries(

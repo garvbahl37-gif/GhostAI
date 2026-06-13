@@ -40,14 +40,14 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Brand neon palette for the "AI war room" aesthetic.
+        // Black-graphite system: silver "brand" tones + restrained signal accents.
         ghost: {
-          violet: "#8b5cf6",
-          indigo: "#6366f1",
-          cyan: "#22d3ee",
-          emerald: "#34d399",
-          amber: "#fbbf24",
-          rose: "#fb7185",
+          violet: "#e4e4e7", // silver (primary/brand surfaces)
+          indigo: "#a1a1aa", // darker silver
+          cyan: "#7dd3fc", // signal blue
+          emerald: "#6ee7b7", // signal green
+          amber: "#fbbf24", // signal amber
+          rose: "#fb7185", // signal red
         },
       },
       borderRadius: {
