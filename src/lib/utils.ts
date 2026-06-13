@@ -85,24 +85,24 @@ export function hostOf(url: string): string {
 export function severityColor(s: string): string {
   switch (s) {
     case "critical":
-      return "#fb7185";
+      return "#6f6f77";
     case "high":
-      return "#fbbf24";
+      return "#a6a6ae";
     case "medium":
-      return "#7dd3fc";
+      return "#d6d6da";
     default:
-      return "#6ee7b7";
+      return "#f2f2f4";
   }
 }
 
 export function verdictColor(v: string): string {
   switch (v) {
     case "Convert":
-      return "#6ee7b7"; // signal green
+      return "#f2f2f4"; // signal green
     case "Maybe":
-      return "#fbbf24"; // signal amber
+      return "#a6a6ae"; // signal amber
     case "Churn Risk":
-      return "#fb7185"; // signal red
+      return "#6f6f77"; // signal red
     default:
       return "#8a8a8a"; // Bounce — graphite grey
   }

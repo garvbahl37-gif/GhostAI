@@ -5,10 +5,10 @@ import type { HeatmapZone } from "@/lib/types";
 
 function heatColor(c: number): string {
   // 0 (calm emerald) -> 100 (hot rose)
-  if (c >= 70) return "#fb7185";
-  if (c >= 50) return "#fb923c";
-  if (c >= 35) return "#fbbf24";
-  return "#6ee7b7";
+  if (c >= 70) return "#6f6f77";
+  if (c >= 50) return "#8a8a92";
+  if (c >= 35) return "#a6a6ae";
+  return "#f2f2f4";
 }
 
 export function Heatmap({ zones }: { zones: HeatmapZone[] }) {

@@ -25,7 +25,7 @@ import { AnimatedNumber } from "@/components/shared/animated-number";
 function Delta({ label, value, suffix, goodWhenPositive = true }: { label: string; value: number; suffix: string; goodWhenPositive?: boolean }) {
   const positive = value >= 0;
   const good = goodWhenPositive ? positive : !positive;
-  const color = good ? "#34d399" : "#fb7185";
+  const color = good ? "#f2f2f4" : "#6f6f77";
   return (
     <Card>
       <CardContent className="p-4">
@@ -126,17 +126,17 @@ export function PricingLab() {
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={result.curve} margin={{ left: -10, right: 10 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                    <XAxis dataKey="price" tick={{ fill: "#94a3b8", fontSize: 11 }} tickFormatter={(v) => `$${v}`} />
-                    <YAxis yAxisId="left" tick={{ fill: "#94a3b8", fontSize: 11 }} domain={[0, 100]} />
-                    <YAxis yAxisId="right" orientation="right" tick={{ fill: "#94a3b8", fontSize: 11 }} />
+                    <XAxis dataKey="price" tick={{ fill: "#6a6a72", fontSize: 11 }} tickFormatter={(v) => `$${v}`} />
+                    <YAxis yAxisId="left" tick={{ fill: "#6a6a72", fontSize: 11 }} domain={[0, 100]} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fill: "#6a6a72", fontSize: 11 }} />
                     <Tooltip
                       contentStyle={{ background: "rgba(15,15,25,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12 }}
                       labelFormatter={(v) => `Price: $${v}`}
                     />
                     <Legend wrapperStyle={{ fontSize: 12 }} />
-                    <ReferenceLine x={result.proposedPrice} yAxisId="left" stroke="#fbbf24" strokeDasharray="4 4" label={{ value: "proposed", fill: "#fbbf24", fontSize: 10 }} />
-                    <ReferenceLine x={result.optimalPrice} yAxisId="left" stroke="#22d3ee" strokeDasharray="4 4" label={{ value: "optimal", fill: "#22d3ee", fontSize: 10 }} />
-                    <Line yAxisId="left" type="monotone" dataKey="conversion" name="Conversion %" stroke="#34d399" strokeWidth={2} dot={false} />
+                    <ReferenceLine x={result.proposedPrice} yAxisId="left" stroke="#a6a6ae" strokeDasharray="4 4" label={{ value: "proposed", fill: "#a6a6ae", fontSize: 10 }} />
+                    <ReferenceLine x={result.optimalPrice} yAxisId="left" stroke="#d6d6da" strokeDasharray="4 4" label={{ value: "optimal", fill: "#d6d6da", fontSize: 10 }} />
+                    <Line yAxisId="left" type="monotone" dataKey="conversion" name="Conversion %" stroke="#f2f2f4" strokeWidth={2} dot={false} />
                     <Line yAxisId="right" type="monotone" dataKey="revenueIndex" name="Revenue index" stroke="#8b5cf6" strokeWidth={2} dot={false} />
                   </LineChart>
                 </ResponsiveContainer>

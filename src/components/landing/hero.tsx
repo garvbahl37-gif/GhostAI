@@ -12,23 +12,11 @@ import { fadeUp, stagger, wordReveal, EASE } from "@/lib/motion";
 const HEAD_1 = ["Meet", "customers"];
 const HEAD_2 = ["before", "reality", "does."];
 
-const CORE_LEGEND = [
-  { label: "Neutral", color: "#e5e5e7" },
-  { label: "Buyer", color: "#6ee7b7" },
-  { label: "Uncertain", color: "#fbbf24" },
-  { label: "Churn", color: "#fb7185" },
-];
-
 export function Hero() {
-  // weighted node palette for the intelligence core (mostly neutral + signal)
+  // dense monochrome particle sphere — hundreds of white dots
   const nodes: SwarmNode[] = useMemo(() => {
-    const palette = [
-      "#e5e5e7", "#e5e5e7", "#e5e5e7", "#d4d4d8",
-      "#6ee7b7", "#6ee7b7",
-      "#fbbf24",
-      "#fb7185",
-    ];
-    return Array.from({ length: 78 }, (_, i) => ({ id: `c${i}`, color: palette[i % palette.length] }));
+    const shades = ["#ffffff", "#ffffff", "#f0f0f2", "#e2e2e6", "#cfcfd4", "#b6b6be"];
+    return Array.from({ length: 440 }, (_, i) => ({ id: `c${i}`, color: shades[i % shades.length] }));
   }, []);
 
   return (
@@ -41,8 +29,8 @@ export function Hero() {
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-xs text-foreground/70 backdrop-blur"
           >
             <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#7dd3fc] opacity-70" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#7dd3fc]" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#d6d6da] opacity-70" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#d6d6da]" />
             </span>
             Customer intelligence platform
           </motion.div>
@@ -110,23 +98,16 @@ export function Hero() {
               <span className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
                 Customer Intelligence Core
               </span>
-              <span className="flex items-center gap-1.5 font-mono text-[11px] text-[#7dd3fc]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#7dd3fc] anim-glow-pulse" /> LIVE
+              <span className="flex items-center gap-1.5 font-mono text-[11px] text-foreground/70">
+                <span className="h-1.5 w-1.5 rounded-full bg-white anim-glow-pulse" /> LIVE
               </span>
             </div>
 
-            <CustomerSwarm nodes={nodes} variant="sphere" height={340} interactive className="my-2" />
+            <CustomerSwarm nodes={nodes} variant="sphere" height={360} interactive className="my-2" />
 
-            <div className="flex items-center justify-between">
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                {CORE_LEGEND.map((l) => (
-                  <span key={l.label} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: l.color, boxShadow: `0 0 8px ${l.color}` }} />
-                    {l.label}
-                  </span>
-                ))}
-              </div>
-            </div>
+            <p className="text-center text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70">
+              Hundreds of simulated customers · rotating in real time
+            </p>
           </div>
 
           {/* faint ambient halo */}

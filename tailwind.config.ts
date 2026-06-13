@@ -40,14 +40,14 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Black-graphite system: silver "brand" tones + restrained signal accents.
+        // Pure black & white system — luminance-coded greyscale only.
         ghost: {
-          violet: "#e4e4e7", // silver (primary/brand surfaces)
-          indigo: "#a1a1aa", // darker silver
-          cyan: "#7dd3fc", // signal blue
-          emerald: "#6ee7b7", // signal green
-          amber: "#fbbf24", // signal amber
-          rose: "#fb7185", // signal red
+          violet: "#e4e4e7", // silver (brand)
+          indigo: "#a1a1aa", // grey
+          cyan: "#d6d6da", // light grey (was signal blue)
+          emerald: "#f2f2f4", // near-white (was green)
+          amber: "#a6a6ae", // grey (was amber)
+          rose: "#6f6f77", // dim grey (was red)
         },
       },
       borderRadius: {

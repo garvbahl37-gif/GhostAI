@@ -27,8 +27,8 @@ export const AGENTS: AgentMeta[] = [
   { name: "Customer Simulator", short: "Swarm", icon: Activity, color: "#c8c8cc", phases: ["simulating"] },
   { name: "Sales Agent", short: "Sales", icon: DollarSign, color: "#bcbcc4", phases: ["sales_support"] },
   { name: "Support Agent", short: "Support", icon: LifeBuoy, color: "#b0b0b8", phases: ["sales_support"] },
-  { name: "Revenue Leak Agent", short: "Revenue", icon: TrendingDown, color: "#fb7185", phases: ["revenue_churn"] },
-  { name: "Insight Agent", short: "Insights", icon: Sparkles, color: "#7dd3fc", phases: ["synthesizing"] },
+  { name: "Revenue Leak Agent", short: "Revenue", icon: TrendingDown, color: "#6f6f77", phases: ["revenue_churn"] },
+  { name: "Insight Agent", short: "Insights", icon: Sparkles, color: "#d6d6da", phases: ["synthesizing"] },
   { name: "Report Generator", short: "Report", icon: FileText, color: "#d4d4d8", phases: ["reporting"] },
 ];
 

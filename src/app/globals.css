@@ -20,11 +20,11 @@
     --secondary-foreground: 240 8% 92%;
     --muted: 240 5% 14%;
     --muted-foreground: 240 5% 56%; /* #8A8A8A */
-    --accent: 199 85% 74%;        /* signal blue */
+    --accent: 240 6% 82%;         /* silver */
     --accent-foreground: 240 10% 6%;
     --border: 240 6% 17%;
     --input: 240 6% 17%;
-    --ring: 199 85% 70%;
+    --ring: 240 6% 70%;
     --radius: 1.25rem;
   }
 

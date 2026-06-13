@@ -103,7 +103,7 @@ export function CustomerSwarm({
           sx: 0,
           sy: 0,
           depth: 0,
-          r: 2.8 + (hashId(nodes[i].id) % 10) / 6,
+          r: variant === "sphere" ? 0.9 + (hashId(nodes[i].id) % 8) / 11 : 2.8 + (hashId(nodes[i].id) % 10) / 6,
           phase: (hashId(nodes[i].id) % 628) / 100,
           color: nodes[i].color,
           node: nodes[i],
@@ -113,24 +113,8 @@ export function CustomerSwarm({
     }
     parts.length = N;
 
-    // sphere connection edges (3D-near unit vectors), capped per node
-    if (variant === "sphere") {
-      const edges: [number, number][] = [];
-      const perNode = new Array(N).fill(0);
-      for (let i = 0; i < N; i++) {
-        for (let j = i + 1; j < N; j++) {
-          const a = parts[i];
-          const b = parts[j];
-          const d2 = (a.bx - b.bx) ** 2 + (a.by - b.by) ** 2 + (a.bz - b.bz) ** 2;
-          if (d2 < 0.34 && perNode[i] < 3 && perNode[j] < 3) {
-            edges.push([i, j]);
-            perNode[i]++;
-            perNode[j]++;
-          }
-        }
-      }
-      edgesRef.current = edges;
-    }
+    // Dense dots-only sphere — no connection lines (clean particle-cloud look).
+    edgesRef.current = [];
   }, [nodes, height, variant]);
 
   useEffect(() => {
@@ -215,9 +199,9 @@ export function CustomerSwarm({
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-y-0 left-0 w-2/5" style={{ background: "linear-gradient(90deg, rgba(251,113,133,0.06), transparent)" }} />
           <div className="absolute inset-y-0 right-0 w-2/5" style={{ background: "linear-gradient(270deg, rgba(110,231,183,0.07), transparent)" }} />
-          <span className="absolute bottom-2 left-3 text-[10px] font-medium uppercase tracking-wider text-[#fb7185]/70">Won&apos;t buy</span>
+          <span className="absolute bottom-2 left-3 text-[10px] font-medium uppercase tracking-wider text-[#6f6f77]/70">Won&apos;t buy</span>
           <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-wider text-muted-foreground/60">purchase intent →</span>
-          <span className="absolute bottom-2 right-3 text-[10px] font-medium uppercase tracking-wider text-[#6ee7b7]/80">Will buy</span>
+          <span className="absolute bottom-2 right-3 text-[10px] font-medium uppercase tracking-wider text-[#f2f2f4]/80">Will buy</span>
         </div>
       )}
       <canvas ref={canvasRef} className="relative block" />

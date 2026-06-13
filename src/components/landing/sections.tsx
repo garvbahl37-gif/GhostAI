@@ -62,14 +62,14 @@ export function Differentiator() {
 }
 
 const FEATURES = [
-  { icon: Globe, color: "#22d3ee", title: "Website Intelligence", desc: "Crawls and understands your site, pricing, FAQs, and trust signals." },
+  { icon: Globe, color: "#d6d6da", title: "Website Intelligence", desc: "Crawls and understands your site, pricing, FAQs, and trust signals." },
   { icon: Users, color: "#8b5cf6", title: "Persona Generator", desc: "Creates 50–500 realistic customers across 10 archetypes." },
   { icon: Activity, color: "#6366f1", title: "Customer Swarm", desc: "Each persona independently evaluates and scores your experience." },
-  { icon: DollarSign, color: "#34d399", title: "Sales Agent", desc: "Acts as a buyer and finds unanswered objections and missing info." },
-  { icon: LifeBuoy, color: "#fbbf24", title: "Support Stress Test", desc: "Throws hard tickets and edge cases at your FAQ and docs." },
-  { icon: TrendingDown, color: "#fb7185", title: "Revenue Leak Detector", desc: "Quantifies hidden conversion blockers and their dollar impact." },
+  { icon: DollarSign, color: "#f2f2f4", title: "Sales Agent", desc: "Acts as a buyer and finds unanswered objections and missing info." },
+  { icon: LifeBuoy, color: "#a6a6ae", title: "Support Stress Test", desc: "Throws hard tickets and edge cases at your FAQ and docs." },
+  { icon: TrendingDown, color: "#6f6f77", title: "Revenue Leak Detector", desc: "Quantifies hidden conversion blockers and their dollar impact." },
   { icon: UserMinus, color: "#f472b6", title: "Churn Prediction", desc: "Forecasts which segments will leave — and exactly why." },
-  { icon: Swords, color: "#fb923c", title: "Competitor Arena", desc: "Battles your site vs a rival across every customer segment." },
+  { icon: Swords, color: "#8a8a92", title: "Competitor Arena", desc: "Battles your site vs a rival across every customer segment." },
   { icon: Clock, color: "#2dd4bf", title: "Pricing Time Machine", desc: "Simulates customer reactions to any price change." },
   { icon: FileText, color: "#a78bfa", title: "Executive Report", desc: "Board-ready insights, recommendations, and projected uplift." },
 ];
@@ -143,7 +143,7 @@ export function HowItWorks() {
       <div className="mx-auto mt-10 max-w-2xl space-y-3">
         {STEPS.map((step, i) => (
           <motion.div key={step} {...reveal(i)} className="flex items-center gap-4 rounded-2xl glass p-4">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-ghost-violet to-ghost-indigo font-mono text-sm font-bold text-white">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/15 bg-white/[0.06] font-mono text-sm font-bold text-foreground">
               {i + 1}
             </span>
             <span className="font-medium">{step}</span>

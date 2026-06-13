@@ -16,7 +16,7 @@ export function ScoreBar({
   // good = green, bad = rose; if invert, high values are bad
   const good = invert ? value < 40 : value > 60;
   const mid = value >= 40 && value <= 60;
-  const tone = mid ? "#fbbf24" : good ? "#34d399" : "#fb7185";
+  const tone = mid ? "#a6a6ae" : good ? "#f2f2f4" : "#6f6f77";
   return (
     <div className={cn("space-y-1", className)}>
       <div className="flex items-center justify-between text-xs">

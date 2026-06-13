@@ -6,9 +6,9 @@ import { verdictColor } from "@/lib/utils";
 import { CustomerSwarm, type SwarmNode } from "@/components/swarm/customer-swarm";
 
 const LEGEND: { label: string; verdict: Verdict; color: string }[] = [
-  { label: "Buyers", verdict: "Convert", color: "#6ee7b7" },
-  { label: "Undecided", verdict: "Maybe", color: "#fbbf24" },
-  { label: "Churn risk", verdict: "Churn Risk", color: "#fb7185" },
+  { label: "Buyers", verdict: "Convert", color: "#f2f2f4" },
+  { label: "Undecided", verdict: "Maybe", color: "#a6a6ae" },
+  { label: "Churn risk", verdict: "Churn Risk", color: "#6f6f77" },
   { label: "Bounced", verdict: "Bounce", color: "#8a8a8a" },
 ];
 

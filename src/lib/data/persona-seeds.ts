@@ -89,7 +89,7 @@ export const ROLE_SEEDS: RoleSeed[] = [
   {
     role: "Product Manager",
     emoji: "🧭",
-    accent: "#22d3ee",
+    accent: "#d6d6da",
     ageRange: [28, 45],
     companySize: [20, 400],
     industries: ["SaaS", "E-commerce", "Media", "EdTech"],
@@ -116,7 +116,7 @@ export const ROLE_SEEDS: RoleSeed[] = [
   {
     role: "Agency Owner",
     emoji: "🎯",
-    accent: "#fbbf24",
+    accent: "#a6a6ae",
     ageRange: [30, 50],
     companySize: [5, 60],
     industries: ["Marketing", "Design", "Consulting", "Dev Agency"],
@@ -143,7 +143,7 @@ export const ROLE_SEEDS: RoleSeed[] = [
   {
     role: "Student",
     emoji: "🎓",
-    accent: "#34d399",
+    accent: "#f2f2f4",
     ageRange: [18, 26],
     companySize: [1, 1],
     industries: ["Education", "Personal", "Side Project"],
@@ -170,7 +170,7 @@ export const ROLE_SEEDS: RoleSeed[] = [
   {
     role: "Small Business Owner",
     emoji: "🏪",
-    accent: "#fb7185",
+    accent: "#6f6f77",
     ageRange: [30, 58],
     companySize: [2, 30],
     industries: ["Retail", "Hospitality", "Local Services", "E-commerce"],

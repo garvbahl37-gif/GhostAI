@@ -30,7 +30,7 @@ const TOOLTIP = {
     color: "#e2e8f0",
   },
   itemStyle: { color: "#e2e8f0" },
-  labelStyle: { color: "#94a3b8" },
+  labelStyle: { color: "#6a6a72" },
 };
 
 export function VerdictDonut({ data }: { data: Record<Verdict, number> }) {
@@ -63,7 +63,7 @@ export function RoleBar({ data }: { data: Insights["roleBreakdown"] }) {
     <div className="h-72">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chart} layout="vertical" margin={{ left: 8, right: 16 }}>
-          <XAxis type="number" domain={[0, 100]} tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
+          <XAxis type="number" domain={[0, 100]} tick={{ fill: "#6a6a72", fontSize: 11 }} axisLine={false} tickLine={false} />
           <YAxis
             type="category"
             dataKey="role"
@@ -77,7 +77,7 @@ export function RoleBar({ data }: { data: Insights["roleBreakdown"] }) {
             {chart.map((d) => (
               <Cell
                 key={d.role}
-                fill={d.purchaseProbability > 60 ? "#6ee7b7" : d.purchaseProbability > 45 ? "#fbbf24" : "#fb7185"}
+                fill={d.purchaseProbability > 60 ? "#f2f2f4" : d.purchaseProbability > 45 ? "#a6a6ae" : "#6f6f77"}
               />
             ))}
           </Bar>
@@ -96,7 +96,7 @@ export function ConfusionRadar({ zones }: { zones: HeatmapZone[] }) {
           <PolarGrid stroke="rgba(255,255,255,0.12)" />
           <PolarAngleAxis dataKey="zone" tick={{ fill: "#cbd5e1", fontSize: 10 }} />
           <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
-          <Radar dataKey="confusion" stroke="#fb7185" fill="#fb7185" fillOpacity={0.35} />
+          <Radar dataKey="confusion" stroke="#6f6f77" fill="#6f6f77" fillOpacity={0.35} />
           <Tooltip {...TOOLTIP} formatter={(v: any) => [`${v}/100`, "Confusion"]} />
         </RadarChart>
       </ResponsiveContainer>
@@ -105,7 +105,7 @@ export function ConfusionRadar({ zones }: { zones: HeatmapZone[] }) {
 }
 
 export function RiskGauge({ value }: { value: number }) {
-  const color = value > 66 ? "#fb7185" : value > 40 ? "#fbbf24" : "#6ee7b7";
+  const color = value > 66 ? "#6f6f77" : value > 40 ? "#a6a6ae" : "#f2f2f4";
   const data = [{ name: "risk", value, fill: color }];
   return (
     <div className="relative h-56">

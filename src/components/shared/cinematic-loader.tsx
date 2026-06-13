@@ -1,13 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Ghost } from "lucide-react";
 import { AGENTS } from "@/components/war-room/agent-meta";
+import { CustomerSwarm, type SwarmNode } from "@/components/swarm/customer-swarm";
 import { EASE } from "@/lib/motion";
-
-const ORBIT = Array.from({ length: 10 }, (_, i) => `node-${i}`);
-const NODE_COLORS = ["#e5e5e7", "#d4d4d8", "#c8c8cc", "#7dd3fc", "#6ee7b7", "#ffffff"];
 
 const BOOT_LINES = [
   "Initializing simulation engine…",
@@ -20,19 +18,15 @@ const BOOT_LINES = [
   "Generating executive report…",
 ];
 
-const STAGE = 340;
-const CENTER = STAGE / 2;
-const R = 138;
-
-function nodePos(i: number, n: number) {
-  const angle = -Math.PI / 2 + (i / n) * Math.PI * 2;
-  return { x: CENTER + Math.cos(angle) * R, y: CENTER + Math.sin(angle) * R };
-}
-
-/** Cinematic graphite boot sequence — white lines, silver core, no spinner. */
+/** Minimal black-and-white boot sequence: a rotating white particle sphere. */
 export function CinematicLoader({ progress = 0, label }: { progress?: number; label?: string }) {
   const [lit, setLit] = useState(0);
   const [line, setLine] = useState(0);
+
+  const nodes: SwarmNode[] = useMemo(() => {
+    const shades = ["#ffffff", "#ffffff", "#f0f0f2", "#dcdce0", "#c2c2c8"];
+    return Array.from({ length: 260 }, (_, i) => ({ id: `l${i}`, color: shades[i % shades.length] }));
+  }, []);
 
   useEffect(() => {
     const a = setInterval(() => setLit((l) => (l + 1) % (AGENTS.length + 1)), 280);
@@ -49,81 +43,28 @@ export function CinematicLoader({ progress = 0, label }: { progress?: number; la
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, scale: 1.12, filter: "blur(16px)" }}
+      exit={{ opacity: 0, scale: 1.1, filter: "blur(16px)" }}
       transition={{ duration: 0.7, ease: EASE }}
       className="fixed inset-0 z-[100] grid place-items-center overflow-hidden bg-[#050506]"
     >
-      {/* ambient graphite light */}
-      <div className="absolute left-1/2 top-1/2 h-[52rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.05] blur-[160px] anim-glow-pulse" />
+      <div className="absolute left-1/2 top-1/2 h-[48rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.04] blur-[160px] anim-glow-pulse" />
       <div className="absolute inset-0 grain opacity-[0.06] mix-blend-overlay" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_42%,rgba(0,0,0,0.78))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_44%,rgba(0,0,0,0.8))]" />
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" style={{ animation: "scan-line 4.5s linear infinite" }} />
 
       <div className="relative flex flex-col items-center">
-        <div className="relative" style={{ width: STAGE, height: STAGE }}>
-          {/* rotating white glint arc */}
-          <div
-            className="absolute inset-5 rounded-full anim-spin-slow"
-            style={{
-              background: "conic-gradient(from 0deg, transparent 0deg 215deg, rgba(255,255,255,0.85) 305deg, rgba(255,255,255,0.2) 350deg, transparent 360deg)",
-              WebkitMask: "radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px))",
-              mask: "radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px))",
-            }}
-          />
-          {/* counter-rotating faint arc */}
-          <div
-            className="absolute inset-2 rounded-full anim-spin-slow-rev"
-            style={{
-              background: "conic-gradient(from 120deg, transparent 0deg 285deg, rgba(125,211,252,0.6) 345deg, transparent 360deg)",
-              WebkitMask: "radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1px))",
-              mask: "radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1px))",
-            }}
-          />
-          <div className="absolute inset-0 rounded-full border border-dashed border-white/12" />
-          <div className="absolute inset-[4.5rem] rounded-full border border-white/[0.06]" />
-
-          {/* connecting lines */}
-          <svg className="absolute inset-0 anim-glow-pulse" viewBox={`0 0 ${STAGE} ${STAGE}`} fill="none">
-            {ORBIT.map((_, i) => {
-              const { x, y } = nodePos(i, ORBIT.length);
-              return <line key={i} x1={CENTER} y1={CENTER} x2={x} y2={y} stroke="rgba(255,255,255,0.12)" strokeWidth={1} />;
-            })}
-          </svg>
-
-          {/* orbiting nodes */}
-          {ORBIT.map((seed, i) => {
-            const { x, y } = nodePos(i, ORBIT.length);
-            const color = NODE_COLORS[i % NODE_COLORS.length];
-            return (
-              <div key={seed} className="absolute" style={{ left: x, top: y, transform: "translate(-50%, -50%)" }}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.35 + i * 0.07, duration: 0.5, ease: EASE }}
-                  className="h-3 w-3 rounded-full"
-                  style={{ background: `radial-gradient(circle at 32% 30%, #ffffff, ${color})`, boxShadow: `0 0 16px ${color}, 0 0 5px ${color}` }}
-                />
-              </div>
-            );
-          })}
-
-          {/* core mark — dark graphite disc, white ghost */}
-          <div className="absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.07] blur-2xl" />
-          <motion.div
-            initial={{ scale: 0, rotate: -40 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.9, ease: EASE }}
-            className="absolute left-1/2 top-1/2 grid h-24 w-24 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-3xl border border-white/12 bg-gradient-to-br from-[#1b1b1f] to-[#0c0c0e] anim-glow-pulse"
-            style={{ boxShadow: "0 0 50px rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.12)" }}
-          >
-            <Ghost className="h-12 w-12 text-white" />
-          </motion.div>
+        {/* rotating white particle sphere */}
+        <div className="relative">
+          <Ghost className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-white/25" />
+          <div className="w-[360px] max-w-[78vw]">
+            <CustomerSwarm nodes={nodes} variant="sphere" height={320} />
+          </div>
         </div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8, ease: EASE }}
+          transition={{ delay: 0.4, duration: 0.8, ease: EASE }}
           className="mt-2 text-center text-base font-semibold uppercase tracking-[0.34em] text-foreground/90"
         >
           Ghost <span className="gradient-text">Customer</span> AI
@@ -138,6 +79,7 @@ export function CinematicLoader({ progress = 0, label }: { progress?: number; la
           {label || BOOT_LINES[line]}
         </motion.p>
 
+        {/* 8-stage pipeline, monochrome */}
         <div className="mt-5 flex items-center gap-2.5">
           {AGENTS.map((a, i) => (
             <motion.span
@@ -145,11 +87,9 @@ export function CinematicLoader({ progress = 0, label }: { progress?: number; la
               animate={{
                 scale: i === lit ? 1.8 : 1,
                 opacity: i <= lit || lit === AGENTS.length ? 1 : 0.25,
-                boxShadow: i === lit ? `0 0 12px ${a.color}` : "0 0 0px transparent",
               }}
               transition={{ duration: 0.25 }}
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ background: a.color }}
+              className="h-1.5 w-1.5 rounded-full bg-white"
             />
           ))}
         </div>

@@ -12,12 +12,12 @@ const buttonVariants = cva(
           "bg-[#fafafa] text-[#0a0a0b] shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_10px_30px_-12px_rgba(0,0,0,0.9)] hover:bg-white",
         // restrained signal-blue accent on graphite
         accent:
-          "border border-[#7dd3fc]/30 bg-[#7dd3fc]/[0.08] text-[#7dd3fc] shadow-[0_0_24px_-10px_rgba(125,211,252,0.6)] hover:bg-[#7dd3fc]/[0.14] hover:border-[#7dd3fc]/50",
+          "border border-white/20 bg-white/[0.08] text-foreground shadow-[0_0_24px_-10px_rgba(255,255,255,0.5)] hover:bg-white/[0.14] hover:border-white/30",
         outline:
           "border border-white/12 bg-white/[0.04] text-foreground hover:bg-white/[0.08] hover:border-white/20 backdrop-blur",
         ghost: "text-foreground/75 hover:bg-white/[0.06] hover:text-foreground",
-        destructive: "border border-[#fb7185]/30 bg-[#fb7185]/10 text-[#fb7185] hover:bg-[#fb7185]/16",
-        link: "text-[#7dd3fc] underline-offset-4 hover:underline",
+        destructive: "border border-[#6f6f77]/30 bg-[#6f6f77]/10 text-[#6f6f77] hover:bg-[#6f6f77]/16",
+        link: "text-[#d6d6da] underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-5 py-2",

@@ -30,7 +30,7 @@ export function PhaseRail({ phase }: { phase: RunPhase }) {
                 className="grid h-6 w-6 place-items-center rounded-lg"
                 style={{
                   background: status === "idle" ? "rgba(255,255,255,0.06)" : `${agent.color}22`,
-                  color: status === "idle" ? "#94a3b8" : agent.color,
+                  color: status === "idle" ? "#6a6a72" : agent.color,
                 }}
               >
                 {status === "done" ? <Check className="h-3.5 w-3.5" /> : <Icon className="h-3.5 w-3.5" />}

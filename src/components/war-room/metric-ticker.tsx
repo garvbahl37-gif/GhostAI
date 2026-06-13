@@ -43,10 +43,10 @@ export function MetricTicker({
 }) {
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      <Tile icon={<Activity className="h-4 w-4" />} label="Customers simulated" value={simulated} color="#7dd3fc" />
-      <Tile icon={<ShoppingCart className="h-4 w-4" />} label="Avg purchase intent" value={avgPurchase} suffix="%" color="#6ee7b7" />
-      <Tile icon={<BrainCircuit className="h-4 w-4" />} label="Avg confusion" value={avgConfusion} suffix="%" color="#fbbf24" />
-      <Tile icon={<AlertTriangle className="h-4 w-4" />} label="Conversion risk" value={conversionRisk} suffix="/100" color="#fb7185" />
+      <Tile icon={<Activity className="h-4 w-4" />} label="Customers simulated" value={simulated} color="#d6d6da" />
+      <Tile icon={<ShoppingCart className="h-4 w-4" />} label="Avg purchase intent" value={avgPurchase} suffix="%" color="#f2f2f4" />
+      <Tile icon={<BrainCircuit className="h-4 w-4" />} label="Avg confusion" value={avgConfusion} suffix="%" color="#a6a6ae" />
+      <Tile icon={<AlertTriangle className="h-4 w-4" />} label="Conversion risk" value={conversionRisk} suffix="/100" color="#6f6f77" />
     </div>
   );
 }

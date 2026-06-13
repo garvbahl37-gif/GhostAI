@@ -53,7 +53,7 @@ export function PersonaCard({
       {sim ? (
         <div className="relative mt-3 space-y-2">
           <ScoreBar label="Purchase intent" value={sim.purchaseProbability} color={persona.accent} />
-          <ScoreBar label="Confusion" value={sim.confusionScore} color="#fb7185" invert />
+          <ScoreBar label="Confusion" value={sim.confusionScore} color="#6f6f77" invert />
         </div>
       ) : (
         <div className="relative mt-3 flex flex-wrap gap-1.5">

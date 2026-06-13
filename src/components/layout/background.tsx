@@ -36,7 +36,7 @@ export function Background() {
       <motion.div style={{ x: x2, y: y2 }} className="absolute inset-0">
         <div className="absolute bottom-[-14rem] left-1/3 h-[34rem] w-[34rem] rounded-full bg-white/[0.03] blur-[160px]" style={{ animation: "ambient-drift 28s ease-in-out infinite" }} />
         {/* one faint signal-blue whisper for life */}
-        <div className="absolute bottom-[12%] right-[10%] h-[22rem] w-[22rem] rounded-full bg-[#7dd3fc]/[0.05] blur-[150px]" style={{ animation: "ambient-drift 24s ease-in-out infinite reverse" }} />
+        <div className="absolute bottom-[12%] right-[10%] h-[22rem] w-[22rem] rounded-full bg-[#d6d6da]/[0.05] blur-[150px]" style={{ animation: "ambient-drift 24s ease-in-out infinite reverse" }} />
       </motion.div>
 
       {/* fine grid */}

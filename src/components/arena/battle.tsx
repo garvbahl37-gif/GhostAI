@@ -118,8 +118,8 @@ export function Battle() {
                     <RadarChart data={radarData} outerRadius="70%">
                       <PolarGrid stroke="rgba(255,255,255,0.12)" />
                       <PolarAngleAxis dataKey="dim" tick={{ fill: "#cbd5e1", fontSize: 10 }} />
-                      <Radar dataKey="You" stroke="#22d3ee" fill="#22d3ee" fillOpacity={0.3} />
-                      <Radar dataKey="Competitor" stroke="#fb7185" fill="#fb7185" fillOpacity={0.25} />
+                      <Radar dataKey="You" stroke="#d6d6da" fill="#d6d6da" fillOpacity={0.3} />
+                      <Radar dataKey="Competitor" stroke="#6f6f77" fill="#6f6f77" fillOpacity={0.25} />
                       <Legend wrapperStyle={{ fontSize: 12 }} />
                       <Tooltip
                         contentStyle={{ background: "rgba(15,15,25,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12 }}
@@ -189,7 +189,7 @@ function Combatant({
   score: number;
   winner: boolean;
 }) {
-  const color = side === "you" ? "#22d3ee" : "#fb7185";
+  const color = side === "you" ? "#d6d6da" : "#6f6f77";
   return (
     <div
       className="relative overflow-hidden rounded-2xl glass p-5 text-center"
