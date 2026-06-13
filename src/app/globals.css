@@ -1,0 +1,249 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 245 40% 3.5%;
+    --foreground: 220 22% 97%;
+    --card: 245 32% 7%;
+    --card-foreground: 220 20% 96%;
+    --primary: 258 90% 66%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 245 22% 13%;
+    --secondary-foreground: 220 20% 92%;
+    --muted: 245 18% 15%;
+    --muted-foreground: 222 14% 64%;
+    --accent: 187 92% 53%;
+    --accent-foreground: 245 40% 5%;
+    --border: 245 20% 16%;
+    --input: 245 20% 16%;
+    --ring: 258 90% 66%;
+    --radius: 1rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: hsl(258 90% 66% / 0.4);
+    color: white;
+  }
+
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply border border-white/[0.08] bg-white/[0.035] backdrop-blur-xl;
+  }
+  .glass-strong {
+    @apply border border-white/[0.1] bg-white/[0.06] backdrop-blur-2xl;
+  }
+  .neon-text {
+    text-shadow: 0 0 24px hsl(258 90% 66% / 0.6);
+  }
+  .gradient-text {
+    @apply bg-gradient-to-r from-ghost-violet via-ghost-cyan to-ghost-emerald bg-clip-text text-transparent;
+    background-size: 200% auto;
+  }
+  .text-glow {
+    text-shadow: 0 0 40px hsl(258 90% 66% / 0.45), 0 0 12px hsl(187 92% 53% / 0.3);
+  }
+  .card-glow {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 30px 80px -30px rgba(99, 102, 241, 0.4);
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 46px 46px;
+  }
+  /* premium gradient ring border (static) */
+  .ring-border {
+    position: relative;
+  }
+  .ring-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.6), rgba(34, 211, 238, 0.25), rgba(255, 255, 255, 0.05));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  /* animated conic glow border */
+  .conic-border {
+    position: relative;
+    isolation: isolate;
+  }
+  .conic-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(
+      from var(--angle, 0deg),
+      transparent 0deg,
+      hsl(258 90% 66%) 70deg,
+      hsl(187 92% 53%) 140deg,
+      transparent 200deg,
+      transparent 360deg
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: spin-angle 6s linear infinite;
+    z-index: -1;
+  }
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.18) 50%, transparent 70%);
+    transform: translateX(-130%);
+    transition: transform 0.7s ease;
+  }
+  .shimmer:hover::after {
+    transform: translateX(130%);
+  }
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+  }
+}
+
+/* @property enables animating the conic gradient angle smoothly */
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spin-angle {
+  to {
+    --angle: 360deg;
+  }
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin-slow-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes aurora-shift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate3d(4%, -3%, 0) scale(1.15);
+    opacity: 1;
+  }
+}
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+@keyframes scan-line {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(2000%);
+  }
+}
+
+.anim-spin-slow {
+  animation: spin-slow 18s linear infinite;
+}
+.anim-spin-slow-rev {
+  animation: spin-slow-rev 24s linear infinite;
+}
+.anim-glow-pulse {
+  animation: glow-pulse 3.5s ease-in-out infinite;
+}
+
+/* grain overlay */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(245 18% 24%);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(258 60% 52%);
+  background-clip: content-box;
+}
+
+/* reduce-motion respect */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles for the executive report export */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .print-card {
+    border: 1px solid #e5e7eb !important;
+    background: white !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+}
