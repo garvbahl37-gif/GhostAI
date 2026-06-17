@@ -6,10 +6,12 @@ import {
   HowItWorks,
   FinalCTA,
 } from "@/components/landing/sections";
+import { LandingEffects } from "@/components/landing/landing-effects";
 
 export default function LandingPage() {
   return (
     <>
+      <LandingEffects />
       <Hero />
       <Differentiator />
       <Features />
