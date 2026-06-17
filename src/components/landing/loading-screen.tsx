@@ -38,7 +38,7 @@ export default function LoadingScreen() {
           {/* Aurora background */}
           <div className="pointer-events-none absolute inset-0 z-0">
             <Aurora
-              colorStops={[\"#3B82F6\", \"#B497CF\", \"#5227FF\"]}
+              colorStops={["#3B82F6", "#B497CF", "#5227FF"]}
               blend={0.8}
               amplitude={1.5}
               speed={0.8}
