@@ -204,12 +204,18 @@ export default function SoftAurora({
     }
 
     function resize() {
-      renderer.setSize(container.offsetWidth, container.offsetHeight);
+      const w = container.offsetWidth;
+      const h = container.offsetHeight;
+      if (w === 0 || h === 0) return;
+      renderer.setSize(w, h);
       if (program) {
         program.uniforms.uResolution.value = [gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height];
       }
     }
     window.addEventListener('resize', resize);
+    // Use ResizeObserver so we get proper dimensions after layout, not just 0
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(container);
     resize();
 
     const geometry = new Triangle(gl);
@@ -268,11 +274,12 @@ export default function SoftAurora({
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resize);
+      ro.disconnect();
       if (enableMouseInteraction) {
         gl.canvas.removeEventListener('mousemove', handleMouseMove);
         gl.canvas.removeEventListener('mouseleave', handleMouseLeave);
       }
-      container.removeChild(gl.canvas);
+      if (container.contains(gl.canvas)) container.removeChild(gl.canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, [speed, scale, brightness, color1, color2, noiseFrequency, noiseAmplitude, bandHeight, bandSpread, octaveDecay, layerOffset, colorSpeed, enableMouseInteraction, mouseInfluence]);
