@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { RunConfig, WebsiteAnalysis, ExecutiveReport, Insights, CompetitorAnalysis } from "@/lib/types";
 import { mockAnalyze, buildReport } from "@/lib/data/mock-engine";
+import { sleep } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
 // Gemini client with graceful degradation.
@@ -12,7 +13,11 @@ import { mockAnalyze, buildReport } from "@/lib/data/mock-engine";
 // engine so a 200-customer swarm doesn't fan out into 200 fragile LLM calls.
 // ---------------------------------------------------------------------------
 
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+// Primary model first, then resilient fallbacks. When the flagship model is
+// overloaded (HTTP 503 "high demand"), we transparently retry on an alternate
+// so real AI analysis survives transient spikes instead of dropping to mock.
+const PRIMARY = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const MODELS = [...new Set([PRIMARY, "gemini-2.0-flash", "gemini-1.5-flash"])];
 const KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
 export function isGeminiEnabled(): boolean {
@@ -37,22 +42,38 @@ async function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
   ]);
 }
 
-/** Call Gemini expecting strict JSON. Returns null on any failure. */
-export async function generateJSON<T>(prompt: string, timeoutMs = 18000): Promise<T | null> {
+/**
+ * Call Gemini expecting strict JSON. Retries transient overloads (503/429/
+ * timeout) and falls back across alternate models before giving up. Returns
+ * null only when every model/attempt fails (then the caller uses the mock).
+ */
+export async function generateJSON<T>(prompt: string, timeoutMs = 30000): Promise<T | null> {
   const c = getClient();
   if (!c) return null;
-  try {
-    const model = c.getGenerativeModel({
-      model: MODEL,
-      generationConfig: { responseMimeType: "application/json", temperature: 0.7 },
-    });
-    const res = await withTimeout(model.generateContent(prompt), timeoutMs);
-    const text = res.response.text();
-    return JSON.parse(stripFences(text)) as T;
-  } catch (err) {
-    console.warn("[gemini] generateJSON failed, falling back:", (err as Error).message);
-    return null;
+
+  for (const modelName of MODELS) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const model = c.getGenerativeModel({
+          model: modelName,
+          generationConfig: { responseMimeType: "application/json", temperature: 0.7 },
+        });
+        const res = await withTimeout(model.generateContent(prompt), timeoutMs);
+        return JSON.parse(stripFences(res.response.text())) as T;
+      } catch (err) {
+        const msg = ((err as Error).message || "").slice(0, 140);
+        const retryable = /503|429|overload|high demand|timeout|unavailable|fetch failed|ECONN|ETIMEDOUT/i.test(msg);
+        console.warn(`[gemini] ${modelName} attempt ${attempt + 1} failed: ${msg}`);
+        if (retryable && attempt === 0) {
+          await sleep(900);
+          continue; // retry same model once
+        }
+        break; // give up on this model, try the next
+      }
+    }
   }
+  console.warn("[gemini] all models/attempts failed -> using mock engine");
+  return null;
 }
 
 function stripFences(s: string): string {
@@ -66,8 +87,12 @@ function stripFences(s: string): string {
 // ---------------------------------------------------------------------------
 // AI-enhanced website analysis (from crawled content)
 // ---------------------------------------------------------------------------
-export async function aiAnalyze(config: RunConfig, crawledText: string | null): Promise<WebsiteAnalysis> {
-  const fallback = mockAnalyze(config);
+export async function aiAnalyze(
+  config: RunConfig,
+  crawledText: string | null,
+  crawlSource: "firecrawl" | "fetch" | "none" = "none",
+): Promise<WebsiteAnalysis> {
+  const fallback = mockAnalyze(config); // fallback.source === "mock"
   if (!isGeminiEnabled() || !crawledText) return fallback;
 
   const prompt = `You are a B2B website analyst. Analyze the following website content and return STRICT JSON only.
@@ -113,7 +138,8 @@ Be accurate to the content. If pricing or security info is absent, reflect that 
     trustSignals: json.trustSignals ?? fallback.trustSignals,
     missingTrustSignals: json.missingTrustSignals ?? fallback.missingTrustSignals,
     contentScore: typeof json.contentScore === "number" ? json.contentScore : fallback.contentScore,
-    source: "fetch",
+    // honest provenance: real AI analysis of a real crawl, or plain fetch
+    source: crawlSource === "none" ? "fetch" : crawlSource,
   } as WebsiteAnalysis;
 }
 

@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   }
 
   const crawl = await crawlSite(url);
-  const youAnalysis = await aiAnalyze({ url, personaCount: 0 }, crawl.text);
+  const youAnalysis = await aiAnalyze({ url, personaCount: 0 }, crawl.text, crawl.source);
   const result = mockCompetitor(url, competitorUrl, youAnalysis);
   return Response.json(result);
 }

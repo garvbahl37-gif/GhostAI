@@ -67,10 +67,11 @@ export async function* runPipeline(
     // ---- 1. Website Analyzer ----------------------------------------------
     yield { type: "status", phase: "analyzing", message: "Crawling and analyzing the website…", progress: 5 };
     const crawl = await crawlSite(config.url);
-    const analysis = await aiAnalyze(config, crawl.text);
-    if (crawl.source !== "none") analysis.source = crawl.source as typeof analysis.source;
+    const analysis = await aiAnalyze(config, crawl.text, crawl.source);
     const signals = deriveSignals(analysis);
     state.analysis = analysis;
+    // reflect what actually happened: real AI analysis vs mock fallback
+    state.engine = analysis.source === "mock" ? "mock" : "gemini";
     yield { type: "analysis", data: analysis };
     for (const t of analyzerThoughts(analysis, signals)) {
       yield { type: "thought", ...t };

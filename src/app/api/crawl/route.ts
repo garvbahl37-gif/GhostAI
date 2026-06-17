@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
   if (!url) return Response.json({ error: "url is required" }, { status: 400 });
 
   const crawl = await crawlSite(url);
-  const analysis = await aiAnalyze({ url, personaCount: 0 }, crawl.text);
-  if (crawl.source !== "none") analysis.source = crawl.source as typeof analysis.source;
+  const analysis = await aiAnalyze({ url, personaCount: 0 }, crawl.text, crawl.source);
   return Response.json(analysis);
 }
