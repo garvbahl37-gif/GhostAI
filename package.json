@@ -4,8 +4,9 @@
   "private": true,
   "description": "The AI that becomes your customer before your customer becomes your problem.",
   "scripts": {
+    "prebuild": "rimraf .next tsconfig.tsbuildinfo",
     "dev": "next dev",
-    "build": "next build",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
@@ -24,6 +25,8 @@
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
+    "rimraf": "^5.0.5",
     "@types/node": "^22.10.5",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",

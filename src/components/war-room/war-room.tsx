@@ -4,6 +4,7 @@ import { useEffect, useReducer, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+
 import { ArrowRight, BarChart3, FileText, Loader2, Swords } from "lucide-react";
 import type {
   Insights,
@@ -229,105 +230,109 @@ export function WarRoom({ runId }: { runId: string }) {
       <AnimatePresence>
         {showLoader && <CinematicLoader progress={s.progress} label={s.message} />}
       </AnimatePresence>
+      <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none -z-10">
+        <video src="/robo.mp4" preload="auto" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
       <div className="container max-w-7xl py-24">
-      {/* Header */}
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold sm:text-3xl">AI War Room</h1>
-            {s.status === "running" && (
-              <Badge variant="cyan">
-                <Loader2 className="h-3 w-3 animate-spin" /> Live
-              </Badge>
-            )}
-            {done && <Badge variant="emerald">Complete</Badge>}
-            {s.status === "error" && <Badge variant="rose">Error</Badge>}
-          </div>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {host ? <>Simulating customers for <span className="font-mono text-foreground">{host}</span></> : "Customer simulation"}
-            {s.analysis && <> · {s.analysis.category}</>}
-          </p>
-        </div>
-        {done && (
-          <div className="flex flex-wrap gap-2">
-            <Link href={`/insights/${runId}`}>
-              <Button variant="accent">
-                <BarChart3 className="h-4 w-4" /> View insights
-              </Button>
-            </Link>
-            <Link href={`/report/${runId}`}>
-              <Button variant="outline">
-                <FileText className="h-4 w-4" /> Report
-              </Button>
-            </Link>
-            <Link href="/arena">
-              <Button variant="outline">
-                <Swords className="h-4 w-4" /> Arena
-              </Button>
-            </Link>
-          </div>
-        )}
-      </div>
-
-      {/* Progress + phase rail */}
-      <div className="mb-6 space-y-3 rounded-2xl glass p-4">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-foreground/80">{s.message}</span>
-          <span className="font-mono text-muted-foreground">{Math.round(s.progress)}%</span>
-        </div>
-        <Progress value={s.progress} />
-        <PhaseRail phase={s.phase} />
-      </div>
-
-      {s.status === "error" && (
-        <div className="mb-6 rounded-2xl border border-ghost-rose/30 bg-ghost-rose/10 p-4 text-sm text-ghost-rose">
-          {s.error ?? "Something went wrong."} — <Link href="/dashboard" className="underline">try again</Link>.
-        </div>
-      )}
-
-      {/* Metrics */}
-      <div className="mb-6">
-        <MetricTicker
-          simulated={s.metrics.simulated}
-          avgPurchase={s.metrics.avgPurchase}
-          avgConfusion={s.metrics.avgConfusion}
-          conversionRisk={s.metrics.conversionRisk}
-        />
-      </div>
-
-      {/* Main grid */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
-          <SwarmGrid personas={s.personas} sims={s.simsById} total={s.total || s.personas.length} />
-          <div className="grid gap-6 sm:grid-cols-2">
-            <SimFeed sims={s.sims} />
-            <Discoveries leaks={s.leaks} objections={s.objections} />
-          </div>
-        </div>
-        <div className="lg:col-span-1">
-          <AgentStream thoughts={s.thoughts} />
-        </div>
-      </div>
-
-      {done && s.insights && (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-6 flex flex-col items-center justify-between gap-4 rounded-2xl glass p-6 sm:flex-row"
-        >
+        {/* Header */}
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-lg font-semibold">{s.insights.headline}</p>
-            <p className="text-sm text-muted-foreground">
-              Estimated <span className="text-ghost-emerald">+{s.insights.estConversionUplift}%</span> conversion uplift if the top fixes ship.
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold sm:text-3xl">AI War Room</h1>
+              {s.status === "running" && (
+                <Badge variant="cyan">
+                  <Loader2 className="h-3 w-3 animate-spin" /> Live
+                </Badge>
+              )}
+              {done && <Badge variant="emerald">Complete</Badge>}
+              {s.status === "error" && <Badge variant="rose">Error</Badge>}
+            </div>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {host ? <>Simulating customers for <span className="font-mono text-foreground">{host}</span></> : "Customer simulation"}
+              {s.analysis && <> · {s.analysis.category}</>}
             </p>
           </div>
-          <Link href={`/insights/${runId}`}>
-            <Button variant="accent" size="lg">
-              Explore full insights <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </motion.div>
-      )}
+          {done && (
+            <div className="flex flex-wrap gap-2">
+              <Link href={`/insights/${runId}`}>
+                <Button variant="accent">
+                  <BarChart3 className="h-4 w-4" /> View insights
+                </Button>
+              </Link>
+              <Link href={`/report/${runId}`}>
+                <Button variant="outline">
+                  <FileText className="h-4 w-4" /> Report
+                </Button>
+              </Link>
+              <Link href="/arena">
+                <Button variant="outline">
+                  <Swords className="h-4 w-4" /> Arena
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Progress + phase rail */}
+        <div className="mb-6 space-y-3 rounded-2xl glass p-4">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-foreground/80">{s.message}</span>
+            <span className="font-mono text-muted-foreground">{Math.round(s.progress)}%</span>
+          </div>
+          <Progress value={s.progress} />
+          <PhaseRail phase={s.phase} />
+        </div>
+
+        {s.status === "error" && (
+          <div className="mb-6 rounded-2xl border border-ghost-rose/30 bg-ghost-rose/10 p-4 text-sm text-ghost-rose">
+            {s.error ?? "Something went wrong."} — <Link href="/dashboard" className="underline">try again</Link>.
+          </div>
+        )}
+
+        {/* Metrics */}
+        <div className="mb-6">
+          <MetricTicker
+            simulated={s.metrics.simulated}
+            avgPurchase={s.metrics.avgPurchase}
+            avgConfusion={s.metrics.avgConfusion}
+            conversionRisk={s.metrics.conversionRisk}
+          />
+        </div>
+
+        {/* Main grid */}
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="space-y-6 lg:col-span-2">
+            <SwarmGrid personas={s.personas} sims={s.simsById} total={s.total || s.personas.length} />
+            <div className="grid gap-6 sm:grid-cols-2">
+              <SimFeed sims={s.sims} />
+              <Discoveries leaks={s.leaks} objections={s.objections} />
+            </div>
+          </div>
+          <div className="lg:col-span-1">
+            <AgentStream thoughts={s.thoughts} />
+          </div>
+        </div>
+
+        {done && s.insights && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6 flex flex-col items-center justify-between gap-4 rounded-2xl glass p-6 sm:flex-row"
+          >
+            <div>
+              <p className="text-lg font-semibold">{s.insights.headline}</p>
+              <p className="text-sm text-muted-foreground">
+                Estimated <span className="text-ghost-emerald">+{s.insights.estConversionUplift}%</span> conversion uplift if the top fixes ship.
+              </p>
+            </div>
+            <Link href={`/insights/${runId}`}>
+              <Button variant="accent" size="lg">
+                Explore full insights <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </motion.div>
+        )}
       </div>
     </>
   );

@@ -49,8 +49,13 @@ export function Battle() {
   const radarData = result?.dimensions.map((d) => ({ dim: d.name, You: d.you, Competitor: d.competitor })) ?? [];
 
   return (
-    <div className="container max-w-5xl py-28">
-      <div className="mb-8 text-center">
+    <>
+      <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none -z-10">
+        <video src="/robo.mp4" preload="auto" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/30" />
+      </div>
+      <div className="container max-w-5xl py-28">
+        <div className="mb-8 text-center">
         <Badge variant="amber" className="mb-3">
           <Swords className="h-3 w-3" /> Competitor Battle Arena
         </Badge>
@@ -173,7 +178,8 @@ export function Battle() {
         </motion.div>
       )}
     </div>
-  );
+  </>
+);
 }
 
 function Combatant({

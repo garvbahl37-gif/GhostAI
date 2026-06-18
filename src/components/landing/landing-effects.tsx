@@ -13,7 +13,10 @@ export function LandingEffects() {
   useEffect(() => {
     const duration = 2500; // 2.5 seconds total loading time
     const interval = 50;
+    const exitDuration = 1200;
     let elapsed = 0;
+    let completeTimer: ReturnType<typeof setTimeout>;
+    let revealNavbarTimer: ReturnType<typeof setTimeout>;
 
     const timer = setInterval(() => {
       elapsed += interval;
@@ -26,11 +29,20 @@ export function LandingEffects() {
 
       if (elapsed >= duration) {
         clearInterval(timer);
-        setTimeout(() => setIsLoading(false), 300); // Wait a tiny bit at 100% before fading
+        completeTimer = setTimeout(() => {
+          setIsLoading(false);
+          revealNavbarTimer = setTimeout(() => {
+            window.dispatchEvent(new Event("landing-loading-complete"));
+          }, exitDuration);
+        }, 300); // Wait a tiny bit at 100% before fading
       }
     }, interval);
 
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      clearTimeout(completeTimer);
+      clearTimeout(revealNavbarTimer);
+    };
   }, []);
 
   return (

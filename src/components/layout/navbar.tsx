@@ -16,6 +16,7 @@ const NAV = [
 export function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const [hideForLandingLoading, setHideForLandingLoading] = useState(pathname === "/");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -24,12 +25,24 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (pathname !== "/") {
+      setHideForLandingLoading(false);
+      return;
+    }
+
+    setHideForLandingLoading(true);
+    const onLoadingComplete = () => setHideForLandingLoading(false);
+    window.addEventListener("landing-loading-complete", onLoadingComplete);
+    return () => window.removeEventListener("landing-loading-complete", onLoadingComplete);
+  }, [pathname]);
+
   return (
     <motion.header
       initial={{ y: -90, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-x-0 top-0 z-50"
+      className={cn("fixed inset-x-0 top-0 z-50", hideForLandingLoading && "invisible pointer-events-none")}
     >
       <div className="container px-4 pt-3 sm:pt-4">
         <div
