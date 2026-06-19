@@ -1,149 +1,161 @@
 # Ghost Customer AI
 
-### _The AI that becomes your customer before your customer becomes your problem._
+### The AI that becomes your customer before your customer becomes your problem.
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-000000?logo=next.js&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-06B6D4?logo=tailwindcss&logoColor=white)
-![Framer Motion](https://img.shields.io/badge/Framer_Motion-11-0055FF?logo=framer&logoColor=white)
-![Recharts](https://img.shields.io/badge/Recharts-2.15-FF6384)
-![Gemini](https://img.shields.io/badge/Gemini-2.5_Flash-4285F4?logo=googlegemini&logoColor=white)
-![LangGraph](https://img.shields.io/badge/LangGraph-0.2-1C3C3C)
-![Supabase](https://img.shields.io/badge/Supabase-pgvector-3FCF8E?logo=supabase&logoColor=white)
-![Zero-Key](https://img.shields.io/badge/Runs_with-ZERO_keys-22C55E)
+![Groq](https://img.shields.io/badge/Groq-Llama_3.3-F55036)
+![Gemini](https://img.shields.io/badge/Gemini-2.5_Flash_Vision-4285F4?logo=googlegemini&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-Postgres-3FCF8E?logo=supabase&logoColor=white)
+![Firecrawl](https://img.shields.io/badge/Firecrawl-crawl_+_screenshot-FF7A00)
+
+Live demo: https://ghost-ai-omega.vercel.app
 
 ---
 
-## The Problem
+## What is this, in plain words
 
-Every SaaS landing page is a black box. You ship it, then wait weeks for real
-traffic, heatmaps, and churn data to tell you what's broken — by which point you've
-already burned the ad spend and lost the customers. Conversion blockers, unanswered
-sales objections, support gaps, and silent revenue leaks only reveal themselves
-**after** they've cost you money.
+Ghost Customer AI is a tool that **creates hundreds of pretend customers** using AI and sends them to look at a website. Each pretend customer ("ghost") behaves like a real type of buyer (a startup founder, a CTO, a student, an enterprise buyer, and so on). They read the homepage, the pricing, the features, and try to "buy".
 
-## The Solution
+Then the tool tells the business owner, in plain numbers and words:
 
-**Ghost Customer AI** spins up _hundreds_ of AI-generated virtual customers — "ghosts" —
-that browse your website like real prospects would. Each ghost has a distinct persona
-(a budget-conscious Student, a security-obsessed Enterprise Buyer, a time-poor Agency
-Owner…), walks your funnel from **Landing → Pricing → Features → Onboarding → Support**,
-and reports exactly where it got confused, where it hesitated, what objection killed
-the deal, and whether it would convert, churn, or bounce.
+- How many of these customers would buy, hesitate, or leave.
+- What confused them.
+- What questions they had that the website never answered.
+- Where the business is quietly losing sales ("revenue leaks").
+- Which customer groups are most likely to cancel later ("churn").
 
-You watch it happen **live** in a "war room", then get a board-ready executive report
-quantifying conversion risk, churn risk, revenue leakage, and the projected uplift if
-you fix each issue — all **before a single real customer hits the page.**
+The whole point: **find the problems on your website before real customers find them and walk away.**
 
-> ### This is NOT a chatbot.
-> A chatbot _talks to_ your customer. Ghost Customer AI **becomes** your customer.
-> It doesn't answer questions about your product — it experiences your product the way
-> a skeptical buyer would, and tells you why they'd walk away.
+It is **not a chatbot**. A chatbot answers questions after a customer asks. This tool *becomes* the customer and finds the problems first.
 
 ---
 
-## The 10 Major Features
+## The problem it solves
 
-| # | Feature | What it does |
-|---|---------|--------------|
-| 1 | **Ghost Customer Swarm** | Spins up 12–500 AI personas that each simulate a full buying journey across your site. |
-| 2 | **Live War Room** (`/simulation/[runId]`) | Real-time NDJSON stream of agent "thoughts", persona cards, verdicts, and animated metrics as the swarm runs. |
-| 3 | **Website Intelligence** | Crawls & analyzes your site — value props, CTAs, pricing tiers, FAQs, trust signals, and a 0–100 content clarity score. |
-| 4 | **Conversion Risk Engine** | Per-persona purchase probability, confusion, trust, and a `Convert / Maybe / Churn Risk / Bounce` verdict. |
-| 5 | **Sales Objection Mining** | Surfaces the exact questions buyers ask that your site never answers, scored by impact and affected roles. |
-| 6 | **Support Gap Detection** | Flags scenarios where FAQ/doc coverage is too thin, raising support dependency and churn. |
-| 7 | **Revenue Leak Quantification** | Names each leak, its cause, % of customers affected, estimated conversion loss, revenue impact, and the fix. |
-| 8 | **Churn Risk Segmentation** | Identifies which customer segments will churn and why (Pricing / Onboarding / Missing Features / Poor Support / Complexity). |
-| 9 | **Pricing Time Machine** (`/pricing-lab`) | Constant-elasticity demand model that finds your revenue-maximizing price and predicts segment reactions. |
-| 10 | **Competitor Battle Arena** (`/arena`) | Head-to-head scoring of your site vs. a competitor across dimensions, with per-persona preferences. |
+When you launch a website or a new pricing page, you usually only learn what is wrong **after** it has already cost you money: bad reviews, support tickets, refunds, people leaving. By then the damage is done.
 
-Plus an **Executive Report Generator** (`/report/[runId]`) that turns it all into a
-crisp narrative with prioritized, effort-vs-impact recommendations.
+Ghost Customer AI lets you test the experience **before launch**, with a simulated crowd of customers, so you can fix the issues first.
 
 ---
 
-## The 8-Agent Pipeline
+## How it works (step by step)
 
-The canonical multi-agent graph — implemented identically in TypeScript
-(`src/lib/agents/orchestrator.ts`) and Python LangGraph (`agents-py/graph.py`):
+1. You enter a website URL (for example, your own site).
+2. The tool **reads and understands** the site (it crawls the page text and, for the UI Roast, takes a screenshot).
+3. It **creates customer personas** across 10 common buyer types.
+4. It runs the **customer swarm**: every persona walks the funnel (Landing, Pricing, Features, Onboarding, Support) and gets scored.
+5. **Sales and Support agents** stress-test the site (find unanswered buying questions and weak support content).
+6. It **detects revenue leaks and churn risks** and adds up the impact.
+7. It shows everything **live** in a "war room", then produces an **executive report** with prioritized fixes.
+
+You watch it happen in real time, then read a clear summary you could hand to a manager.
+
+---
+
+## Main features
+
+- **Customer Swarm** - spins up 12 to 500 AI personas, each simulating a full buying journey.
+- **Live War Room** - a real-time view of the swarm: animated customer nodes, live agent reasoning, growing metrics, and problems appearing as they are found.
+- **Website Analysis** - reads the site and extracts the value proposition, calls to action, pricing tiers, FAQs, trust signals, and a 0 to 100 clarity score.
+- **Conversion + Confusion + Churn scoring** - per persona: purchase intent, confusion, trust, and a verdict (Convert, Maybe, Churn Risk, Bounce).
+- **Sales Objection Mining** - the exact buyer questions the site never answers.
+- **Support Stress Test** - where FAQ and docs are too thin.
+- **Revenue Leak Detector** - names each leak, how many customers it affects, and the estimated conversion loss, with a suggested fix.
+- **Churn Prediction** - which customer groups are most likely to leave, and why.
+- **Visual UI Roast** (`/roast`) - takes a real screenshot of the page and asks an AI vision model to act like a first-time customer: where the eye lands first, what is confusing, with boxes drawn directly on the screenshot.
+- **Auto-Fix** - for each revenue leak, the AI writes ready-to-paste improved copy/markup that addresses the problem.
+- **Competitor Battle Arena** (`/arena`) - crawls and analyzes both your site and a competitor for real, then shows which customer segments prefer which site, and why.
+- **Pricing Time Machine** (`/pricing-lab`) - simulate a price change and see the predicted effect on conversion and revenue.
+- **Executive Report** (`/report/[runId]`) - a clean narrative with prioritized recommendations, exportable to PDF or Markdown.
+
+---
+
+## How the AI is set up (and why)
+
+The app uses the right tool for each job, and always has a safe backup so it never breaks:
+
+| Job | What does it | Why |
+|-----|--------------|-----|
+| Read + analyze the site text | **Groq** (`llama-3.3-70b-versatile`) | Fast and has a generous free quota, so heavy text work does not hit limits. |
+| Write the executive report + Auto-Fix copy | **Groq** (falls back to Gemini) | Same reason. |
+| Look at the screenshot (UI Roast) | **Gemini 2.5 Flash** (vision) | Vision/multimodal understanding of the actual page image. |
+| Crawl the page + take screenshots | **Firecrawl** | Clean content extraction and full-page screenshots. |
+| If a model is unavailable | **Built-in deterministic engine** | Guarantees a complete, reproducible result so a live demo never fails. |
+
+**Honesty built in:** every result is labeled with where it came from. `analysis.source` is `firecrawl` or `fetch` when the AI analyzed a real crawl, and `mock` only when every model was unavailable and it fell back to the built-in engine. The header badge shows "Gemini live" (real AI) or "Demo engine" (mock).
+
+**Important honest note:** the AI reads the site and writes the report. The hundreds of per-persona scores are produced by a fast, rule-based engine that uses the real analysis as input. This is a deliberate choice: it keeps results fast, cheap, and reproducible instead of making hundreds of separate AI calls.
+
+---
+
+## The 8-agent pipeline
 
 ```
-  Website Analyzer ──▶ Persona Generator ──▶ Customer Simulation Swarm
-                                                   ├──▶ Sales Agent ──┐
-                                                   └──▶ Support Agent ┘
-                                                        │
-                                                Revenue Leak Agent ──▶ Insight Agent ──▶ Report Generator
+Website Analyzer  ->  Persona Generator  ->  Customer Simulation Swarm
+        -> Sales Agent  +  Support Agent  (run together)
+        -> Revenue Leak Agent  ->  Insight Agent  ->  Report Generator
 ```
 
-| Agent | Role |
-|-------|------|
-| **Website Analyzer** | Crawls the site (Firecrawl → fetch → mock) and extracts structured intelligence. |
-| **Persona Generator** | Spawns the ghost customers across 10 canonical roles. |
-| **Customer Simulation Swarm** | Each ghost browses the funnel; gap-penalty scoring produces verdicts. |
-| **Sales Agent** | Catalogues purchase-blocking objections (runs in parallel with Support). |
-| **Support Agent** | Measures support dependency and FAQ/doc coverage gaps (parallel branch). |
-| **Revenue Leak Agent** | Fan-in node that joins Sales + Support and quantifies revenue leakage. |
-| **Insight Agent** | Aggregates everything into the `Insights` object (+ optional competitor analysis). |
-| **Report Generator** | Writes the board-ready `ExecutiveReport` (Gemini narrative, mock fallback). |
+- **Website Analyzer** - crawls the site and extracts structured information.
+- **Persona Generator** - creates the ghost customers across 10 buyer types.
+- **Customer Simulation Swarm** - each ghost walks the funnel and gets scored.
+- **Sales Agent** - finds unanswered buying questions.
+- **Support Agent** - finds support and documentation gaps.
+- **Revenue Leak Agent** - turns the findings into quantified revenue leaks.
+- **Insight Agent** - combines everything into one risk model.
+- **Report Generator** - writes the final executive report.
 
-> **Why this split?** Site understanding and report narrative go through Gemini (where
-> language reasoning adds the most value). Per-persona scoring stays in a fast,
-> grounded, deterministic engine — so a 500-ghost swarm never fans out into 500 fragile
-> LLM calls. Every number on every screen traces back to the same detected gaps.
+A parallel Python version of this graph (FastAPI + LangGraph) lives in `agents-py/` for reference and self-hosting. The deployed app uses the built-in TypeScript engine.
 
 ---
 
-## Architecture Overview
+## Tech stack
 
-Ghost Customer AI is a **full-stack TypeScript app** with an **optional** Python engine
-and **optional** Supabase persistence — all three layers degrade gracefully.
-
-```
-┌──────────────────────────────────────────────────────────────────────────┐
-│  Next.js 15 (App Router) — Vercel                                          │
-│  ┌──────────────┐   ┌──────────────────────────────────────────────────┐  │
-│  │  React 19 UI │   │  API Routes (/api/*)                              │  │
-│  │  Tailwind    │◀─▶│  POST /api/run  →  NDJSON stream of RunEvents     │  │
-│  │  Framer      │   │  ┌────────────────────────────────────────────┐  │  │
-│  │  Recharts    │   │  │  TS Multi-Agent Engine                      │  │  │
-│  │  War Room    │   │  │  src/lib/agents/orchestrator.ts (8 agents)  │  │  │
-│  └──────────────┘   │  │   ├─ crawl/crawler.ts  (Firecrawl→fetch→∅)  │  │  │
-│                     │  │   ├─ ai/gemini.ts      (Gemini 2.5 Flash)   │  │  │
-│                     │  │   └─ data/mock-engine.ts (deterministic)    │  │  │
-│                     │  └────────────────────────────────────────────┘  │  │
-│                     │             │ (optional /py/* rewrite)             │  │
-│                     └─────────────┼────────────────────────────────────┘  │
-└─────────────────────────────────────┼──────────────────────────────────────┘
-                                       ▼ (only if PYTHON_ENGINE_URL set)
-                  ┌────────────────────────────────────────┐
-                  │  Python Engine — Render / Railway       │
-                  │  FastAPI + LangGraph (agents-py/)        │
-                  │  graph.py mirrors orchestrator.ts        │
-                  └────────────────────────────────────────┘
-                                       │ (optional)
-                  ┌────────────────────────────────────────┐
-                  │  Supabase: Postgres + pgvector + Auth   │
-                  └────────────────────────────────────────┘
-```
-
-- **Primary path (default):** the Next.js TS engine runs the whole pipeline in-process
-  and streams results. **No external services required.**
-- **Optional Python path:** set `PYTHON_ENGINE_URL` to route through the real LangGraph
-  `StateGraph` engine. The contract (camelCase JSON, NDJSON `RunEvent`s) is identical.
-- **Optional persistence:** Supabase stores runs/insights/reports; without it, runs live
-  in an in-process store + client-side `localStorage` cache.
-
-See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full agent graph, data flow, and
-streaming protocol.
+- **Frontend:** Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS, Framer Motion, Recharts, OGL (background visuals).
+- **AI:** Groq (text) + Google Gemini 2.5 Flash (vision).
+- **Crawling:** Firecrawl (crawl + screenshots), with a plain `fetch` fallback.
+- **Database:** Supabase (Postgres) for saving runs.
+- **Deploy:** Vercel (the Next.js app is both the website and the API/backend).
 
 ---
 
-## Quickstart — Zero Keys, Full Demo
+## Pages
 
-**You do not need a single API key.** With no `.env`, the app runs on a deterministic,
-seeded mock engine and the entire end-to-end demo works offline. The same URL always
-produces the same result, so demos are reproducible.
+| Route | What it shows |
+|-------|---------------|
+| `/` | Landing page. |
+| `/dashboard` | Start a run: enter a URL, pick how many customers, optional extras. |
+| `/simulation/[runId]` | The live War Room while the swarm runs. |
+| `/insights/[runId]` | Full results: verdict breakdown, objections, leaks, churn, heatmap. |
+| `/roast` | Visual UI Roast: screenshot with confusion boxes drawn on it. |
+| `/arena` | Competitor Battle Arena: your site vs a rival. |
+| `/pricing-lab` | Pricing Time Machine: simulate a price change. |
+| `/report/[runId]` | Executive report with prioritized fixes. |
+
+## API routes
+
+| Method | Route | Purpose |
+|--------|-------|---------|
+| POST | `/api/run` | Runs the full pipeline and streams live updates. |
+| POST | `/api/project` | Validates input and creates a run id. |
+| POST | `/api/crawl` | Crawls + analyzes one URL. |
+| POST | `/api/generate-personas` | Returns a list of personas. |
+| POST | `/api/competitor-analysis` | Crawls + analyzes two sites and compares them. |
+| POST | `/api/pricing-simulation` | Simulates a price change. |
+| POST | `/api/vision-roast` | Screenshot + Gemini Vision roast. |
+| POST | `/api/autofix` | Generates improved copy/markup for a problem. |
+| GET | `/api/insights?runId=` | Reads a saved run's insights. |
+| GET | `/api/report?runId=` | Reads a saved run's report. |
+| GET | `/api/health` | Status, including which AI providers are configured. |
+
+---
+
+## Quick start (runs with zero API keys)
+
+You do not need any API keys to try it. With no keys, the app uses the built-in deterministic engine and the full demo still works end to end.
 
 ```bash
 npm install
@@ -151,105 +163,94 @@ npm run dev
 # open http://localhost:3000
 ```
 
-That's it. Go to **`/dashboard`**, paste any URL (e.g. `https://linear.app`), pick a
-persona count, and hit run — you'll watch the ghost swarm light up the War Room and
-land on a full executive report.
+Go to `/dashboard`, paste any URL (for example `https://linear.app`), pick a customer count, and click run. You will see the live War Room and then a full report.
 
-> **Note:** Edit `next.config.mjs`? No need. Everything optional is read from env vars,
-> all of which are blank by default.
+Add the API keys below to switch from the demo engine to real AI analysis.
 
 ---
 
-## Environment Variables (all optional)
+## Environment variables (all optional)
 
-Copy `.env.example` → `.env.local`. Leave everything blank to run on the mock engine.
+Copy `.env.example` to `.env.local` and fill in what you have. Leave any blank to use the fallback.
 
-| Variable | Purpose | Fallback if unset |
-|----------|---------|-------------------|
-| `GEMINI_API_KEY` | Enables real Gemini analysis of crawled content + report narrative. | Deterministic mock engine |
-| `GEMINI_MODEL` | Gemini model id. | `gemini-2.5-flash` |
-| `FIRECRAWL_API_KEY` | Enables Firecrawl clean-markdown crawling. | Plain `fetch` → HTML strip → mock |
-| `PYTHON_ENGINE_URL` | Routes `/py/*` to the FastAPI + LangGraph engine (e.g. `http://localhost:8000`). | Built-in TS engine |
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL (persistence + auth). | In-memory + `localStorage` |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/public key. | — |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-side writes). | — |
-
----
-
-## Page Routes
-
-| Route | Description |
-|-------|-------------|
-| `/` | Landing page — the pitch. |
-| `/dashboard` | Create a run: enter URL, persona count, optional competitor + price. |
-| `/simulation/[runId]` | **Live "war room"** — watch the swarm stream in real time. |
-| `/insights/[runId]` | Aggregated insights: verdict breakdown, objections, leaks, churn, heatmap. |
-| `/arena` | Competitor Battle Arena — you vs. a rival, scored. |
-| `/pricing-lab` | Pricing Time Machine — find the revenue-maximizing price. |
-| `/report/[runId]` | Board-ready executive report with prioritized recommendations. |
-
-## API Routes (Next.js)
-
-| Method | Route | Body / Query | Returns |
-|--------|-------|--------------|---------|
-| `POST` | `/api/project` | `{ url, … }` | Creates/initializes a project. |
-| `POST` | `/api/run` | `{ url, personaCount, competitorUrl?, currentPrice?, fast? }` | **NDJSON stream** of `RunEvent`s. |
-| `GET` | `/api/run?runId=` | — | Completed `RunState` (single-instance fallback). |
-| `POST` | `/api/crawl` | `{ url }` | `{ url, source, text, analysis }` |
-| `POST` | `/api/generate-personas` | `{ url, personaCount }` | `{ personas: Persona[] }` |
-| `POST` | `/api/competitor-analysis` | `{ url, competitorUrl }` | `CompetitorAnalysis` |
-| `POST` | `/api/pricing-simulation` | `{ currentPrice, proposedPrice }` | `PricingSimulation` |
-| `GET` | `/api/insights?runId=` | — | `Insights` |
-| `GET` | `/api/report?runId=` | — | `ExecutiveReport` |
-| `GET` | `/api/health` | — | `{ ok, engine, gemini, firecrawl, pythonEngine, time }` |
-
-The `/api/run` stream sets `Content-Type: application/x-ndjson`, `Cache-Control:
-no-transform`, and `X-Accel-Buffering: no` so proxies don't buffer the live stream.
+| Variable | What it does | If blank |
+|----------|--------------|----------|
+| `GROQ_API_KEY` | Real AI for site analysis, report, and Auto-Fix. Get a free key at https://console.groq.com/keys | Falls back to Gemini, then the demo engine. |
+| `GROQ_MODEL` | Groq model name. | `llama-3.3-70b-versatile` |
+| `GEMINI_API_KEY` | Used for the Visual UI Roast (vision), and as the text fallback. Get a free key at https://aistudio.google.com/apikey | UI Roast is unavailable; text uses Groq or demo engine. |
+| `GEMINI_MODEL` | Gemini model name. | `gemini-2.5-flash` |
+| `FIRECRAWL_API_KEY` | Real crawling and screenshots. Get a free key at https://www.firecrawl.dev | Falls back to plain fetch, then demo content. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL (to save runs). | Runs are kept in memory + browser cache only. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-side key to read/write saved runs. | Same as above. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public Supabase key (for future client features). | Not required today. |
+| `ALLOWED_ORIGINS` | Comma-separated list of sites allowed to call the API from another domain. | Only same-origin calls are allowed. |
+| `PYTHON_ENGINE_URL` | Optional URL of the Python engine. | The built-in engine is used. |
 
 ---
 
-## Enabling the Optional Layers
+## Saving runs with Supabase (optional)
 
-### Enable Gemini (real AI analysis + report)
-1. Grab a free key at <https://aistudio.google.com/apikey>.
-2. Set `GEMINI_API_KEY=...` in `.env.local` (optionally `GEMINI_MODEL=gemini-2.5-flash`).
-3. Restart `npm run dev`. `GET /api/health` now reports `"engine": "gemini"`.
+By default, completed runs are kept in server memory plus your browser cache. To make runs durable and shareable across devices, connect Supabase:
 
-If a Gemini call times out or returns malformed JSON, it transparently falls back to the
-mock engine — the UI never breaks.
+1. Create a project at https://supabase.com.
+2. Open the SQL Editor and run the script in [`supabase/runs.sql`](supabase/runs.sql). It creates one table:
+   ```sql
+   create table if not exists public.runs (
+     id text primary key,
+     data jsonb not null,
+     created_at timestamptz not null default now()
+   );
+   alter table public.runs enable row level security;
+   ```
+3. Set `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in your environment.
 
-### Enable Firecrawl (better crawling)
-1. Get a free key at <https://www.firecrawl.dev>.
-2. Set `FIRECRAWL_API_KEY=...`. Crawls now return clean markdown; `analysis.source`
-   becomes `"firecrawl"`. Without it, the app uses a dependency-free `fetch` + HTML strip,
-   then falls to `"mock"`.
-
-### Enable the Python LangGraph engine
-1. `cd agents-py && pip install -r requirements.txt && uvicorn main:app --port 8000`
-2. Set `PYTHON_ENGINE_URL=http://localhost:8000` in `.env.local`.
-3. Restart `next dev`. `next.config.mjs` now proxies `/py/*` → the engine. The TS and
-   Python engines speak the identical `RunEvent` NDJSON contract.
-
-### Enable Supabase (persistence + auth)
-1. Create a project at <https://supabase.com>, enable the `pgvector` extension.
-2. Load the schema (see [`DEPLOYMENT.md`](./DEPLOYMENT.md)).
-3. Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and
-   `SUPABASE_SERVICE_ROLE_KEY`. The in-memory run store swaps for the
-   `projects` / `simulations` / `insights` tables.
+After this, opening a `/insights/[runId]` or `/report/[runId]` link works on any device, not just the one that ran it.
 
 ---
 
-## Deploy Notes
+## Deploy to Vercel
 
-- **Web (Vercel):** import the repo, framework auto-detected as Next.js. Add any optional
-  env vars in **Project → Settings → Environment Variables**. With none, it still works.
-- **Python engine (Render / Railway):** deploy `agents-py/` via its `Dockerfile`
-  (`python:3.12-slim`, honors `$PORT`). Health check `/health`. Then set
-  `PYTHON_ENGINE_URL=https://<service>.onrender.com` in Vercel.
+The Next.js app is both the frontend and the backend (its API routes run as serverless functions), so it deploys as one project.
 
-Full step-by-step (Docker Compose, Supabase schema, per-var reference) lives in
-[`DEPLOYMENT.md`](./DEPLOYMENT.md).
+1. Import the repository at https://vercel.com.
+2. Vercel auto-detects Next.js. No special settings needed.
+3. In Project Settings, Environment Variables, add the keys you want (`GROQ_API_KEY`, `GEMINI_API_KEY`, `FIRECRAWL_API_KEY`, and the Supabase keys). With none, the site still works on the demo engine.
+4. Deploy. Open `/api/health` to confirm which providers are active.
 
 ---
 
-<sub>Built for the zero-key era: install, run, demo. No accounts, no secrets, no excuses.</sub>
+## How to tell real data from demo data
+
+- The navbar badge: "Gemini live" means a real AI is configured; "Demo engine" means none is.
+- After a run, the analysis `source` is `firecrawl` or `fetch` for real data, and `mock` for the demo fallback.
+- If you connected Supabase, you can see every run in the `runs` table, including its `source`.
+
+A common cause of demo (mock) results is a free-tier AI quota running out for the day. Adding a Groq key (or enabling billing on Gemini) fixes it.
+
+---
+
+## Project structure
+
+```
+src/
+  app/                 Next.js pages and API routes
+  components/          UI: war-room, insights, roast, arena, pricing, landing, ui
+  lib/
+    agents/            the 8-stage orchestrator (streams live events)
+    ai/                groq.ts (text), gemini.ts (vision + fallback)
+    crawl/             crawler + screenshots
+    data/              the deterministic engine + persona seeds
+    store.ts           run storage (Supabase + memory fallback)
+    supabase.ts        Supabase client
+agents-py/             optional Python FastAPI + LangGraph engine
+supabase/              database schema and the runs table
+presentation/          pitch deck, report, and audit PDFs
+```
+
+---
+
+## Notes and limitations (honest)
+
+- Per-persona scores come from a fast rule-based engine using the real analysis, not from a separate AI call per customer. This keeps it fast and reproducible.
+- Free AI tiers have daily limits. If you hit them, the app falls back to the demo engine and clearly labels it. Use Groq (generous free tier) for text and add billing on Gemini if you need heavy vision use.
+- The Python engine in `agents-py/` is optional and not used by the deployed site.
