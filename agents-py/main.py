@@ -45,13 +45,19 @@ app = FastAPI(
     description="FastAPI + LangGraph engine that runs the 8-agent ghost-customer pipeline.",
 )
 
-# Permissive CORS so the Next.js app (any origin / the /py proxy) can call us.
+# CORS — restricted to an allow-list (no wildcard). Set ALLOWED_ORIGINS as a
+# comma-separated list (e.g. "https://your-app.vercel.app,http://localhost:3000").
+import os
+
+_origins = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "").split(",") if o.strip()]
+if not _origins:
+    _origins = ["http://localhost:3000"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_origins,
     allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 

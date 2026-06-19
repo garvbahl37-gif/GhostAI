@@ -61,7 +61,7 @@ export async function* runPipeline(
     simulations: [],
     engine: engineName(),
   };
-  saveRun(state);
+  await saveRun(state);
 
   try {
     // ---- 1. Website Analyzer ----------------------------------------------
@@ -173,14 +173,14 @@ export async function* runPipeline(
     yield { type: "report", data: report };
 
     state.phase = "done";
-    saveRun(state);
+    await saveRun(state);
     yield { type: "status", phase: "done", message: "Simulation complete.", progress: 100 };
     yield { type: "done", runId };
   } catch (err) {
     const message = (err as Error).message || "Unknown error";
     state.phase = "error";
     state.error = message;
-    saveRun(state);
+    await saveRun(state);
     yield { type: "error", message };
   }
 }

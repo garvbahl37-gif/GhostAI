@@ -156,7 +156,12 @@ export function InsightsView({ runId }: { runId: string }) {
           {ins.revenueLeaks.length ? (
             <div className="grid gap-4 md:grid-cols-2">
               {ins.revenueLeaks.map((l, i) => (
-                <RevenueLeakCard key={l.title} leak={l} i={i} />
+                <RevenueLeakCard
+                  key={l.title}
+                  leak={l}
+                  i={i}
+                  context={{ title: analysis?.title, category: analysis?.category, tone: analysis?.toneOfVoice }}
+                />
               ))}
             </div>
           ) : (

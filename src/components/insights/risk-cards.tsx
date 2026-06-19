@@ -1,10 +1,86 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingDown, UserMinus, HelpCircle, LifeBuoy, Wrench } from "lucide-react";
-import type { ChurnRisk, RevenueLeak, SalesObjection, SupportGap } from "@/lib/types";
+import { TrendingDown, UserMinus, HelpCircle, LifeBuoy, Wrench, Wand2, Loader2 } from "lucide-react";
+import type { ChurnRisk, RevenueLeak, SalesObjection, SupportGap, AutoFix } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { severityColor } from "@/lib/utils";
+
+export interface FixContext {
+  title?: string;
+  category?: string;
+  tone?: string;
+}
+
+/** Generative "Auto-Fix": calls Gemini to produce paste-ready copy/markup that
+ *  overcomes a detected leak. Real generation, honest error on failure. */
+function AutoFixPanel({ leak, context }: { leak: RevenueLeak; context?: FixContext }) {
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [err, setErr] = useState("");
+  const [fix, setFix] = useState<AutoFix | null>(null);
+
+  async function run() {
+    if (fix) {
+      setOpen((o) => !o);
+      return;
+    }
+    setErr("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/autofix", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          problem: { title: leak.title, cause: leak.cause, fix: leak.fix },
+          context: context ?? {},
+        }),
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d?.error || "Auto-Fix failed");
+      setFix(d);
+      setOpen(true);
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="mt-3">
+      <button
+        onClick={run}
+        disabled={loading}
+        className="inline-flex items-center gap-1.5 rounded-lg border border-white/12 bg-white/[0.05] px-3 py-1.5 text-xs font-semibold text-foreground/90 transition hover:bg-white/[0.1] disabled:opacity-50"
+      >
+        {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Wand2 className="h-3.5 w-3.5" />}
+        {loading ? "Generating fix…" : fix ? (open ? "Hide auto-fix" : "Show auto-fix") : "Auto-Fix with AI"}
+      </button>
+      {err && <p className="mt-1.5 text-xs text-ghost-rose">{err}</p>}
+      {fix && open && (
+        <div className="mt-3 space-y-3">
+          <p className="text-xs italic text-muted-foreground">{fix.rationale}</p>
+          {fix.variants.map((v, idx) => (
+            <div key={idx} className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-xs font-semibold">{v.heading}</p>
+                <Badge variant="muted">{v.kind}</Badge>
+              </div>
+              <p className="mt-1.5 text-sm text-foreground/90">{v.copy}</p>
+              {v.html && (
+                <pre className="mt-2 max-h-32 overflow-auto rounded-lg bg-black/40 p-2 text-[10px] leading-snug text-foreground/60">
+                  {v.html}
+                </pre>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function SeverityBadge({ s }: { s: string }) {
   const variant = s === "critical" ? "rose" : s === "high" ? "amber" : s === "medium" ? "cyan" : "emerald";
@@ -29,7 +105,7 @@ function Shell({ children, i }: { children: React.ReactNode; i: number }) {
   );
 }
 
-export function RevenueLeakCard({ leak, i }: { leak: RevenueLeak; i: number }) {
+export function RevenueLeakCard({ leak, i, context }: { leak: RevenueLeak; i: number; context?: FixContext }) {
   return (
     <Shell i={i}>
       <div className="flex items-start justify-between gap-3">
@@ -59,6 +135,7 @@ export function RevenueLeakCard({ leak, i }: { leak: RevenueLeak; i: number }) {
       <div className="mt-3 flex items-start gap-2 rounded-xl bg-ghost-emerald/10 p-2.5 text-xs text-ghost-emerald">
         <Wrench className="mt-0.5 h-3.5 w-3.5 shrink-0" /> {leak.fix}
       </div>
+      <AutoFixPanel leak={leak} context={context} />
     </Shell>
   );
 }

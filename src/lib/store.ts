@@ -1,13 +1,16 @@
 import type { RunState } from "./types";
+import { supabase, RUNS_TABLE } from "./supabase";
 
 // ---------------------------------------------------------------------------
-// In-memory run store.
+// Run store: durable (Supabase) with an in-memory write-through cache.
 //
-// Survives across API requests within a single server process — enough for the
-// live demo and for the dashboard / insights / report pages to read a run's
-// results after the simulation stream completes. Swap this for Supabase by
-// implementing the same get/set/list interface against the `projects` /
-// `simulations` / `insights` tables (see supabase/schema.sql).
+// - saveRun  -> writes memory immediately + upserts to Supabase (best-effort).
+// - getRun   -> memory first; on a different serverless instance (memory miss)
+//               it reads from Supabase, so completed runs are durable and
+//               shareable across devices/instances.
+// If Supabase is not configured / a table is missing / it errors, everything
+// falls back to memory so the app never breaks. Persistence requires the
+// `runs` table (see supabase/runs.sql).
 // ---------------------------------------------------------------------------
 
 declare global {
@@ -15,27 +18,68 @@ declare global {
   var __ghostRunStore: Map<string, RunState> | undefined;
 }
 
-const store: Map<string, RunState> =
+const mem: Map<string, RunState> =
   globalThis.__ghostRunStore ?? (globalThis.__ghostRunStore = new Map());
 
-const MAX_RUNS = 50; // keep memory bounded on long-lived dev servers
+const MAX_RUNS = 30;
 
-export function saveRun(run: RunState): void {
-  store.set(run.runId, run);
-  if (store.size > MAX_RUNS) {
-    const oldest = [...store.values()].sort((a, b) => a.createdAt - b.createdAt)[0];
-    if (oldest) store.delete(oldest.runId);
+function evict() {
+  if (mem.size > MAX_RUNS) {
+    const oldest = [...mem.values()].sort((a, b) => a.createdAt - b.createdAt)[0];
+    if (oldest) mem.delete(oldest.runId);
   }
 }
 
-export function getRun(runId: string): RunState | undefined {
-  return store.get(runId);
+async function withTimeout<T>(p: Promise<T>, ms: number): Promise<T | null> {
+  try {
+    return await Promise.race([
+      p,
+      new Promise<T>((_, rej) => setTimeout(() => rej(new Error("supabase timeout")), ms)),
+    ]);
+  } catch {
+    return null;
+  }
+}
+
+export async function saveRun(run: RunState): Promise<void> {
+  mem.set(run.runId, run);
+  evict();
+  if (!supabase) return;
+  await withTimeout(
+    (async () => {
+      const { error } = await supabase
+        .from(RUNS_TABLE)
+        .upsert({ id: run.runId, data: run, created_at: new Date(run.createdAt).toISOString() }, { onConflict: "id" });
+      if (error) console.warn("[supabase] saveRun:", error.message);
+    })(),
+    6000,
+  );
+}
+
+export async function getRun(runId: string): Promise<RunState | undefined> {
+  const local = mem.get(runId);
+  if (local) return local;
+  if (!supabase) return undefined;
+  const fromDb = await withTimeout(
+    (async () => {
+      const { data, error } = await supabase.from(RUNS_TABLE).select("data").eq("id", runId).maybeSingle();
+      if (error) {
+        console.warn("[supabase] getRun:", error.message);
+        return null;
+      }
+      return (data?.data as RunState) ?? null;
+    })(),
+    6000,
+  );
+  if (fromDb) mem.set(runId, fromDb);
+  return fromDb ?? undefined;
 }
 
 export function listRuns(): RunState[] {
-  return [...store.values()].sort((a, b) => b.createdAt - a.createdAt);
+  return [...mem.values()].sort((a, b) => b.createdAt - a.createdAt);
 }
 
-export function deleteRun(runId: string): void {
-  store.delete(runId);
+export async function deleteRun(runId: string): Promise<void> {
+  mem.delete(runId);
+  if (supabase) await withTimeout(supabase.from(RUNS_TABLE).delete().eq("id", runId) as unknown as Promise<unknown>, 4000);
 }

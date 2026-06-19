@@ -4,11 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Ghost, LayoutDashboard, Swords, LineChart } from "lucide-react";
+import { Ghost, LayoutDashboard, Swords, LineChart, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/roast", label: "UI Roast", icon: Eye },
   { href: "/arena", label: "Battle Arena", icon: Swords },
   { href: "/pricing-lab", label: "Pricing Lab", icon: LineChart },
 ];

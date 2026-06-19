@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import type { RunConfig, WebsiteAnalysis, ExecutiveReport, Insights, CompetitorAnalysis } from "@/lib/types";
+import type { RunConfig, WebsiteAnalysis, ExecutiveReport, Insights, CompetitorAnalysis, RoastRegion, AutoFix } from "@/lib/types";
 import { mockAnalyze, buildReport } from "@/lib/data/mock-engine";
 import { sleep } from "@/lib/utils";
 
@@ -17,7 +17,9 @@ import { sleep } from "@/lib/utils";
 // overloaded (HTTP 503 "high demand"), we transparently retry on an alternate
 // so real AI analysis survives transient spikes instead of dropping to mock.
 const PRIMARY = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-const MODELS = [...new Set([PRIMARY, "gemini-2.0-flash", "gemini-1.5-flash"])];
+// flash-lite has a separate quota and stays available when flash is rate-limited;
+// 1.5-flash is 404 for current keys so it's intentionally NOT in the chain.
+const MODELS = [...new Set([PRIMARY, "gemini-2.5-flash-lite", "gemini-2.0-flash"])];
 const KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
 export function isGeminiEnabled(): boolean {
@@ -62,9 +64,11 @@ export async function generateJSON<T>(prompt: string, timeoutMs = 30000): Promis
         return JSON.parse(stripFences(res.response.text())) as T;
       } catch (err) {
         const msg = ((err as Error).message || "").slice(0, 140);
-        const retryable = /503|429|overload|high demand|timeout|unavailable|fetch failed|ECONN|ETIMEDOUT/i.test(msg);
         console.warn(`[gemini] ${modelName} attempt ${attempt + 1} failed: ${msg}`);
-        if (retryable && attempt === 0) {
+        // 429 (rate limit/quota) won't clear in ~1s -> jump to the next model now
+        if (/429|quota|rate limit|too many|resource exhausted/i.test(msg)) break;
+        const transient = /503|overload|high demand|timeout|unavailable|fetch failed|ECONN|ETIMEDOUT/i.test(msg);
+        if (transient && attempt === 0) {
           await sleep(900);
           continue; // retry same model once
         }
@@ -206,4 +210,115 @@ export async function aiThought(agent: string, context: string): Promise<string 
     8000,
   );
   return json?.thought ?? null;
+}
+
+// ---------------------------------------------------------------------------
+// Visual Roast — Gemini Vision over a real screenshot.
+// Returns null on any failure (caller surfaces an honest error; never mock).
+// ---------------------------------------------------------------------------
+export interface VisionRoastData {
+  roast: string;
+  clarityScore: number;
+  firstLook?: { x: number; y: number };
+  regions: RoastRegion[];
+}
+
+export async function aiVisionRoast(screenshotUrl: string): Promise<VisionRoastData | null> {
+  const c = getClient();
+  if (!c) return null;
+
+  // fetch the screenshot bytes -> base64
+  let b64 = "";
+  let mime = "image/png";
+  try {
+    const r = await withTimeout(fetch(screenshotUrl), 15000);
+    if (!r.ok) return null;
+    mime = r.headers.get("content-type") || "image/png";
+    const ab = await r.arrayBuffer();
+    b64 = Buffer.from(ab).toString("base64");
+  } catch {
+    return null;
+  }
+
+  const prompt = `You are a first-time, slightly impatient potential customer landing on this web page for the first time. Be brutally honest but specific.
+
+Return STRICT JSON only:
+{
+  "roast": string,            // <= 2 sentences, blunt first-impression of the page
+  "clarityScore": number,     // 0-100, how clearly the page communicates value + next action
+  "firstLook": { "x": number, "y": number },  // where your eye lands FIRST, normalized 0-1000
+  "regions": [                // 4 to 7 items: spots that cause confusion / friction / lost attention
+    {
+      "label": string,        // short name, e.g. "Buried CTA", "Wall of text", "Unclear pricing"
+      "why": string,          // one sentence: why it confuses or loses you
+      "severity": "high" | "medium" | "low",
+      "box": [ymin, xmin, ymax, xmax]   // bounding box, integers normalized to 0-1000 (Gemini convention)
+    }
+  ]
+}
+Focus on real, visible problems in THIS screenshot (hero, CTA, navigation, pricing, trust, readability). Coordinates must be within 0-1000.`;
+
+  for (const modelName of MODELS) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const model = c.getGenerativeModel({
+          model: modelName,
+          generationConfig: { responseMimeType: "application/json", temperature: 0.4 },
+        });
+        const res = await withTimeout(
+          model.generateContent([{ text: prompt }, { inlineData: { mimeType: mime, data: b64 } }]),
+          30000,
+        );
+        const parsed = JSON.parse(stripFences(res.response.text())) as VisionRoastData;
+        if (parsed && Array.isArray(parsed.regions)) return parsed;
+        return null;
+      } catch (err) {
+        const msg = ((err as Error).message || "").slice(0, 140);
+        console.warn(`[gemini-vision] ${modelName} attempt ${attempt + 1} failed: ${msg}`);
+        if (/429|quota|rate limit|too many|resource exhausted/i.test(msg)) break;
+        const transient = /503|overload|high demand|timeout|unavailable|fetch failed/i.test(msg);
+        if (transient && attempt === 0) {
+          await sleep(900);
+          continue;
+        }
+        break;
+      }
+    }
+  }
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// Auto-Fix — Gemini generates optimized copy/markup for a detected problem.
+// ---------------------------------------------------------------------------
+export async function aiAutoFix(
+  problem: { title: string; cause?: string; fix?: string },
+  context: { title?: string; category?: string; tone?: string; audience?: string },
+): Promise<AutoFix | null> {
+  if (!isGeminiEnabled()) return null;
+  const prompt = `You are a senior conversion copywriter + front-end engineer. A customer-simulation found this problem on the website "${context.title ?? "the site"}" (${context.category ?? "web product"}):
+
+PROBLEM: ${problem.title}
+${problem.cause ? `CAUSE: ${problem.cause}` : ""}
+${problem.fix ? `SUGGESTED DIRECTION: ${problem.fix}` : ""}
+BRAND TONE: ${context.tone ?? "clear, confident, friendly"}
+TARGET AUDIENCE: ${context.audience ?? "the site's prospective buyers"}
+
+Generate concrete, paste-ready fixes that directly overcome this problem. Return STRICT JSON:
+{
+  "problem": string,        // restate the problem in one line
+  "rationale": string,      // 1-2 sentences: why these fixes convert better
+  "variants": [             // 2 to 3 variants
+    {
+      "kind": string,       // e.g. "Hero headline", "Pricing blurb", "FAQ entry", "Trust strip"
+      "heading": string,    // short label for this variant
+      "copy": string,       // the actual ready-to-use copy
+      "html": string        // a small self-contained Tailwind HTML snippet implementing it (no <script>)
+    }
+  ]
+}
+Keep copy specific and benefit-led; no lorem ipsum; no scripts in html.`;
+  const json = await generateJSON<AutoFix>(prompt, 22000);
+  if (!json || !Array.isArray(json.variants) || !json.variants.length) return null;
+  return json;
 }

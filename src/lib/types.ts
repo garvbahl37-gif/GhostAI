@@ -282,3 +282,39 @@ export type RunEvent =
   | { type: "report"; data: ExecutiveReport }
   | { type: "done"; runId: string }
   | { type: "error"; message: string };
+
+// ---------------------------------------------------------------------------
+// Visual Roast (Gemini Vision over a real screenshot)
+// ---------------------------------------------------------------------------
+export interface RoastRegion {
+  label: string;
+  why: string;
+  severity: Severity;
+  // Gemini convention: [ymin, xmin, ymax, xmax] normalized 0-1000
+  box: [number, number, number, number];
+}
+
+export interface VisionRoast {
+  screenshotUrl: string;
+  roast: string;
+  clarityScore: number; // 0-100
+  firstLook?: { x: number; y: number }; // 0-1000 where the eye lands first
+  regions: RoastRegion[];
+  source: "gemini-vision";
+}
+
+// ---------------------------------------------------------------------------
+// Auto-Fix (Gemini generates optimized copy/markup for a detected problem)
+// ---------------------------------------------------------------------------
+export interface AutoFixVariant {
+  kind: string; // e.g. "Hero headline", "Pricing blurb", "FAQ", "Trust strip"
+  heading: string;
+  copy: string;
+  html?: string; // optional ready-to-paste Tailwind HTML snippet
+}
+
+export interface AutoFix {
+  problem: string;
+  rationale: string;
+  variants: AutoFixVariant[];
+}

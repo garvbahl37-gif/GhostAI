@@ -36,6 +36,24 @@ export async function crawlSite(url: string): Promise<CrawlResult> {
   return { text: null, source: "none" };
 }
 
+/** Capture a full-page screenshot via Firecrawl. Returns a hosted image URL,
+ *  or null if no key / capture failed (caller surfaces an honest error). */
+export async function screenshotSite(url: string): Promise<string | null> {
+  if (!FIRECRAWL_KEY) return null;
+  try {
+    const res = await fetch("https://api.firecrawl.dev/v1/scrape", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${FIRECRAWL_KEY}` },
+      body: JSON.stringify({ url, formats: ["screenshot@fullPage"] }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.data?.screenshot ?? data?.screenshot ?? null;
+  } catch {
+    return null;
+  }
+}
+
 async function firecrawl(url: string): Promise<string | null> {
   const res = await fetch("https://api.firecrawl.dev/v1/scrape", {
     method: "POST",
