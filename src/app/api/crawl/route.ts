@@ -14,6 +14,19 @@ export async function POST(req: NextRequest) {
   if (!url) return Response.json({ error: "url is required" }, { status: 400 });
 
   const crawl = await crawlSite(url);
+  // No real content could be read (site blocks automated access, JS-only shell,
+  // or transient outage). Fail honestly instead of silently returning mock data.
+  if (!crawl.text) {
+    return Response.json(
+      {
+        error:
+          "Couldn't read that site right now — it may be blocking automated access or temporarily unavailable. Try again, or use a different URL.",
+        source: "none",
+      },
+      { status: 502 },
+    );
+  }
+
   const analysis = await aiAnalyze({ url, personaCount: 0 }, crawl.text, crawl.source);
   return Response.json(analysis);
 }

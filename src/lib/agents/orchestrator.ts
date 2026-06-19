@@ -73,6 +73,16 @@ export async function* runPipeline(
     // reflect what actually happened: real AI analysis vs mock fallback
     state.engine = analysis.source === "mock" ? "mock" : "gemini";
     yield { type: "analysis", data: analysis };
+    // Be honest in the war room when we couldn't read the live site: keep the
+    // swarm running on an estimated baseline rather than failing the demo, but
+    // never present it as a real crawl.
+    if (analysis.source === "mock") {
+      yield {
+        type: "thought",
+        agent: "Website Analyzer",
+        text: "Live crawl unavailable for this URL right now — running on an estimated baseline so the swarm still completes. Re-run for real-site data.",
+      };
+    }
     for (const t of analyzerThoughts(analysis, signals)) {
       yield { type: "thought", ...t };
       await pace(200);

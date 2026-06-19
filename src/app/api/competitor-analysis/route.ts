@@ -21,6 +21,24 @@ export async function POST(req: NextRequest) {
 
   // crawl both, then analyze both — parallel to stay within the function budget
   const [youCrawl, compCrawl] = await Promise.all([crawlSite(url), crawlSite(competitorUrl)]);
+
+  // A head-to-head is only fair if BOTH sites were really crawled. If either
+  // side can't be read, fail honestly rather than pitting a real site against a
+  // fabricated mock competitor (which would silently distort the result).
+  const unreadable = [
+    !youCrawl.text ? url : null,
+    !compCrawl.text ? competitorUrl : null,
+  ].filter(Boolean);
+  if (unreadable.length) {
+    return Response.json(
+      {
+        error: `Couldn't read ${unreadable.join(" and ")} right now — the site may block automated access or be temporarily unavailable. Try again or use a different URL so both sides are compared on real data.`,
+        source: "none",
+      },
+      { status: 502 },
+    );
+  }
+
   const [youAnalysis, compAnalysis] = await Promise.all([
     aiAnalyze({ url, personaCount: 0 }, youCrawl.text, youCrawl.source),
     aiAnalyze({ url: competitorUrl, personaCount: 0 }, compCrawl.text, compCrawl.source),

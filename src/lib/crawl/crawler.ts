@@ -2,10 +2,22 @@
 // Website content acquisition with three tiers of graceful degradation:
 //   1. Firecrawl (FIRECRAWL_API_KEY) — clean markdown extraction
 //   2. Plain server-side fetch + HTML→text strip
-//   3. null → the analyzer uses the deterministic mock engine
+//   3. null → callers decide (analysis endpoints fail honestly; a full swarm
+//      run keeps going on the clearly-labelled mock engine)
+//
+// Each tier retries once on a transient miss, and the plain-fetch tier sends a
+// real browser User-Agent so sites that bot-block a crawler UA (Stripe, etc.)
+// still return content — this is what keeps a request from silently degrading
+// to mock data when the live crawl could actually have succeeded.
 // ---------------------------------------------------------------------------
 
+import { sleep } from "@/lib/utils";
+
 const FIRECRAWL_KEY = process.env.FIRECRAWL_API_KEY;
+
+// A real-content crawl must clear this; below it the page is effectively empty
+// (bot wall, JS-only shell) and we treat the tier as a miss, not a success.
+const MIN_CONTENT_CHARS = 60;
 
 async function withTimeout<T>(p: Promise<T>, ms: number): Promise<T | null> {
   try {
@@ -24,15 +36,21 @@ export interface CrawlResult {
 }
 
 export async function crawlSite(url: string): Promise<CrawlResult> {
-  // Tier 1: Firecrawl
+  // Tier 1: Firecrawl (retry once — transient 5xx / timeouts are common)
   if (FIRECRAWL_KEY) {
-    const fc = await withTimeout(firecrawl(url), 25000);
-    if (fc) return { text: fc, source: "firecrawl" };
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const fc = await withTimeout(firecrawl(url), 28000);
+      if (fc && fc.trim().length >= MIN_CONTENT_CHARS) return { text: fc, source: "firecrawl" };
+      if (attempt === 0) await sleep(700);
+    }
   }
-  // Tier 2: plain fetch
-  const html = await withTimeout(plainFetch(url), 12000);
-  if (html) return { text: html, source: "fetch" };
-  // Tier 3: nothing — mock engine takes over
+  // Tier 2: plain fetch with a real browser UA (retry once)
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const html = await withTimeout(plainFetch(url), 14000);
+    if (html && html.trim().length >= MIN_CONTENT_CHARS) return { text: html, source: "fetch" };
+    if (attempt === 0) await sleep(500);
+  }
+  // Tier 3: nothing — the caller decides (honest error vs. labelled mock)
   return { text: null, source: "none" };
 }
 
@@ -69,11 +87,17 @@ async function firecrawl(url: string): Promise<string | null> {
 }
 
 async function plainFetch(url: string): Promise<string | null> {
+  // A real desktop-Chrome UA + full header set — a crawler-looking UA gets a
+  // 403 / bot wall from many marketing sites (Stripe, etc.), which used to push
+  // the request onto the mock engine even though the page is publicly readable.
   const res = await fetch(url, {
     headers: {
       "User-Agent":
-        "Mozilla/5.0 (compatible; GhostCustomerAI/1.0; +https://ghostcustomer.ai/bot)",
-      Accept: "text/html,application/xhtml+xml",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+      Accept:
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+      "Accept-Language": "en-US,en;q=0.9",
+      "Upgrade-Insecure-Requests": "1",
     },
     redirect: "follow",
   });
