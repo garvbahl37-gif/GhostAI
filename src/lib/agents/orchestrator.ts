@@ -14,7 +14,7 @@ import {
   buildInsights,
   buildReport,
   deriveSignals,
-  mockCompetitor,
+  buildCompetitor,
   mockPersonas,
   mockSimulate,
 } from "@/lib/data/mock-engine";
@@ -151,9 +151,15 @@ export async function* runPipeline(
     yield { type: "metric", key: "estUplift", value: insights.estConversionUplift };
     yield { type: "insights", data: insights };
 
-    // ---- optional: Competitor Battle --------------------------------------
+    // ---- optional: Competitor Battle (real crawl + AI analysis of the rival)
     if (config.competitorUrl) {
-      state.competitor = mockCompetitor(config.url, config.competitorUrl, analysis);
+      const compCrawl = await crawlSite(config.competitorUrl);
+      const compAnalysis = await aiAnalyze(
+        { url: config.competitorUrl, personaCount: 0 },
+        compCrawl.text,
+        compCrawl.source,
+      );
+      state.competitor = buildCompetitor(config.url, config.competitorUrl, analysis, compAnalysis);
     }
 
     // ---- 8. Report Generator ----------------------------------------------

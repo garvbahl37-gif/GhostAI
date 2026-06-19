@@ -691,12 +691,19 @@ export function buildInsights(
 // ---------------------------------------------------------------------------
 // Competitor analysis
 // ---------------------------------------------------------------------------
-export function mockCompetitor(
+/**
+ * Build a head-to-head from TWO real `WebsiteAnalysis` objects. Both sides
+ * should be produced by the same crawl + Gemini path (`aiAnalyze`) so the
+ * comparison reflects real sites, not a fabricated competitor. If a caller
+ * cannot crawl the competitor it may pass `mockAnalyze({url})` explicitly, but
+ * the default product path now analyzes both.
+ */
+export function buildCompetitor(
   youUrl: string,
   compUrl: string,
   youAnalysis: WebsiteAnalysis,
+  compAnalysis: WebsiteAnalysis,
 ): CompetitorAnalysis {
-  const compAnalysis = mockAnalyze({ url: compUrl, personaCount: 0 });
   const youScore = youAnalysis.contentScore;
   const compScore = compAnalysis.contentScore;
 
