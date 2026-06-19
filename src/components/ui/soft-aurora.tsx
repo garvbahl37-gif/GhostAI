@@ -183,6 +183,8 @@ export default function SoftAurora({
   useEffect(() => {
     if (!containerRef.current) return;
     const container = containerRef.current;
+    let dispose: (() => void) | undefined;
+    try {
     const renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -255,23 +257,28 @@ export default function SoftAurora({
 
     function update(time: number) {
       animationFrameId = requestAnimationFrame(update);
-      program.uniforms.uTime.value = time * 0.001;
+      try {
+        program.uniforms.uTime.value = time * 0.001;
 
-      if (enableMouseInteraction) {
-        currentMouse[0] += 0.05 * (targetMouse[0] - currentMouse[0]);
-        currentMouse[1] += 0.05 * (targetMouse[1] - currentMouse[1]);
-        program.uniforms.uMouse.value[0] = currentMouse[0];
-        program.uniforms.uMouse.value[1] = currentMouse[1];
-      } else {
-        program.uniforms.uMouse.value[0] = 0.5;
-        program.uniforms.uMouse.value[1] = 0.5;
+        if (enableMouseInteraction) {
+          currentMouse[0] += 0.05 * (targetMouse[0] - currentMouse[0]);
+          currentMouse[1] += 0.05 * (targetMouse[1] - currentMouse[1]);
+          program.uniforms.uMouse.value[0] = currentMouse[0];
+          program.uniforms.uMouse.value[1] = currentMouse[1];
+        } else {
+          program.uniforms.uMouse.value[0] = 0.5;
+          program.uniforms.uMouse.value[1] = 0.5;
+        }
+
+        renderer.render({ scene: mesh });
+      } catch (err) {
+        cancelAnimationFrame(animationFrameId);
+        console.warn("[SoftAurora] render error:", (err as Error)?.message);
       }
-
-      renderer.render({ scene: mesh });
     }
     animationFrameId = requestAnimationFrame(update);
 
-    return () => {
+    dispose = () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resize);
       ro.disconnect();
@@ -282,6 +289,10 @@ export default function SoftAurora({
       if (container.contains(gl.canvas)) container.removeChild(gl.canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
+    } catch (err) {
+      console.warn("[SoftAurora] WebGL init failed, skipping aurora:", (err as Error)?.message);
+    }
+    return () => dispose?.();
   }, [speed, scale, brightness, color1, color2, noiseFrequency, noiseAmplitude, bandHeight, bandSpread, octaveDecay, layerOffset, colorSpeed, enableMouseInteraction, mouseInfluence]);
 
   return <div ref={containerRef} className="w-full h-full" />;

@@ -7,11 +7,14 @@ import {
   FinalCTA,
 } from "@/components/landing/sections";
 import { LandingEffects } from "@/components/landing/landing-effects";
+import { SafeMount } from "@/components/shared/safe-mount";
 
 export default function LandingPage() {
   return (
     <>
-      <LandingEffects />
+      <SafeMount>
+        <LandingEffects />
+      </SafeMount>
       <Hero />
       <Differentiator />
       <Features />
