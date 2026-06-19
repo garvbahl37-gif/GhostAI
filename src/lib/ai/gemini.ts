@@ -2,6 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { RunConfig, WebsiteAnalysis, ExecutiveReport, Insights, CompetitorAnalysis, RoastRegion, AutoFix } from "@/lib/types";
 import { mockAnalyze, buildReport } from "@/lib/data/mock-engine";
 import { sleep } from "@/lib/utils";
+import { groqEnabled, groqJSON } from "@/lib/ai/groq";
 
 // ---------------------------------------------------------------------------
 // Gemini client with graceful degradation.
@@ -27,7 +28,8 @@ export function isGeminiEnabled(): boolean {
 }
 
 export function engineName(): "gemini" | "mock" {
-  return isGeminiEnabled() ? "gemini" : "mock";
+  // "gemini" here means "a real LLM is available" (Groq or Gemini) vs "mock".
+  return isGeminiEnabled() || groqEnabled() ? "gemini" : "mock";
 }
 
 let client: GoogleGenerativeAI | null = null;
@@ -50,6 +52,13 @@ async function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
  * null only when every model/attempt fails (then the caller uses the mock).
  */
 export async function generateJSON<T>(prompt: string, timeoutMs = 30000): Promise<T | null> {
+  // Prefer Groq for text generation (fast + generous free quota); fall back to
+  // Gemini if Groq is unavailable/fails; the caller falls back to mock if both fail.
+  if (groqEnabled()) {
+    const g = await groqJSON<T>(prompt, Math.min(timeoutMs, 22000));
+    if (g) return g;
+  }
+
   const c = getClient();
   if (!c) return null;
 
