@@ -113,12 +113,12 @@ export function LandingEffects() {
         )}
       </AnimatePresence>
 
-      <div className="pointer-events-none fixed inset-0 z-0 opacity-80 mix-blend-screen transition-opacity duration-1000">
+      <div className="pointer-events-none fixed inset-0 z-0 opacity-60 mix-blend-screen transition-opacity duration-1000">
         <SoftAurora
           speed={0.8}
           scale={1.2}
-          brightness={1.8}
-          color1="#1e3a8a"
+          brightness={1.2}
+          color1="#3b82f6"
           color2="#ffffff"
           noiseFrequency={2.0}
           noiseAmplitude={1.2}
