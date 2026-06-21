@@ -118,8 +118,8 @@ export function LandingEffects() {
           speed={0.8}
           scale={1.2}
           brightness={1.8}
-          color1="#2563eb"
-          color2="#e100ff"
+          color1="#1e3a8a"
+          color2="#ffffff"
           noiseFrequency={2.0}
           noiseAmplitude={1.2}
           bandHeight={0.6}

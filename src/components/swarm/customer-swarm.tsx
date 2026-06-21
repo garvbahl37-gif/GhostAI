@@ -113,8 +113,28 @@ export function CustomerSwarm({
     }
     parts.length = N;
 
-    // Dense dots-only sphere — no connection lines (clean particle-cloud look).
-    edgesRef.current = [];
+    // Generate 3D connection lines (network mesh) if sphere variant is active
+    if (variant === "sphere") {
+      const edges: [number, number][] = [];
+      for (let i = 0; i < N; i++) {
+        let count = 0;
+        for (let j = i + 1; j < N; j++) {
+          const dx = parts[i].bx - parts[j].bx;
+          const dy = parts[i].by - parts[j].by;
+          const dz = parts[i].bz - parts[j].bz;
+          const d2 = dx * dx + dy * dy + dz * dz;
+          // Connect nodes that are close to each other
+          if (d2 < 0.035) {
+            edges.push([i, j]);
+            count++;
+            if (count >= 2) break; // Cap at 2 connections per node for a clean tech look
+          }
+        }
+      }
+      edgesRef.current = edges;
+    } else {
+      edgesRef.current = [];
+    }
   }, [nodes, height, variant]);
 
   useEffect(() => {
@@ -349,14 +369,19 @@ function drawSphere(
   }
 
   // edges (behind nodes), alpha by depth
-  ctx.lineWidth = 1;
-  for (const [i, j] of edges) {
+  ctx.lineWidth = 0.8;
+  for (let idx = 0; idx < edges.length; idx++) {
+    const [i, j] = edges[idx];
     const a = parts[i];
     const b = parts[j];
     if (!a || !b) continue;
     const da = (a.depth + b.depth) / 2;
     const alpha = Math.max(0, (da + 1) / 2) * 0.18;
-    ctx.strokeStyle = `rgba(190,190,200,${alpha.toFixed(3)})`;
+    const lineAlpha = (alpha * 0.4).toFixed(3);
+    // Alternate between violet and cyan connecting lines
+    ctx.strokeStyle = idx % 2 === 0 
+      ? `rgba(139, 92, 246, ${lineAlpha})` 
+      : `rgba(6, 182, 212, ${lineAlpha})`;
     ctx.beginPath();
     ctx.moveTo(a.sx, a.sy);
     ctx.lineTo(b.sx, b.sy);
@@ -377,16 +402,22 @@ function drawSphere(
 
 function drawNode(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string, alpha: number) {
   ctx.globalAlpha = alpha;
+  const isColored = color !== "#ffffff" && !color.startsWith("#fff") && !color.startsWith("#f0") && !color.startsWith("#e2") && !color.startsWith("#cf") && !color.startsWith("#b6");
+  
+  // Real-time pulse effect for active nodes
+  const pulse = isColored ? (Math.sin(Date.now() / 200) * 0.25 + 1.0) : 1.0;
   ctx.shadowColor = color;
-  ctx.shadowBlur = r * 2.6;
+  ctx.shadowBlur = r * (isColored ? 5.5 : 2.0) * pulse;
+  
   ctx.fillStyle = color;
   ctx.beginPath();
   ctx.arc(x, y, Math.max(0.6, r), 0, Math.PI * 2);
   ctx.fill();
   ctx.shadowBlur = 0;
-  ctx.fillStyle = "rgba(255,255,255,0.9)";
+  
+  ctx.fillStyle = isColored ? "#ffffff" : "rgba(255,255,255,0.9)";
   ctx.beginPath();
-  ctx.arc(x, y, Math.max(0.4, r * 0.32), 0, Math.PI * 2);
+  ctx.arc(x, y, Math.max(0.4, r * (isColored ? 0.45 : 0.32)), 0, Math.PI * 2);
   ctx.fill();
   ctx.globalAlpha = 1;
 }

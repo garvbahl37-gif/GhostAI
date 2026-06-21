@@ -1,4 +1,5 @@
 import { Hero } from "@/components/landing/hero";
+import { TrustSection } from "@/components/landing/trust-section";
 import {
   Differentiator,
   Features,
@@ -16,6 +17,7 @@ export default function LandingPage() {
         <LandingEffects />
       </SafeMount>
       <Hero />
+      <TrustSection />
       <Differentiator />
       <Features />
       <AgentsShowcase />
