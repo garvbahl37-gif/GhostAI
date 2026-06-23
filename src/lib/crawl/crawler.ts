@@ -23,7 +23,9 @@ async function withTimeout<T>(p: Promise<T>, ms: number): Promise<T | null> {
   try {
     return await Promise.race([
       p,
-      new Promise<T>((_, rej) => setTimeout(() => rej(new Error("timeout")), ms)),
+      new Promise<T>((_, rej) =>
+        setTimeout(() => rej(new Error("timeout")), ms),
+      ),
     ]);
   } catch {
     return null;
@@ -40,14 +42,16 @@ export async function crawlSite(url: string): Promise<CrawlResult> {
   if (FIRECRAWL_KEY) {
     for (let attempt = 0; attempt < 2; attempt++) {
       const fc = await withTimeout(firecrawl(url), 28000);
-      if (fc && fc.trim().length >= MIN_CONTENT_CHARS) return { text: fc, source: "firecrawl" };
+      if (fc && fc.trim().length >= MIN_CONTENT_CHARS)
+        return { text: fc, source: "firecrawl" };
       if (attempt === 0) await sleep(700);
     }
   }
   // Tier 2: plain fetch with a real browser UA (retry once)
   for (let attempt = 0; attempt < 2; attempt++) {
     const html = await withTimeout(plainFetch(url), 14000);
-    if (html && html.trim().length >= MIN_CONTENT_CHARS) return { text: html, source: "fetch" };
+    if (html && html.trim().length >= MIN_CONTENT_CHARS)
+      return { text: html, source: "fetch" };
     if (attempt === 0) await sleep(500);
   }
   // Tier 3: nothing — the caller decides (honest error vs. labelled mock)
@@ -59,12 +63,26 @@ export async function crawlSite(url: string): Promise<CrawlResult> {
 export async function screenshotSite(url: string): Promise<string | null> {
   if (!FIRECRAWL_KEY) return null;
   try {
-    const res = await fetch("https://api.firecrawl.dev/v1/scrape", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${FIRECRAWL_KEY}` },
-      body: JSON.stringify({ url, formats: ["screenshot@fullPage"] }),
-    });
-    if (!res.ok) return null;
+    const res = await withTimeout(
+      fetch("https://api.firecrawl.dev/v1/scrape", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${FIRECRAWL_KEY}`,
+        },
+        body: JSON.stringify({
+          url,
+          formats: ["screenshot"],
+          waitFor: 5000,
+          actions: [
+            { type: "wait", milliseconds: 2000 },
+            { type: "screenshot", fullPage: true },
+          ],
+        }),
+      }),
+      40000,
+    );
+    if (!res || !res.ok) return null;
     const data = await res.json();
     return data?.data?.screenshot ?? data?.screenshot ?? null;
   } catch {
