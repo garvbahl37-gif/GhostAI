@@ -7,9 +7,9 @@ import SoftAurora from "@/components/ui/soft-aurora";
 import Aurora from "@/components/ui/aurora";
 
 // Dashboard palette: Mint Green · Electric Cyan · Cyber Purple
-const MINT    = "#4ade80";
-const CYAN    = "#22d3ee";
-const PURPLE  = "#a855f7";
+const MINT = "#4ade80";
+const CYAN = "#22d3ee";
+const PURPLE = "#a855f7";
 
 /** Roaming ghost PNG: wanders organically across the viewport over a 32s loop.
  *  Framer Motion x/y must be plain numbers (pixels) — calc() is not supported.
@@ -22,10 +22,10 @@ function RoamingGhost() {
       style={{ left: "50%", top: "50%", marginLeft: -96, marginTop: -96 }}
       animate={{
         // Plain pixel keyframes — roughly ±30 vw / ±25 vh at 1920×1080
-        x: [0,  260,  90, -300, -140,  210, 0],
-        y: [0, -180,  240,  130, -220,  90,  0],
-        rotate:  [0,  9,   -5,   16,  -10,   4,  0],
-        scale:   [1, 1.1, 0.92, 1.05, 0.96, 1.08, 1],
+        x: [0, 260, 90, -300, -140, 210, 0],
+        y: [0, -180, 240, 130, -220, 90, 0],
+        rotate: [0, 9, -5, 16, -10, 4, 0],
+        scale: [1, 1.1, 0.92, 1.05, 0.96, 1.08, 1],
         opacity: [0.35, 0.50, 0.30, 0.45, 0.25, 0.40, 0.35],
       }}
       transition={{

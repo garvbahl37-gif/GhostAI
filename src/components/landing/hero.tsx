@@ -93,7 +93,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden pb-24 pt-40 sm:pt-48">
+    <section className="relative overflow-hidden pb-24 pt-24 sm:pt-32">
       {/* Premium ambient glows */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 -z-10 w-[450px] h-[450px] rounded-full bg-violet-600/5 blur-[120px] pointer-events-none" />
       <div className="absolute top-1/2 right-1/4 translate-x-1/2 -translate-y-1/2 -z-10 w-[550px] h-[550px] rounded-full bg-cyan-600/5 blur-[130px] pointer-events-none" />
@@ -187,94 +187,7 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Floating Insight Card 1 (Top Left) */}
-          <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-4 -left-6 z-10 hidden sm:block glass rounded-2xl p-4 shadow-2xl backdrop-blur-xl border border-white/[0.08] bg-black/40 w-[240px]"
-          >
-            <div className="flex items-center gap-2 mb-2.5">
-              <div className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
-              <span className="text-[10px] font-semibold tracking-wider text-rose-400 uppercase">Simulated Persona</span>
-            </div>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="h-8 w-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-violet-300">DP</div>
-              <div>
-                <h4 className="text-xs font-semibold text-white">Devon Patel</h4>
-                <p className="text-[10px] text-muted-foreground">VP Product, Enterprise SaaS</p>
-              </div>
-            </div>
-            <div className="rounded-lg bg-white/[0.02] border border-white/[0.04] p-2 mt-2">
-              <p className="text-[10px] text-zinc-300 leading-normal">"Objection: ROI of annual contract is unclear. Needs SOC2 check."</p>
-              <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-white/[0.04]">
-                <span className="text-[9px] text-rose-400 font-semibold">85% Churn Risk 🔴</span>
-                <span className="text-[9px] text-muted-foreground">Intent: 12%</span>
-              </div>
-            </div>
-          </motion.div>
 
-          {/* Floating Insight Card 2 (Top Right) */}
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            className="absolute -top-12 -right-4 z-10 hidden sm:block glass rounded-2xl p-4 shadow-2xl backdrop-blur-xl border border-white/[0.08] bg-black/40 w-[240px]"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
-                <span className="text-[10px] font-semibold tracking-wider text-amber-400 uppercase">Live Objection</span>
-              </div>
-              <span className="text-[9px] font-mono text-muted-foreground">Active</span>
-            </div>
-            <p className="text-xs font-medium text-white mb-1">"Why do we need another dashboard?"</p>
-            <p className="text-[10px] text-muted-foreground mb-3">Raised by 42% of Growth Leads</p>
-            <div className="flex items-center justify-between bg-amber-500/5 border border-amber-500/10 rounded-lg p-2 text-[9px] text-amber-400">
-              <span className="font-medium">Product Fix Recommended</span>
-              <ArrowRight className="h-3 w-3" />
-            </div>
-          </motion.div>
-
-          {/* Floating Insight Card 3 (Bottom Left) */}
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            className="absolute -bottom-6 -left-10 z-10 hidden md:block glass rounded-2xl p-4 shadow-2xl backdrop-blur-xl border border-white/[0.08] bg-black/40 w-[220px]"
-          >
-            <div className="flex items-center gap-2 mb-2.5">
-              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-semibold tracking-wider text-emerald-400 uppercase">Simulated Persona</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-emerald-300">SC</div>
-              <div>
-                <h4 className="text-xs font-semibold text-white">Sarah Chen</h4>
-                <p className="text-[10px] text-muted-foreground">Founder, Seed DevTools</p>
-              </div>
-            </div>
-            <div className="mt-2.5 pt-2 border-t border-white/[0.04] flex items-center justify-between text-[10px]">
-              <span className="text-emerald-400 font-semibold">Will Purchase 🟢</span>
-              <span className="font-mono text-zinc-400">Intent: 92%</span>
-            </div>
-          </motion.div>
-
-          {/* Floating Insight Card 4 (Bottom Right) */}
-          <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className="absolute -bottom-10 -right-6 z-10 hidden sm:block glass rounded-2xl p-4 shadow-2xl backdrop-blur-xl border border-white/[0.08] bg-black/40 w-[210px]"
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
-              <span className="text-[10px] font-semibold tracking-wider text-emerald-400 uppercase">Funnel Lift</span>
-            </div>
-            <div className="flex items-baseline gap-1.5 mb-1">
-              <span className="text-2xl font-bold tracking-tight text-white">+14.2%</span>
-              <span className="text-[10px] text-emerald-400 font-medium">Conversion</span>
-            </div>
-            <p className="text-[10px] text-muted-foreground leading-normal">
-              Predicted lift after addressing pricing structure objections.
-            </p>
-          </motion.div>
 
           {/* Faint ambient halo backdrop */}
           <div className="absolute inset-0 -z-10 rounded-[28px] bg-white/[0.02] blur-3xl" />
