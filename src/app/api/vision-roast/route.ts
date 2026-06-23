@@ -5,7 +5,7 @@ import { normalizeUrl } from "@/lib/utils";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 // POST { url } -> VisionRoast (real screenshot + Gemini Vision). No mock fallback.
 export async function POST(req: NextRequest) {
