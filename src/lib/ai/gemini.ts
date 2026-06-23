@@ -240,7 +240,7 @@ export async function aiVisionRoast(screenshotUrl: string): Promise<VisionRoastD
   let b64 = "";
   let mime = "image/png";
   try {
-    const r = await withTimeout(fetch(screenshotUrl), 15000);
+    const r = await withTimeout(fetch(screenshotUrl), 30000);
     if (!r.ok) return null;
     mime = r.headers.get("content-type") || "image/png";
     const ab = await r.arrayBuffer();
@@ -276,7 +276,7 @@ Focus on real, visible problems in THIS screenshot (hero, CTA, navigation, prici
         });
         const res = await withTimeout(
           model.generateContent([{ text: prompt }, { inlineData: { mimeType: mime, data: b64 } }]),
-          30000,
+          60000,
         );
         const parsed = JSON.parse(stripFences(res.response.text())) as VisionRoastData;
         if (parsed && Array.isArray(parsed.regions)) return parsed;

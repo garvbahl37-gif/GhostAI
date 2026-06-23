@@ -66,21 +66,19 @@ export async function screenshotSite(url: string): Promise<string | null> {
     const res = await withTimeout(
       fetch("https://api.firecrawl.dev/v1/scrape", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${FIRECRAWL_KEY}`,
-        },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${FIRECRAWL_KEY}` },
         body: JSON.stringify({
           url,
           formats: ["screenshot"],
-          waitFor: 5000,
+          timeout: 60000,
+          waitFor: 3000,
           actions: [
             { type: "wait", milliseconds: 2000 },
             { type: "screenshot", fullPage: true },
           ],
         }),
       }),
-      40000,
+      60000
     );
     if (!res || !res.ok) return null;
     const data = await res.json();
