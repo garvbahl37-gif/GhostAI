@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Hourglass } from 'lucide-react';
-import Aurora from '@/components/ui/aurora';
 
 export default function LoadingScreen() {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,54 +28,64 @@ export default function LoadingScreen() {
     <AnimatePresence>
       {isLoading && (
         <motion.div
-          initial={{ opacity: 1 }}
+          key="loading-screen"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.2, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050506]"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0B0F19] overflow-hidden w-full h-full"
         >
-          {/* Aurora background */}
-          <div className="pointer-events-none absolute inset-0 z-0">
-            <Aurora
-              colorStops={["#3B82F6", "#B497CF", "#5227FF"]}
-              blend={0.8}
-              amplitude={1.5}
-              speed={0.8}
-            />
+          {/* Ambient Glowing Mesh Gradient */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-500/15 blur-[120px]" />
+            <div className="absolute -top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-purple-500/15 blur-[120px]" />
           </div>
+
           <motion.h1
             initial={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
             animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
-            className="z-10 mb-8 font-serif text-5xl tracking-[0.25em] text-white/90 md:text-7xl lg:text-8xl"
-            style={{ textShadow: '0 0 60px rgba(255,255,255,0.2)' }}
+            transition={{ duration: 1.5, ease: 'easeOut', delay: 0.2 }}
+            className="z-10 mb-8 font-sans text-5xl tracking-[0.2em] md:text-7xl lg:text-8xl font-light"
           >
-            GHOST <span className="text-[#61b8ff]">AI</span>
+            <span className="bg-gradient-to-br from-white via-gray-200 to-gray-500 bg-clip-text text-transparent">
+              GHOST AI
+            </span>
           </motion.h1>
-          <div className="z-10 flex w-full max-w-md flex-col items-center">
-            <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: '16rem', opacity: 1 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="mb-8 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"
-            />
+
+          <div className="z-10 flex w-full max-w-md flex-col items-center px-6">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="mb-6 flex items-center gap-3 text-muted-foreground/80"
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="mb-4 flex flex-col items-center gap-3 w-full"
             >
-              <Hourglass className="h-3.5 w-3.5 animate-pulse text-[#b49865]" />
-              <span className="font-mono text-xs uppercase tracking-[0.3em]">Initializing Swarm...</span>
+              <span className="font-mono text-xs uppercase tracking-[0.2em] text-gray-400">
+                Initializing Agent Swarm...
+              </span>
             </motion.div>
+
+            {/* Tiny, elegant progress bar */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="w-48 h-[2px] bg-gray-800 rounded-full overflow-hidden relative mb-4"
+            >
+              <motion.div
+                className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-purple-500"
+                initial={{ width: '0%' }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.1, ease: 'linear' }}
+              />
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 1 }}
-              className="flex items-center gap-4 font-mono text-sm tracking-widest text-white/60"
+              className="font-mono text-xs tracking-widest text-white/40"
             >
-              <div className="h-[1px] w-6 bg-gradient-to-r from-transparent to-[#61b8ff]/40" />
-              <span className="w-12 text-center">{progress} %</span>
-              <div className="h-[1px] w-6 bg-gradient-to-l from-transparent to-[#61b8ff]/40" />
+              {progress.toString().padStart(3, '0')}%
             </motion.div>
           </div>
         </motion.div>
