@@ -231,10 +231,7 @@ export function WarRoom({ runId }: { runId: string }) {
       <AnimatePresence>
         {showLoader && <CinematicLoader progress={s.progress} label={s.message} />}
       </AnimatePresence>
-      <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none -z-10">
-        <video src="/robo.mp4" preload="auto" autoPlay loop muted playsInline className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+
       <div className="container max-w-7xl py-24">
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
