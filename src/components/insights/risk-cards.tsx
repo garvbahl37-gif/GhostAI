@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingDown, UserMinus, HelpCircle, LifeBuoy, Wrench, Wand2, Loader2 } from "lucide-react";
+import { TrendingDown, UserMinus, HelpCircle, LifeBuoy, Wrench, Wand2, Loader2, Copy, Check } from "lucide-react";
 import type { ChurnRisk, RevenueLeak, SalesObjection, SupportGap, AutoFix } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { severityColor } from "@/lib/utils";
@@ -53,14 +53,21 @@ function AutoFixPanel({ leak, context }: { leak: RevenueLeak; context?: FixConte
       <button
         onClick={run}
         disabled={loading}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-white/12 bg-white/[0.05] px-3 py-1.5 text-xs font-semibold text-foreground/90 transition hover:bg-white/[0.1] disabled:opacity-50"
+        className="group inline-flex items-center gap-1.5 rounded-lg border border-white/12 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-foreground/90 backdrop-blur transition hover:border-white/20 hover:bg-white/[0.12] disabled:opacity-50"
       >
-        {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Wand2 className="h-3.5 w-3.5" />}
-        {loading ? "Generating fix…" : fix ? (open ? "Hide auto-fix" : "Show auto-fix") : "Auto-Fix with AI"}
+        {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Wand2 className="h-3.5 w-3.5 text-ghost-violet" />}
+        {loading ? "Generating fix…" : fix ? (open ? "Hide auto-fix" : "Show auto-fix") : "Fix it with AI"}
       </button>
       {err && <p className="mt-1.5 text-xs text-ghost-rose">{err}</p>}
+
+      {loading && <FixSkeleton />}
+
       {fix && open && (
-        <div className="mt-3 space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-3 space-y-3"
+        >
           <p className="text-xs italic text-muted-foreground">{fix.rationale}</p>
           {fix.variants.map((v, idx) => (
             <div key={idx} className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
@@ -68,16 +75,77 @@ function AutoFixPanel({ leak, context }: { leak: RevenueLeak; context?: FixConte
                 <p className="text-xs font-semibold">{v.heading}</p>
                 <Badge variant="muted">{v.kind}</Badge>
               </div>
-              <p className="mt-1.5 text-sm text-foreground/90">{v.copy}</p>
+
+              {/* before -> after diff */}
+              <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                <div className="rounded-lg border border-ghost-rose/20 bg-ghost-rose/[0.06] p-2">
+                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-ghost-rose/80">Before</p>
+                  <p className="text-xs text-foreground/65 line-through decoration-ghost-rose/40">{leak.cause}</p>
+                </div>
+                <div className="rounded-lg border border-ghost-emerald/25 bg-ghost-emerald/[0.07] p-2">
+                  <div className="mb-1 flex items-center justify-between gap-2">
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-ghost-emerald/80">After</p>
+                    <CopyButton text={v.copy} />
+                  </div>
+                  <p className="text-xs text-foreground/90">{v.copy}</p>
+                </div>
+              </div>
+
               {v.html && (
-                <pre className="mt-2 max-h-32 overflow-auto rounded-lg bg-black/40 p-2 text-[10px] leading-snug text-foreground/60">
-                  {v.html}
-                </pre>
+                <div className="mt-2">
+                  <div className="mb-1 flex items-center justify-between">
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Paste-ready snippet</p>
+                    <CopyButton text={v.html} label="Copy code" />
+                  </div>
+                  <pre className="max-h-40 overflow-auto rounded-lg bg-black/40 p-2 text-[10px] leading-snug text-foreground/60">
+                    {v.html}
+                  </pre>
+                </div>
               )}
             </div>
           ))}
-        </div>
+        </motion.div>
       )}
+    </div>
+  );
+}
+
+/** Copy-to-clipboard with a brief confirmation. */
+function CopyButton({ text, label = "Copy" }: { text: string; label?: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        } catch {
+          /* clipboard blocked — no-op */
+        }
+      }}
+      className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/[0.05] px-1.5 py-0.5 text-[10px] font-medium text-foreground/80 transition hover:bg-white/[0.1]"
+    >
+      {copied ? <Check className="h-3 w-3 text-ghost-emerald" /> : <Copy className="h-3 w-3" />}
+      {copied ? "Copied" : label}
+    </button>
+  );
+}
+
+/** Skeleton shown while the AI generates the fix. */
+function FixSkeleton() {
+  return (
+    <div className="mt-3 space-y-3">
+      {[0, 1].map((i) => (
+        <div key={i} className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+          <div className="h-3 w-1/3 animate-pulse rounded bg-white/10" />
+          <div className="mt-2 grid gap-2 sm:grid-cols-2">
+            <div className="h-14 animate-pulse rounded-lg bg-white/[0.05]" />
+            <div className="h-14 animate-pulse rounded-lg bg-white/[0.05]" />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

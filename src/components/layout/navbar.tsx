@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Ghost, LayoutDashboard, Swords, LineChart, Eye, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { UserMenu } from "@/components/auth/user-menu";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -126,6 +127,7 @@ export function Navbar() {
 
           {/* Actions & Mobile Toggle */}
           <div className="flex items-center gap-2">
+            <UserMenu />
             <Link
               href="/dashboard"
               className={cn(

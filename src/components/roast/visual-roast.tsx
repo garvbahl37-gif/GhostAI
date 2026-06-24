@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Eye, ScanLine, Loader2, Crosshair } from "lucide-react";
+import { Eye, ScanLine, Loader2, Crosshair, Flame, SquareDashedMousePointer } from "lucide-react";
 import type { VisionRoast } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { HeatmapOverlay, regionsToHeatmap } from "@/components/roast/heatmap-overlay";
 
 const SAMPLES = ["stripe.com", "notion.so", "linear.app", "vercel.com"];
 const SEV: Record<string, { c: string; label: string }> = {
@@ -21,6 +22,9 @@ export function VisualRoast() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<VisionRoast | null>(null);
+  const [view, setView] = useState<"annotated" | "heatmap">("annotated");
+
+  const heatmapPoints = useMemo(() => (result ? regionsToHeatmap(result.regions) : []), [result]);
 
   async function roast(target: string) {
     if (!target.trim()) return;
@@ -108,9 +112,18 @@ export function VisualRoast() {
             </CardContent>
           </Card>
 
-          {/* annotated screenshot */}
+          {/* annotated screenshot / heatmap */}
           <Card>
             <CardContent className="p-3">
+              {/* view toggle */}
+              <div className="mb-3 flex w-fit items-center gap-1 rounded-xl border border-white/[0.06] bg-white/[0.03] p-1">
+                <ViewTab active={view === "annotated"} onClick={() => setView("annotated")} icon={<SquareDashedMousePointer className="h-3.5 w-3.5" />} label="Annotated" />
+                <ViewTab active={view === "heatmap"} onClick={() => setView("heatmap")} icon={<Flame className="h-3.5 w-3.5" />} label="Ghost Heatmap" />
+              </div>
+
+              {view === "heatmap" ? (
+                <HeatmapOverlay screenshotUrl={result.screenshotUrl} points={heatmapPoints} />
+              ) : (
               <div className="relative w-full overflow-hidden rounded-xl ring-1 ring-white/10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={result.screenshotUrl} alt="Screenshot of the analyzed page" className="block w-full" />
@@ -155,20 +168,34 @@ export function VisualRoast() {
                   </div>
                 )}
               </div>
+              )}
               <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 px-1">
-                <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                  <Crosshair className="h-3 w-3" /> eye lands here
-                </span>
-                {Object.values(SEV).map((s) => (
-                  <span key={s.label} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                    <span className="h-2 w-2 rounded-sm" style={{ background: s.c }} /> {s.label}
-                  </span>
-                ))}
+                {view === "annotated" ? (
+                  <>
+                    <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                      <Crosshair className="h-3 w-3" /> eye lands here
+                    </span>
+                    {Object.values(SEV).map((s) => (
+                      <span key={s.label} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                        <span className="h-2 w-2 rounded-sm" style={{ background: s.c }} /> {s.label}
+                      </span>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <span className="text-[11px] text-muted-foreground">Hover a dot for the objection ·</span>
+                    {[["High friction", "bg-red-500"], ["Medium", "bg-yellow-500"], ["Minor", "bg-blue-500"]].map(([l, c]) => (
+                      <span key={l} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                        <span className={`h-2 w-2 rounded-full ${c}`} /> {l}
+                      </span>
+                    ))}
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>
 
-          {/* region list */}
+          {/* region list (objection details) */}
           <div className="grid gap-3 sm:grid-cols-2">
             {result.regions.map((r, i) => {
               const sev = SEV[r.severity] ?? SEV.low;
@@ -188,5 +215,20 @@ export function VisualRoast() {
         </motion.div>
       )}
     </div>
+  );
+}
+
+function ViewTab({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+        active ? "bg-white/10 text-foreground ring-1 ring-white/15" : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      {icon}
+      {label}
+    </button>
   );
 }

@@ -11,7 +11,7 @@ import {
   Legend,
   Tooltip,
 } from "recharts";
-import { Crown, Loader2, Swords } from "lucide-react";
+import { Crown, Loader2, Swords, FileDown } from "lucide-react";
 import type { CompetitorAnalysis } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,29 @@ export function Battle() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<CompetitorAnalysis | null>(null);
+  const [pdfLoading, setPdfLoading] = useState(false);
+
+  async function downloadBattleCard() {
+    if (!result) return;
+    setPdfLoading(true);
+    try {
+      // dynamic import keeps @react-pdf strictly client-side (no SSR)
+      const { generateBattleCardBlob } = await import("@/components/arena/battle-card-doc");
+      const blob = await generateBattleCardBlob(result, new Date().toLocaleDateString());
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = href;
+      a.download = `battle-card-${result.you.title}-vs-${result.competitor.title}.pdf`.replace(/\s+/g, "-");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(href);
+    } catch (e) {
+      setError(`Couldn't generate the PDF: ${(e as Error).message}`);
+    } finally {
+      setPdfLoading(false);
+    }
+  }
 
   async function battle() {
     setError("");
@@ -111,6 +134,12 @@ export function Battle() {
               {result.winner === "tie" ? "It's a tie — segments are split." : `${result.winner === "you" ? result.you.title : result.competitor.title} wins.`}{" "}
               <span className="text-foreground/70">{result.reason}</span>
             </p>
+            <div className="mt-4 flex justify-center">
+              <Button variant="outline" onClick={downloadBattleCard} disabled={pdfLoading}>
+                {pdfLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileDown className="h-4 w-4" />}
+                {pdfLoading ? "Building battle card…" : "Download Battle Card (PDF)"}
+              </Button>
+            </div>
           </div>
 
           {/* Radar + dimensions */}

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AuthGate } from "@/components/auth/auth-gate";
 
 const SAMPLES = ["stripe.com", "notion.so", "linear.app", "vercel.com", "figma.com"];
 const COUNTS = [60, 120, 250, 500];
@@ -50,6 +51,7 @@ export default function DashboardPage() {
   }
 
   return (
+    <AuthGate subtitle="Create a free account or sign in to launch the customer swarm, run UI Roasts, and save your reports.">
     <div className="container max-w-3xl py-28">
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
         <Badge variant="cyan" className="mb-4">
@@ -200,5 +202,6 @@ export default function DashboardPage() {
         Runs instantly on the deterministic demo engine. Add a <span className="text-foreground">GEMINI_API_KEY</span> for live AI analysis.
       </p>
     </div>
+    </AuthGate>
   );
 }

@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { RunConfig, WebsiteAnalysis, ExecutiveReport, Insights, CompetitorAnalysis, RoastRegion, AutoFix } from "@/lib/types";
 import { mockAnalyze, buildReport } from "@/lib/data/mock-engine";
 import { sleep } from "@/lib/utils";
-import { groqEnabled, groqJSON } from "@/lib/ai/groq";
+import { groqEnabled, groqJSON, groqVisionEnabled, groqVisionJSON } from "@/lib/ai/groq";
 
 // ---------------------------------------------------------------------------
 // Gemini client with graceful degradation.
@@ -25,6 +25,11 @@ const KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
 export function isGeminiEnabled(): boolean {
   return Boolean(KEY);
+}
+
+/** Visual UI Roast works if EITHER Gemini Vision or Groq Vision is available. */
+export function isVisionEnabled(): boolean {
+  return isGeminiEnabled() || groqVisionEnabled();
 }
 
 export function engineName(): "gemini" | "mock" {
@@ -230,13 +235,11 @@ export interface VisionRoastData {
   clarityScore: number;
   firstLook?: { x: number; y: number };
   regions: RoastRegion[];
+  engine?: "gemini" | "groq";
 }
 
 export async function aiVisionRoast(screenshotUrl: string): Promise<VisionRoastData | null> {
-  const c = getClient();
-  if (!c) return null;
-
-  // fetch the screenshot bytes -> base64
+  // fetch the screenshot bytes -> base64 (shared by both vision engines)
   let b64 = "";
   let mime = "image/png";
   try {
@@ -267,8 +270,12 @@ Return STRICT JSON only:
 }
 Focus on real, visible problems in THIS screenshot (hero, CTA, navigation, pricing, trust, readability). Coordinates must be within 0-1000.`;
 
-  for (const modelName of MODELS) {
-    for (let attempt = 0; attempt < 2; attempt++) {
+  // Engine 1: Gemini Vision (preferred when a key is configured). One fast
+  // attempt per model — when Gemini is slow/over quota we want to fail over to
+  // the Groq fallback quickly rather than burn ~2 min retrying a busy model.
+  const c = getClient();
+  if (c) {
+    for (const modelName of MODELS) {
       try {
         const model = c.getGenerativeModel({
           model: modelName,
@@ -276,24 +283,25 @@ Focus on real, visible problems in THIS screenshot (hero, CTA, navigation, prici
         });
         const res = await withTimeout(
           model.generateContent([{ text: prompt }, { inlineData: { mimeType: mime, data: b64 } }]),
-          60000,
+          18000,
         );
         const parsed = JSON.parse(stripFences(res.response.text())) as VisionRoastData;
-        if (parsed && Array.isArray(parsed.regions)) return parsed;
-        return null;
+        if (parsed && Array.isArray(parsed.regions)) return { ...parsed, engine: "gemini" };
       } catch (err) {
         const msg = ((err as Error).message || "").slice(0, 140);
-        console.warn(`[gemini-vision] ${modelName} attempt ${attempt + 1} failed: ${msg}`);
-        if (/429|quota|rate limit|too many|resource exhausted/i.test(msg)) break;
-        const transient = /503|overload|high demand|timeout|unavailable|fetch failed/i.test(msg);
-        if (transient && attempt === 0) {
-          await sleep(900);
-          continue;
-        }
-        break;
+        console.warn(`[gemini-vision] ${modelName} failed: ${msg}`);
+        if (/429|quota|rate limit|too many|resource exhausted/i.test(msg)) break; // straight to Groq
       }
     }
   }
+
+  // Engine 2: Groq Vision fallback — keeps the Roast working when Gemini is out
+  // of quota or busy (the exact "Vision analysis failed (model busy)" case).
+  if (groqVisionEnabled()) {
+    const parsed = await groqVisionJSON<VisionRoastData>(prompt, `data:${mime};base64,${b64}`, 30000);
+    if (parsed && Array.isArray(parsed.regions)) return { ...parsed, engine: "groq" };
+  }
+
   return null;
 }
 

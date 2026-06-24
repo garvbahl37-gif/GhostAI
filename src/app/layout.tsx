@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Background } from "@/components/layout/background";
 import { Navbar } from "@/components/layout/navbar";
+import { AuthProvider } from "@/components/auth/auth-provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
@@ -24,8 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`dark ${inter.variable} ${mono.variable}`}>
       <body className="min-h-screen font-sans">
         <Background />
-        <Navbar />
-        <main className="relative z-10">{children}</main>
+        <AuthProvider>
+          <Navbar />
+          <main className="relative z-10">{children}</main>
+        </AuthProvider>
       </body>
     </html>
   );

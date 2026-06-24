@@ -30,6 +30,7 @@ import { AgentStream, type Thought } from "./agent-stream";
 import { SwarmGrid } from "./swarm-grid";
 import { MetricTicker } from "./metric-ticker";
 import { SimFeed, Discoveries } from "./live-feed";
+import { ReactionBoard } from "./reaction-board";
 import { CinematicLoader } from "@/components/shared/cinematic-loader";
 
 interface State {
@@ -312,6 +313,11 @@ export function WarRoom({ runId }: { runId: string }) {
           <div className="lg:col-span-1">
             <AgentStream thoughts={s.thoughts} />
           </div>
+        </div>
+
+        {/* Live focus group — real persona reactions streamed in as chat */}
+        <div className="mt-6">
+          <ReactionBoard personas={s.personas} sims={s.sims} />
         </div>
 
         {done && s.insights && (

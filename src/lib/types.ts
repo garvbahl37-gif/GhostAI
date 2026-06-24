@@ -300,7 +300,26 @@ export interface VisionRoast {
   clarityScore: number; // 0-100
   firstLook?: { x: number; y: number }; // 0-1000 where the eye lands first
   regions: RoastRegion[];
-  source: "gemini-vision";
+  source: "gemini-vision" | "groq-vision";
+  engine?: "gemini" | "groq";
+}
+
+// ---------------------------------------------------------------------------
+// Ghost Heatmap — confusion/objection points plotted on the screenshot
+// (Hotjar-style). x/y are normalized PERCENTAGES (0-100) of the image box.
+// ---------------------------------------------------------------------------
+export interface HeatmapPoint {
+  x: number; // 0-100 (% of width)
+  y: number; // 0-100 (% of height)
+  severity: "high" | "medium" | "low";
+  label: string;
+  why: string;
+  personaId?: string;
+}
+
+export interface HeatmapData {
+  screenshotUrl: string;
+  points: HeatmapPoint[];
 }
 
 // ---------------------------------------------------------------------------
