@@ -56,7 +56,7 @@ export function TrustSection() {
   ];
 
   return (
-    <section className="relative border-t border-b border-white/[0.04] bg-[#050506]/40 py-16 backdrop-blur-md">
+    <section className="relative border-t border-b border-slate-900/[0.04] bg-slate-50/60 py-16 backdrop-blur-md">
       {/* Subtle backdrop grid */}
       <div className="absolute inset-0 -z-10 bg-grid-bg opacity-[0.02] pointer-events-none" />
 
@@ -77,7 +77,7 @@ export function TrustSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl"
+            className="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
           >
             Pre-launch simulation at global scale
           </motion.h2>
@@ -94,20 +94,20 @@ export function TrustSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="group relative rounded-2xl glass p-5 transition-all duration-300 hover:bg-white/[0.04] hover:border-white/15"
+                className="group relative rounded-2xl bg-white border border-slate-200/80 p-5 shadow-sm transition-all duration-300 hover:shadow-md hover:border-violet-200/60 hover:-translate-y-0.5"
               >
                 <div className="flex items-center justify-between">
-                  <span className={`grid h-10 w-10 place-items-center rounded-xl border border-white/10 ${s.bgColor} transition-transform duration-300 group-hover:scale-110`}>
+                  <span className={`grid h-10 w-10 place-items-center rounded-xl border ${s.bgColor} transition-transform duration-300 group-hover:scale-110`}>
                     <Icon className={`h-5 w-5 ${s.color}`} />
                   </span>
-                  <span className="font-mono text-2xl font-bold text-white tracking-tight">
+                  <span className="font-mono text-2xl font-bold text-slate-900 tracking-tight">
                     <AnimatedNumber value={s.value} suffix={s.suffix} decimals={s.decimals} />
                   </span>
                 </div>
-                <h3 className="mt-4 text-sm font-semibold text-white group-hover:text-violet-300 transition-colors">
+                <h3 className="mt-4 text-sm font-semibold text-slate-800 group-hover:text-violet-600 transition-colors">
                   {s.label}
                 </h3>
-                <p className="mt-1.5 text-xs leading-normal text-muted-foreground">
+                <p className="mt-1.5 text-xs leading-normal text-slate-500">
                   {s.desc}
                 </p>
               </motion.div>
@@ -116,8 +116,8 @@ export function TrustSection() {
         </div>
 
         {/* Security Credentials Bar */}
-        <div className="mt-14 pt-10 border-t border-white/[0.06] flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className="mt-14 pt-10 border-t border-slate-200/70 flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
             Enterprise Security Core:
           </span>
           <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
@@ -134,8 +134,8 @@ export function TrustSection() {
                 >
                   <Icon className="h-4 w-4 text-violet-400/80" />
                   <div className="flex flex-col">
-                    <span className="text-[13px] font-bold text-zinc-200">{b.label}</span>
-                    <span className="text-[9px] text-muted-foreground uppercase tracking-wider">{b.info}</span>
+                    <span className="text-[13px] font-bold text-slate-800">{b.label}</span>
+                    <span className="text-[9px] text-slate-400 uppercase tracking-wider">{b.info}</span>
                   </div>
                 </motion.div>
               );

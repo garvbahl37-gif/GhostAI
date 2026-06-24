@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 export function Background() {
+  const pathname = usePathname();
+  const isLanding = pathname === "/";
+
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
   const sx = useSpring(mx, { stiffness: 60, damping: 22 });
@@ -22,6 +26,54 @@ export function Background() {
     window.addEventListener("mousemove", onMove);
     return () => window.removeEventListener("mousemove", onMove);
   }, [mx, my]);
+
+  if (isLanding) {
+    return (
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        {/* Light SaaS base background */}
+        <div className="absolute inset-0 bg-[#FAF9FB]" />
+
+        {/* Ambient glows - soft purple/indigo/blue on the right and center */}
+        <motion.div style={{ x: x1, y: y1 }} className="absolute inset-0">
+          {/* Strong purple glow on the right top */}
+          <div
+            className="absolute -right-[10%] top-[5%] h-[50rem] w-[50rem] rounded-full blur-[150px]"
+            style={{
+              background: "radial-gradient(circle, rgba(168,85,247,0.7) 0%, rgba(99,102,241,0.4) 50%, transparent 70%)",
+              animation: "ambient-drift 22s ease-in-out infinite",
+              mixBlendMode: "multiply"
+            }}
+          />
+          {/* Soft blue/cyan glow in the center-right */}
+          <div
+            className="absolute right-[20%] bottom-[10%] h-[40rem] w-[40rem] rounded-full blur-[130px]"
+            style={{
+              background: "radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(6,182,212,0.05) 50%, transparent 70%)",
+              animation: "ambient-drift 26s ease-in-out infinite reverse"
+            }}
+          />
+        </motion.div>
+
+        <motion.div style={{ x: x2, y: y2 }} className="absolute inset-0">
+          {/* Purple glow on the left bottom */}
+          <div
+            className="absolute -left-[10%] bottom-[-10%] h-[45rem] w-[45rem] rounded-full blur-[160px]"
+            style={{
+              background: "radial-gradient(circle, rgba(168,85,247,0.6) 0%, rgba(139,92,246,0.3) 40%, transparent 70%)",
+              animation: "ambient-drift 28s ease-in-out infinite",
+              mixBlendMode: "multiply"
+            }}
+          />
+        </motion.div>
+
+        {/* fine grid with light grey/indigo grid lines */}
+        <div className="absolute inset-0 grid-bg-light opacity-60 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
+
+        {/* subtle grain */}
+        <div className="absolute inset-0 grain opacity-[0.015] mix-blend-overlay" />
+      </div>
+    );
+  }
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
@@ -51,3 +103,4 @@ export function Background() {
     </div>
   );
 }
+

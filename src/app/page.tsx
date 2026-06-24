@@ -12,7 +12,7 @@ import { SafeMount } from "@/components/shared/safe-mount";
 
 export default function LandingPage() {
   return (
-    <>
+    <div className="landing-page-theme">
       <SafeMount>
         <LandingEffects />
       </SafeMount>
@@ -23,9 +23,9 @@ export default function LandingPage() {
       <AgentsShowcase />
       <HowItWorks />
       <FinalCTA />
-      <footer className="border-t border-white/5 py-8 text-center text-xs text-muted-foreground">
-        Ghost Customer AI · Multi-agent customer simulation · Built with Next.js, LangGraph & Gemini
+      <footer className="border-t border-slate-200/80 py-8 text-center text-xs text-slate-400">
+        Ghost Customer AI · Multi-agent customer simulation · Built with Next.js, LangGraph &amp; Gemini
       </footer>
-    </>
+    </div>
   );
 }

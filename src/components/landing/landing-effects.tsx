@@ -182,24 +182,26 @@ export function LandingEffects() {
         )}
       </AnimatePresence>
 
-      <div className="pointer-events-none fixed inset-0 z-0 opacity-60 mix-blend-screen transition-opacity duration-1000">
-        <SoftAurora
-          speed={0.8}
-          scale={1.2}
-          brightness={1.2}
-          color1="#3b82f6"
-          color2="#ffffff"
-          noiseFrequency={2.0}
-          noiseAmplitude={1.2}
-          bandHeight={0.6}
-          bandSpread={1.2}
-          octaveDecay={0.15}
-          layerOffset={0}
-          colorSpeed={1.5}
-          enableMouseInteraction={false}
-          mouseInfluence={0.25}
-        />
-      </div>
+      {isLoading && (
+        <div className="pointer-events-none fixed inset-0 z-10 opacity-60 mix-blend-screen transition-opacity duration-1000">
+          <SoftAurora
+            speed={0.8}
+            scale={1.2}
+            brightness={1.2}
+            color1="#3b82f6"
+            color2="#ffffff"
+            noiseFrequency={2.0}
+            noiseAmplitude={1.2}
+            bandHeight={0.6}
+            bandSpread={1.2}
+            octaveDecay={0.15}
+            layerOffset={0}
+            colorSpeed={1.5}
+            enableMouseInteraction={false}
+            mouseInfluence={0.25}
+          />
+        </div>
+      )}
     </>
   );
 }

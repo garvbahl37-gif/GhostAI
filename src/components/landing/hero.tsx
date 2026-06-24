@@ -1,196 +1,181 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Shield, Zap, AlertTriangle, Users, TrendingUp, CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, CheckCircle, Play } from "lucide-react";
 import { AnimatedNumber } from "@/components/shared/animated-number";
-import { CustomerSwarm, type SwarmNode } from "@/components/swarm/customer-swarm";
-import { fadeUp, stagger, wordReveal, EASE } from "@/lib/motion";
-
-const HEAD_1 = ["Meet", "your", "customers"];
-const HEAD_2 = ["before", "reality", "does."];
+import { HeroMockup } from "@/components/landing/hero-mockup";
+import { fadeUp, stagger, EASE } from "@/lib/motion";
 
 export function Hero() {
-  // Dense particle sphere with color-coded status nodes representing interactive simulated customers
-  const nodes: SwarmNode[] = useMemo(() => {
-    const shades = ["#ffffff", "#ffffff", "#f0f0f2", "#e2e2e6", "#cfcfd4", "#b6b6be"];
-    const baseNodes = Array.from({ length: 420 }, (_, i) => ({
-      id: `c${i}`,
-      color: shades[i % shades.length],
-    }));
-
-    // High-value, status-colored interactive customer nodes (placed first to be prominent)
-    const interactiveNodes: SwarmNode[] = [
-      {
-        id: "i1",
-        color: "#fb7185", // Rose (high churn risk / objection)
-        name: "Devon Patel",
-        role: "VP Product, Enterprise SaaS",
-        verdict: "High Churn Risk 🔴",
-        intent: 12,
-      },
-      {
-        id: "i2",
-        color: "#34d399", // Emerald (high purchase intent)
-        name: "Sarah Chen",
-        role: "Founder, Seed DevTools",
-        verdict: "Will Purchase 🟢",
-        intent: 92,
-      },
-      {
-        id: "i3",
-        color: "#fbbf24", // Amber (active objection)
-        name: "Marcus Vance",
-        role: "Head of Growth, FinTech",
-        verdict: "Objection: Pricing model 🟡",
-        intent: 45,
-      },
-      {
-        id: "i4",
-        color: "#a78bfa", // Violet (active simulator)
-        name: "Alex Mercer",
-        role: "CTO, DevTools Startup",
-        verdict: "Active: Simulating Setup 🟣",
-        intent: 78,
-      },
-      {
-        id: "i5",
-        color: "#fb7185",
-        name: "Jessica Taylor",
-        role: "Director of Product, RetailTech",
-        verdict: "Objection: Integration lag 🔴",
-        intent: 24,
-      },
-      {
-        id: "i6",
-        color: "#34d399",
-        name: "David Kim",
-        role: "VP Engineering, HealthTech",
-        verdict: "Will Purchase 🟢",
-        intent: 88,
-      },
-      {
-        id: "i7",
-        color: "#22d3ee", // Cyan (high adoption)
-        name: "Elena Rostova",
-        role: "Product Marketing Manager",
-        verdict: "High Adoption Rate 🔵",
-        intent: 85,
-      },
-      {
-        id: "i8",
-        color: "#fbbf24",
-        name: "Tomás Silva",
-        role: "Head of Sales, Web3 Platform",
-        verdict: "Objection: No Slack alert 🟡",
-        intent: 52,
-      },
-    ];
-
-    return [...interactiveNodes, ...baseNodes];
-  }, []);
-
   return (
-    <section className="relative overflow-hidden pb-24 pt-24 sm:pt-32">
-      {/* Premium ambient glows */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 -z-10 w-[450px] h-[450px] rounded-full bg-violet-600/5 blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/2 right-1/4 translate-x-1/2 -translate-y-1/2 -z-10 w-[550px] h-[550px] rounded-full bg-cyan-600/5 blur-[130px] pointer-events-none" />
+    <section className="relative overflow-hidden pb-24 pt-28 sm:pt-36">
+      {/* Background accent glows (specific to hero area) */}
+      <div className="absolute top-[-10%] right-[-5%] -z-10 w-[500px] h-[500px] rounded-full bg-purple-500/40 blur-[120px] pointer-events-none mix-blend-multiply" />
+      <div className="absolute top-1/4 right-[15%] -z-10 w-[500px] h-[500px] rounded-full bg-violet-500/30 blur-[120px] pointer-events-none mix-blend-multiply" />
+      <div className="absolute top-1/2 right-0 -z-10 w-[400px] h-[400px] rounded-full bg-blue-500/20 blur-[120px] pointer-events-none mix-blend-multiply" />
+      <div className="absolute bottom-[-15%] left-[-10%] -z-10 w-[600px] h-[600px] rounded-full bg-purple-500/30 blur-[120px] pointer-events-none mix-blend-multiply" />
 
-      <div className="container grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
-        {/* Left: copywriting and trust metrics */}
-        <motion.div variants={stagger(0.1, 0.05)} initial="hidden" animate="show">
+      <div className="container grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 xl:gap-16">
+        {/* ── Left column: Copy ── */}
+        <motion.div
+          variants={stagger(0.1, 0.05)}
+          initial="hidden"
+          animate="show"
+          className="relative z-10"
+        >
+          {/* Beta badge */}
           <motion.div
             variants={fadeUp}
-            className="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/[0.05] px-3.5 py-1.5 text-xs text-violet-300 shadow-[0_0_15px_rgba(139,92,246,0.1)] backdrop-blur"
+            className="inline-flex items-center gap-2 rounded-full border border-violet-500/25 bg-violet-500/[0.07] px-3.5 py-1.5 text-xs text-violet-700 shadow-sm"
           >
             <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-violet-400 opacity-70" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-violet-500" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-violet-500 opacity-60" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-violet-600" />
             </span>
             Beta · 1,200+ simulations run
           </motion.div>
 
-          <h1 className="mt-7 text-5xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl lg:text-[4.75rem] text-glow">
-            <motion.span variants={stagger(0.07)} initial="hidden" animate="show" className="block text-white leading-tight">
-              Meet your customers
-            </motion.span>
-            <motion.span variants={stagger(0.07)} initial="hidden" animate="show" className="block bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400 bg-clip-text text-transparent leading-normal py-1">
-              before reality does.
-            </motion.span>
-          </h1>
+          {/* Headline */}
+          <motion.h1
+            variants={fadeUp}
+            className="mt-7 text-[2.75rem] font-extrabold leading-[1.02] tracking-tight text-slate-900 sm:text-[3.5rem] md:text-[4rem] lg:text-[4.25rem] xl:text-[4.75rem]"
+          >
+            MEET YOUR
+            <br />
+            CUSTOMERS{" "}
+            <span className="bg-gradient-to-r from-violet-600 via-indigo-500 to-blue-500 bg-clip-text text-transparent">
+              BEFORE
+            </span>
+            <br />
+            REALITY DOES.
+          </motion.h1>
 
-          <motion.p variants={fadeUp} className="mt-7 max-w-xl text-lg leading-relaxed text-zinc-400">
-            GhostCustomer AI simulates <span className="text-white font-medium">hundreds of autonomous AI customer personas</span> that crawl your product, raise onboarding objections, and predict churn — <span className="text-white font-medium">before you launch.</span> Designed for product, marketing, and growth teams.
+          {/* Description */}
+          <motion.p
+            variants={fadeUp}
+            className="mt-6 max-w-lg text-[1.05rem] leading-relaxed text-slate-500"
+          >
+            Experience your product through the eyes of{" "}
+            <span className="font-semibold text-slate-800">hyper-realistic AI customer personas</span>{" "}
+            — uncovering deep product feedback, detecting onboarding objections, and{" "}
+            <span className="font-semibold text-slate-800">predicting churn</span>{" "}
+            in real-time before you launch.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="mt-9 flex flex-col sm:flex-row flex-wrap gap-4 items-start sm:items-center">
+          {/* CTA Buttons */}
+          <motion.div
+            variants={fadeUp}
+            className="mt-9 flex flex-col sm:flex-row flex-wrap gap-3.5 items-start sm:items-center"
+          >
             <Link href="/dashboard">
-              <Button size="lg" className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-medium shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_25px_rgba(99,102,241,0.5)] border-0 transition-all duration-300 py-6 px-8 rounded-xl flex items-center gap-2">
-                Start Simulation <ArrowRight className="h-4.5 w-4.5" />
-              </Button>
+              <button
+                id="hero-start-simulation"
+                className="group relative overflow-hidden rounded-xl bg-violet-600 px-7 py-3.5 text-sm font-semibold text-white shadow-[0_4px_14px_rgba(124,58,237,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-violet-700 hover:shadow-[0_8px_25px_rgba(124,58,237,0.45)] flex items-center gap-2"
+              >
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                <span className="relative z-10">Start Simulation</span>
+                <ArrowRight className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+              </button>
             </Link>
+
             <Link href="#how">
-              <Button variant="outline" size="lg" className="border-white/10 hover:border-white/20 bg-white/[0.02] text-zinc-300 hover:text-white transition-all duration-300 py-6 px-8 rounded-xl flex items-center gap-2 backdrop-blur-md">
-                Book Demo
-              </Button>
+              <button
+                id="hero-watch-demo"
+                className="group flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-7 py-3.5 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-violet-400/50 hover:bg-violet-50/50 hover:text-violet-700 hover:shadow-[0_4px_14px_rgba(124,58,237,0.08)]"
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-violet-400/30 bg-violet-50 transition-all duration-300 group-hover:bg-violet-100 group-hover:border-violet-400/60">
+                  <Play className="h-2.5 w-2.5 fill-violet-600 text-violet-600 ml-0.5" />
+                </span>
+                Watch Demo
+              </button>
             </Link>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="mt-4 text-xs text-muted-foreground flex items-center gap-2">
-            <CheckCircle className="h-3.5 w-3.5 text-violet-400 flex-shrink-0" />
-            No credit card required. Free tier includes 50 persona runs.
+          {/* Trust nudge */}
+          <motion.div
+            variants={fadeUp}
+            className="mt-5 text-xs text-slate-400 flex items-center gap-2"
+          >
+            <CheckCircle className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />
+            No credit card required · Free tier includes 50 persona runs
           </motion.div>
 
           {/* Stats Bar */}
-          <motion.div variants={fadeUp} className="mt-14 flex flex-wrap gap-x-12 gap-y-6 pt-8 border-t border-white/[0.06] w-full max-w-lg">
+          <motion.div
+            variants={fadeUp}
+            className="mt-12 flex flex-wrap gap-x-10 gap-y-5 pt-8 border-t border-slate-200/80 w-full max-w-lg"
+          >
             {[
               { v: 94.2, s: "%", l: "Churn prediction accuracy" },
               { v: 60, s: "s", l: "To first swarm insight" },
               { v: 2.4, s: "M", l: "Avg. revenue leak found", prefix: "$" },
             ].map((m) => (
               <div key={m.l} className="flex flex-col">
-                <p className="font-mono text-3xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
+                <p className="font-mono text-2xl font-bold text-slate-900">
                   {m.prefix}
                   <AnimatedNumber value={m.v} suffix={m.s} />
                 </p>
-                <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{m.l}</p>
+                <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                  {m.l}
+                </p>
               </div>
             ))}
           </motion.div>
         </motion.div>
 
-        {/* Right: Enhanced Customer Network (Globe + Floating mockups) */}
+        {/* ── Right column: Floating Dashboard Cards Mockup ── */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.3, ease: EASE }}
-          className="relative min-h-[460px] flex items-center justify-center"
+          initial={{ opacity: 0, scale: 0.92, y: 30 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.35, ease: EASE }}
+          className="relative hidden lg:flex items-center justify-center"
         >
-          {/* Central network card */}
-          <div className="ring-border w-full relative overflow-hidden rounded-[28px] bg-white/[0.01] p-6 backdrop-blur-xl border border-white/[0.06]">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-400">
-                Customer Intelligence Network
+          <HeroMockup />
+        </motion.div>
+
+        {/* Mobile-only: simplified single card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+          className="relative flex lg:hidden items-center justify-center"
+        >
+          <div className="w-full max-w-sm rounded-2xl border border-white/[0.12] bg-[#07070d] p-5 shadow-[0_20px_60px_-10px_rgba(0,0,0,0.7)]">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
+              <span className="text-[11px] font-bold tracking-wider uppercase text-zinc-100 flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-violet-500 shadow-[0_0_8px_#8b5cf6]" />
+                Simulation Dashboard
               </span>
-              <span className="flex items-center gap-1.5 font-mono text-[11px] text-emerald-400">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" /> LIVE SIMULATION
+              <span className="text-[8px] font-mono text-emerald-400 flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" /> LIVE
               </span>
             </div>
-
-            <CustomerSwarm nodes={nodes} variant="sphere" height={380} interactive className="my-2" />
-
-            <div className="flex justify-between items-center mt-2 px-1 text-[10px] text-muted-foreground/80">
-              <span className="uppercase tracking-[0.12em]">Network of simulated customers</span>
-              <span>Hover nodes to inspect details</span>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="rounded-xl border border-white/[0.04] bg-white/[0.01] p-2.5">
+                <span className="text-[8px] font-bold uppercase tracking-wider text-zinc-500">CONVERSION</span>
+                <p className="text-sm font-bold text-emerald-400 mt-0.5">+14.2%</p>
+              </div>
+              <div className="rounded-xl border border-white/[0.04] bg-white/[0.01] p-2.5">
+                <span className="text-[8px] font-bold uppercase tracking-wider text-zinc-500">CHURN PRED.</span>
+                <p className="text-sm font-bold text-rose-400 mt-0.5">94.2% Acc.</p>
+              </div>
+            </div>
+            <div className="space-y-2 text-[9px] font-mono text-zinc-400">
+              <div className="flex gap-1.5">
+                <span className="text-zinc-600">[12:44]</span>
+                <span><strong className="text-violet-300">Sarah Chen</strong> → Will Purchase 🟢</span>
+              </div>
+              <div className="flex gap-1.5">
+                <span className="text-zinc-600">[12:44]</span>
+                <span className="text-amber-400">Devon Patel → Objection: Pricing 🟡</span>
+              </div>
+              <div className="flex gap-1.5">
+                <span className="text-zinc-600">[12:44]</span>
+                <span className="text-rose-400">Marcus Vance → High Churn Risk 🔴</span>
+              </div>
             </div>
           </div>
-
-
-
-          {/* Faint ambient halo backdrop */}
-          <div className="absolute inset-0 -z-10 rounded-[28px] bg-white/[0.02] blur-3xl" />
         </motion.div>
       </div>
     </section>

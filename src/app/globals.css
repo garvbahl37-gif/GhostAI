@@ -297,3 +297,111 @@
     break-inside: avoid;
   }
 }
+
+/* ============================================================================
+   Light SaaS Landing Page Theme Override
+   ============================================================================ */
+
+.landing-page-theme {
+  --background: 240 10% 98%;
+  --foreground: 240 10% 4%;
+  color: #0F172A;
+}
+
+/* Base text elements */
+.landing-page-theme h1,
+.landing-page-theme h2,
+.landing-page-theme h3,
+.landing-page-theme h4,
+.landing-page-theme h5 {
+  color: #0F172A !important;
+}
+
+.landing-page-theme p,
+.landing-page-theme span,
+.landing-page-theme li {
+  color: #475569;
+}
+
+/* Explicit class overrides */
+.landing-page-theme .text-white {
+  color: #0F172A !important;
+}
+
+.landing-page-theme .text-zinc-200 {
+  color: #1E293B !important;
+}
+
+.landing-page-theme .text-zinc-300,
+.landing-page-theme .text-zinc-400,
+.landing-page-theme .text-muted-foreground {
+  color: #475569 !important;
+}
+
+/* Sections specific background and borders */
+.landing-page-theme section {
+  background-color: transparent !important;
+  border-color: rgba(15, 23, 42, 0.05) !important;
+}
+
+/* Glass card overrides */
+.landing-page-theme .glass {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(99, 102, 241, 0.08) !important;
+  box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+  backdrop-filter: blur(16px);
+}
+
+.landing-page-theme .glass:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(99, 102, 241, 0.15) !important;
+  box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.08), 0 1px 5px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Differentiator custom styling */
+.landing-page-theme .border-ghost-rose\/20 {
+  border-color: rgba(244, 63, 94, 0.15) !important;
+  background-color: rgba(244, 63, 94, 0.03) !important;
+}
+.landing-page-theme .text-ghost-rose {
+  color: #E11D48 !important;
+}
+.landing-page-theme .border-ghost-emerald\/20 {
+  border-color: rgba(16, 185, 129, 0.15) !important;
+  background-color: rgba(16, 185, 129, 0.03) !important;
+}
+.landing-page-theme .text-ghost-emerald {
+  color: #059669 !important;
+}
+
+/* Features page icons */
+.landing-page-theme .bg-white\/\[0\.04\] {
+  background-color: rgba(15, 23, 42, 0.04) !important;
+  border-color: rgba(15, 23, 42, 0.06) !important;
+  color: #334155 !important;
+}
+
+.landing-page-theme .group:hover .bg-white\/\[0\.04\] {
+  background-color: rgba(99, 102, 241, 0.1) !important;
+  border-color: rgba(99, 102, 241, 0.2) !important;
+  color: #4F46E5 !important;
+}
+
+/* CTA Card */
+.landing-page-theme .from-ghost-violet\/20 {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(99, 102, 241, 0.05) 50%, rgba(6, 182, 212, 0.06) 100%) !important;
+  border-color: rgba(99, 102, 241, 0.1) !important;
+  box-shadow: 0 30px 60px -20px rgba(99, 102, 241, 0.12) !important;
+}
+
+.landing-page-theme .from-ghost-violet\/20 h2 {
+  color: #0F172A !important;
+}
+
+/* Light grid background */
+.grid-bg-light {
+  background-image:
+    linear-gradient(to right, rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
