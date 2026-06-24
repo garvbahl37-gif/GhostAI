@@ -251,6 +251,8 @@ export interface RunConfig {
   competitorUrl?: string;
   personaCount: number;
   currentPrice?: number;
+  /** Speed Run demo: fully offline, deterministic Stripe data — no crawl/LLM. */
+  isDemo?: boolean;
 }
 
 export interface RunState {

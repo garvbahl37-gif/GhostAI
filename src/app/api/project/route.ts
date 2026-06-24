@@ -22,7 +22,8 @@ export async function POST(req: NextRequest) {
     competitorUrl: body?.competitorUrl ? normalizeUrl(String(body.competitorUrl)) : undefined,
     personaCount: Math.max(12, Math.min(500, Number(body?.personaCount) || 120)),
     currentPrice: body?.currentPrice ? Number(body.currentPrice) : undefined,
+    isDemo: Boolean(body?.isDemo),
   };
 
-  return Response.json({ runId: newRunId(), config, engine: engineName() });
+  return Response.json({ runId: newRunId(), config, engine: config.isDemo ? "mock" : engineName() });
 }

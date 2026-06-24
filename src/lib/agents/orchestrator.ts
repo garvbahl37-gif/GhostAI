@@ -15,6 +15,7 @@ import {
   buildReport,
   deriveSignals,
   buildCompetitor,
+  demoStripeAnalysis,
   mockPersonas,
   mockSimulate,
 } from "@/lib/data/mock-engine";
@@ -51,6 +52,9 @@ export async function* runPipeline(
 ): AsyncGenerator<RunEvent, void, unknown> {
   const pace = (ms: number) => (opts.fast ? Promise.resolve() : sleep(ms));
   const count = clamp(config.personaCount, 12, 500);
+  // Speed Run demo: short-circuit ALL outbound network (no crawl, no Firecrawl,
+  // no LLM) and serve deterministic Stripe data so the demo can't fail offline.
+  const isDemo = Boolean(config.isDemo);
 
   const state: RunState = {
     runId,
@@ -59,24 +63,36 @@ export async function* runPipeline(
     createdAt: Date.now(),
     personas: [],
     simulations: [],
-    engine: engineName(),
+    engine: isDemo ? "mock" : engineName(),
   };
   await saveRun(state);
 
   try {
     // ---- 1. Website Analyzer ----------------------------------------------
-    yield { type: "status", phase: "analyzing", message: "Crawling and analyzing the website…", progress: 5 };
-    const crawl = await crawlSite(config.url);
-    const analysis = await aiAnalyze(config, crawl.text, crawl.source);
+    yield {
+      type: "status",
+      phase: "analyzing",
+      message: isDemo ? "Speed Run — loading the Stripe demo dataset…" : "Crawling and analyzing the website…",
+      progress: 5,
+    };
+    let analysis;
+    if (isDemo) {
+      // simulate ~1.8s of "processing" so it feels real, then seed instantly
+      await sleep(1800);
+      analysis = demoStripeAnalysis();
+    } else {
+      const crawl = await crawlSite(config.url);
+      analysis = await aiAnalyze(config, crawl.text, crawl.source);
+    }
     const signals = deriveSignals(analysis);
     state.analysis = analysis;
     // reflect what actually happened: real AI analysis vs mock fallback
-    state.engine = analysis.source === "mock" ? "mock" : "gemini";
+    state.engine = isDemo ? "mock" : analysis.source === "mock" ? "mock" : "gemini";
     yield { type: "analysis", data: analysis };
     // Be honest in the war room when we couldn't read the live site: keep the
     // swarm running on an estimated baseline rather than failing the demo, but
-    // never present it as a real crawl.
-    if (analysis.source === "mock") {
+    // never present it as a real crawl. (Skipped in demo — it's intentional.)
+    if (!isDemo && analysis.source === "mock") {
       yield {
         type: "thought",
         agent: "Website Analyzer",
@@ -162,7 +178,7 @@ export async function* runPipeline(
     yield { type: "insights", data: insights };
 
     // ---- optional: Competitor Battle (real crawl + AI analysis of the rival)
-    if (config.competitorUrl) {
+    if (config.competitorUrl && !isDemo) {
       const compCrawl = await crawlSite(config.competitorUrl);
       const compAnalysis = await aiAnalyze(
         { url: config.competitorUrl, personaCount: 0 },
@@ -178,7 +194,9 @@ export async function* runPipeline(
       yield { type: "thought", ...t };
       await pace(150);
     }
-    const report = await aiReport(analysis, insights, state.competitor);
+    const report = isDemo
+      ? buildReport(analysis, insights, state.competitor)
+      : await aiReport(analysis, insights, state.competitor);
     state.report = report;
     yield { type: "report", data: report };
 

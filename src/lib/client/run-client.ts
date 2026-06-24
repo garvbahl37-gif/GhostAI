@@ -9,6 +9,7 @@ export interface StreamRunBody {
   personaCount?: number;
   currentPrice?: number;
   fast?: boolean;
+  isDemo?: boolean;
 }
 
 /** POST to /api/run and invoke `onEvent` for each NDJSON event as it streams. */

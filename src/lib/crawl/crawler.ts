@@ -19,6 +19,10 @@ const FIRECRAWL_KEY = process.env.FIRECRAWL_API_KEY;
 // (bot wall, JS-only shell) and we treat the tier as a miss, not a success.
 const MIN_CONTENT_CHARS = 60;
 
+// How long to let the page fully render before the UI-Roast screenshot, so we
+// capture the real page — not a splash/loading state. Tunable via env.
+const SCREENSHOT_WAIT_MS = Number(process.env.SCREENSHOT_WAIT_MS) || 6500;
+
 async function withTimeout<T>(p: Promise<T>, ms: number): Promise<T | null> {
   try {
     return await Promise.race([
@@ -69,20 +73,33 @@ export async function screenshotSite(url: string): Promise<string | null> {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${FIRECRAWL_KEY}` },
         body: JSON.stringify({
           url,
-          formats: ["screenshot"],
-          timeout: 60000,
-          waitFor: 3000,
+          formats: ["screenshot@fullPage"],
+          timeout: 90000,
+          // Wait for the page to settle, then an extra in-page wait + a scroll to
+          // trigger lazy content, THEN screenshot — so we never roast a loader.
+          waitFor: SCREENSHOT_WAIT_MS,
           actions: [
-            { type: "wait", milliseconds: 2000 },
+            { type: "wait", milliseconds: SCREENSHOT_WAIT_MS },
+            { type: "scroll", direction: "down" },
+            { type: "wait", milliseconds: 1200 },
+            { type: "scroll", direction: "up" },
+            { type: "wait", milliseconds: 600 },
             { type: "screenshot", fullPage: true },
           ],
         }),
       }),
-      60000
+      90000
     );
     if (!res || !res.ok) return null;
     const data = await res.json();
-    return data?.data?.screenshot ?? data?.screenshot ?? null;
+    // the in-page screenshot action lands in actions.screenshots; fall back to
+    // the format-level screenshot fields.
+    return (
+      data?.data?.actions?.screenshots?.[data.data.actions.screenshots.length - 1] ??
+      data?.data?.screenshot ??
+      data?.screenshot ??
+      null
+    );
   } catch {
     return null;
   }

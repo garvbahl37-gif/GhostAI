@@ -44,6 +44,62 @@ import type {
 } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
+// Speed Run demo — a hand-tuned, impressive Stripe analysis. Fully offline:
+// the orchestrator uses this directly in demo mode (no crawl, no LLM) so a
+// hackathon demo never depends on the network. Shape matches live data exactly.
+// ---------------------------------------------------------------------------
+export function demoStripeAnalysis(): WebsiteAnalysis {
+  return {
+    url: "https://stripe.com",
+    title: "Stripe",
+    tagline: "Financial infrastructure to grow your revenue",
+    category: "Payments & Financial Infrastructure",
+    valueProps: [
+      "Accept payments and move money globally with a single integration",
+      "Battle-tested APIs trusted by millions of businesses worldwide",
+      "Built-in fraud protection, billing, and revenue tooling out of the box",
+    ],
+    ctas: ["Start now", "Contact sales", "Read the docs"],
+    navItems: ["Products", "Solutions", "Developers", "Resources", "Pricing", "Sign in"],
+    pricingTiers: [
+      {
+        name: "Integrated",
+        price: "2.9% + 30¢",
+        period: "per successful card charge",
+        highlights: ["No setup fees", "No monthly fees", "Pay only when you get paid"],
+      },
+      {
+        name: "Custom",
+        price: "Custom",
+        period: "for large payment volume",
+        highlights: ["Volume discounts", "Multi-product pricing", "Country-specific rates", "Dedicated support"],
+      },
+    ],
+    faqs: [
+      { q: "How fast can I start accepting payments?", a: "You can be live in minutes with a few lines of code." },
+      { q: "Which payment methods are supported?", a: "100+ methods including cards, wallets, and bank debits across 135+ currencies." },
+      { q: "Is Stripe secure?", a: "Stripe is a PCI Service Provider Level 1, the most stringent certification available." },
+    ],
+    trustSignals: [
+      "Powers millions of businesses across 135+ currencies",
+      "99.999% historical uptime",
+      "PCI Service Provider Level 1 certified",
+      "Trusted by Amazon, Shopify, OpenAI, and Marriott",
+    ],
+    missingTrustSignals: [
+      "Transparent enterprise pricing on the page",
+      "A side-by-side comparison vs. competitors",
+    ],
+    onboardingSteps: ["Create an account", "Add your API keys", "Drop in Checkout or Elements", "Go live"],
+    detectedFeatures: ["Payments", "Billing", "Connect", "Radar fraud detection", "Issuing", "Terminal", "Tax", "Invoicing"],
+    targetAudience: "Developers and finance teams at startups through global enterprises",
+    toneOfVoice: "Confident, technical, precise",
+    contentScore: 86,
+    source: "mock",
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Site category archetypes (drives realistic, varied analysis output)
 // ---------------------------------------------------------------------------
 interface Archetype {

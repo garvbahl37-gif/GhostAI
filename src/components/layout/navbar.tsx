@@ -77,7 +77,7 @@ export function Navbar() {
               {!isLanding && (
                 <span
                   className="absolute -inset-1.5 rounded-2xl opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100"
-                  style={{ background: "radial-gradient(circle, rgba(139,92,246,0.3) 0%, rgba(99,102,241,0.1) 50%, transparent 70%)" }}
+                  style={{ background: "radial-gradient(circle, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.08) 50%, transparent 70%)" }}
                 />
               )}
             </span>
@@ -88,8 +88,10 @@ export function Navbar() {
 
           {/* Center nav (segmented) */}
           <nav className={cn(
-            "absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-xl border p-1 md:flex",
-            isLanding ? "border-slate-950/10 bg-slate-950/[0.02]" : "border-white/[0.06] bg-white/[0.03]"
+            "absolute left-1/2 hidden -translate-x-1/2 items-center gap-0.5 rounded-2xl border p-1 md:flex",
+            isLanding
+              ? "border-slate-950/10 bg-slate-950/[0.02]"
+              : "border-white/[0.08] bg-white/[0.025] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
           )}>
             {NAV.map((item) => {
               const active = pathname?.startsWith(item.href);
@@ -99,22 +101,26 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "relative flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-colors",
+                    "relative flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-sm font-medium transition-colors duration-200",
                     isLanding
                       ? active ? "text-slate-900" : "text-slate-600 hover:text-slate-900"
-                      : active ? "text-white" : "text-muted-foreground hover:text-foreground",
+                      : active ? "text-white" : "text-white/55 hover:text-white/90",
                   )}
                 >
                   {active && (
                     <motion.span
                       layoutId="nav-pill"
                       className={cn(
-                        "absolute inset-0 -z-10 rounded-lg",
+                        "absolute inset-0 -z-10 rounded-xl",
                         isLanding
                           ? "bg-violet-600/10 ring-1 ring-violet-500/20 border border-violet-500/10"
-                          : "bg-gradient-to-r from-violet-600/15 to-indigo-600/10 ring-1 ring-violet-500/30 border border-violet-500/10"
+                          : "bg-white/[0.1] ring-1 ring-white/[0.14]"
                       )}
-                      style={isLanding ? { boxShadow: "0 0 12px rgba(139,92,246,0.12)" } : { boxShadow: "0 0 16px -2px rgba(139,92,246,0.45)" }}
+                      style={
+                        isLanding
+                          ? { boxShadow: "0 0 12px rgba(139,92,246,0.12)" }
+                          : { boxShadow: "inset 0 1px 0 rgba(255,255,255,0.14), 0 6px 16px -6px rgba(0,0,0,0.6)" }
+                      }
                       transition={{ type: "spring", stiffness: 360, damping: 30 }}
                     />
                   )}
@@ -134,10 +140,10 @@ export function Navbar() {
                 "relative overflow-hidden rounded-xl px-3.5 py-1.5 text-xs font-semibold shadow-sm transition-all duration-300 hover:-translate-y-0.5 sm:px-4 sm:py-2 sm:text-sm group",
                 isLanding
                   ? "bg-violet-600 text-white hover:bg-violet-700 shadow-[0_4px_12px_rgba(124,58,237,0.2)] hover:shadow-[0_4px_20px_rgba(124,58,237,0.35)]"
-                  : "bg-white text-[#0a0a0b] shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_0_20px_rgba(139,92,246,0.4)]"
+                  : "bg-white text-[#0a0a0b] shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_8px_24px_-6px_rgba(255,255,255,0.45)]"
               )}
             >
-              {!isLanding && <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-violet-500/25 to-transparent transition-transform duration-1000 ease-out group-hover:translate-x-full" />}
+              {!isLanding && <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-black/[0.08] to-transparent transition-transform duration-1000 ease-out group-hover:translate-x-full" />}
               <span className="relative z-10">Launch</span>
             </Link>
 

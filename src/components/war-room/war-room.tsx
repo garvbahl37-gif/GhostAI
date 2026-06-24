@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { ArrowRight, BarChart3, FileText, Loader2, Swords } from "lucide-react";
+import { ArrowRight, BarChart3, FileText, Loader2, Swords, Zap } from "lucide-react";
 import type {
   Insights,
   Persona,
@@ -241,6 +241,11 @@ export function WarRoom({ runId }: { runId: string }) {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-2xl font-bold sm:text-3xl">AI War Room</h1>
+              {configRef.current?.isDemo && (
+                <Badge variant="amber">
+                  <Zap className="h-3 w-3" /> Demo Mode Active
+                </Badge>
+              )}
               {s.status === "running" && (
                 <Badge variant="cyan">
                   <Loader2 className="h-3 w-3 animate-spin" /> Live

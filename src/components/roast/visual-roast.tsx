@@ -91,7 +91,8 @@ export function VisualRoast() {
 
       {loading && (
         <div className="rounded-2xl glass p-10 text-center text-sm text-muted-foreground">
-          Capturing a full-page screenshot and asking a Gemini-vision customer to react… (5–20s)
+          Letting the page fully load, capturing a full-page screenshot, then asking a vision-AI customer to
+          react… this takes ~10–30s so we roast the real page, not a loading screen.
         </div>
       )}
 

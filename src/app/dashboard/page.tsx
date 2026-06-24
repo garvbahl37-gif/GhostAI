@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Sparkles, Globe, Swords, Loader2, Zap, ChevronDown, ChevronUp } from "lucide-react";
+import { Sparkles, Globe, Swords, Loader2, Zap, ChevronDown, ChevronUp, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,7 +25,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function launch(targetUrl: string) {
+  async function launch(targetUrl: string, opts?: { isDemo?: boolean }) {
     setError("");
     setLoading(true);
     try {
@@ -34,10 +34,11 @@ export default function DashboardPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           url: targetUrl,
-          competitorUrl: competitorUrl || undefined,
-          pricingUrl: pricingUrl || undefined,
-          personaCount: count,
-          currentPrice: currentPrice ? Number(currentPrice) : undefined,
+          competitorUrl: opts?.isDemo ? undefined : competitorUrl || undefined,
+          pricingUrl: opts?.isDemo ? undefined : pricingUrl || undefined,
+          personaCount: opts?.isDemo ? 250 : count,
+          currentPrice: opts?.isDemo ? undefined : currentPrice ? Number(currentPrice) : undefined,
+          isDemo: opts?.isDemo || undefined,
         }),
       });
       const data = await res.json();
@@ -66,7 +67,7 @@ export default function DashboardPage() {
         </p>
       </motion.div>
 
-      <Card className="conic-border mt-8 bg-[#0a0a16]/70 p-6">
+      <Card className="conic-border mt-8 bg-[#0a0a14]/80 p-7">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -94,7 +95,7 @@ export default function DashboardPage() {
                   key={s}
                   type="button"
                   onClick={() => setUrl(s)}
-                  className="rounded-full bg-white/5 px-2.5 py-1 text-xs text-foreground/80 transition hover:bg-white/10"
+                  className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-xs text-foreground/75 transition hover:border-white/20 hover:bg-white/[0.07] hover:text-foreground"
                 >
                   {s}
                 </button>
@@ -110,10 +111,10 @@ export default function DashboardPage() {
                   key={c}
                   type="button"
                   onClick={() => setCount(c)}
-                  className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${
+                  className={`rounded-xl border px-4 py-2 text-sm font-medium transition-all ${
                     count === c
-                      ? "border-ghost-violet bg-ghost-violet/20 text-foreground"
-                      : "border-white/10 bg-white/5 text-muted-foreground hover:text-foreground"
+                      ? "border-white/20 bg-white/[0.1] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_6px_18px_-8px_rgba(0,0,0,0.6)]"
+                      : "border-white/[0.08] bg-white/[0.02] text-muted-foreground hover:border-white/15 hover:bg-white/[0.05] hover:text-foreground"
                   }`}
                 >
                   {c} ghosts
@@ -157,15 +158,13 @@ export default function DashboardPage() {
             </Button>
             <Button
               type="button"
-              variant="outline"
+              variant="accent"
               size="lg"
               disabled={loading}
-              onClick={() => {
-                setUrl("stripe.com");
-                launch("stripe.com");
-              }}
+              onClick={() => launch("stripe.com", { isDemo: true })}
+              title="Bulletproof offline demo — seeded Stripe data, no network needed"
             >
-              <Zap className="h-4 w-4" /> Instant demo
+              <Zap className="h-4 w-4" /> Speed Run Demo
             </Button>
           </div>
         </form>
@@ -174,33 +173,31 @@ export default function DashboardPage() {
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         <a
           href="/arena"
-          className="flex items-center gap-3 rounded-2xl glass p-4 transition hover:bg-white/[0.06]"
+          className="group flex items-center gap-3 rounded-2xl border border-white/[0.06] glass p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/[0.14] hover:bg-white/[0.05]"
         >
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-ghost-amber/15 text-ghost-amber">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-ghost-amber/15 text-ghost-amber ring-1 ring-ghost-amber/20">
             <Swords className="h-5 w-5" />
           </span>
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold">Competitor Battle Arena</p>
             <p className="text-xs text-muted-foreground">Pit your site against a rival</p>
           </div>
+          <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground" />
         </a>
         <a
           href="/pricing-lab"
-          className="flex items-center gap-3 rounded-2xl glass p-4 transition hover:bg-white/[0.06]"
+          className="group flex items-center gap-3 rounded-2xl border border-white/[0.06] glass p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/[0.14] hover:bg-white/[0.05]"
         >
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-ghost-emerald/15 text-ghost-emerald">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-ghost-emerald/15 text-ghost-emerald ring-1 ring-ghost-emerald/20">
             <Zap className="h-5 w-5" />
           </span>
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold">Pricing Time Machine</p>
             <p className="text-xs text-muted-foreground">Simulate a price change</p>
           </div>
+          <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground" />
         </a>
       </div>
-
-      <p className="mt-6 text-center text-xs text-muted-foreground">
-        Runs instantly on the deterministic demo engine. Add a <span className="text-foreground">GEMINI_API_KEY</span> for live AI analysis.
-      </p>
     </div>
     </AuthGate>
   );
