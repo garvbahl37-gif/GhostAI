@@ -49,7 +49,7 @@ export function TabsTrigger({ value, children, className }: { value: string; chi
       onClick={() => ctx.setValue(value)}
       className={cn(
         "rounded-lg px-4 py-1.5 text-sm font-medium transition-all",
-        active ? "bg-white/10 text-foreground shadow" : "text-muted-foreground hover:text-foreground",
+        active ? "bg-slate-100 text-slate-900 shadow" : "text-slate-500 hover:text-slate-900",
         className,
       )}
     >

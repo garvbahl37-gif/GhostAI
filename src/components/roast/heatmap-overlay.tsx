@@ -7,9 +7,9 @@ import { clamp } from "@/lib/utils";
 
 // Strict severity → Tailwind colour (per spec): high=red, medium=yellow, low=blue.
 const DOT: Record<HeatmapPoint["severity"], { bg: string; ring: string; text: string }> = {
-  high: { bg: "bg-red-500", ring: "bg-red-500/40", text: "text-red-400" },
-  medium: { bg: "bg-yellow-500", ring: "bg-yellow-500/40", text: "text-yellow-400" },
-  low: { bg: "bg-blue-500", ring: "bg-blue-500/40", text: "text-blue-400" },
+  high: { bg: "bg-red-500", ring: "bg-red-500/40", text: "text-red-600" },
+  medium: { bg: "bg-yellow-500", ring: "bg-yellow-500/40", text: "text-yellow-600" },
+  low: { bg: "bg-blue-500", ring: "bg-blue-500/40", text: "text-blue-600" },
 };
 
 /** Convert Gemini-vision roast regions (boxes, 0-1000) into heatmap points
@@ -39,7 +39,7 @@ export function HeatmapOverlay({
   const [hover, setHover] = useState<number | null>(null);
 
   return (
-    <div className="relative w-full overflow-hidden rounded-xl ring-1 ring-white/10">
+    <div className="relative w-full overflow-hidden rounded-xl ring-1 ring-black/5">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={screenshotUrl} alt="Heatmap of the analyzed page" className="block w-full select-none" />
 
@@ -83,7 +83,7 @@ export function HeatmapOverlay({
                 transition={{ duration: 0.14 }}
                 className={`absolute left-1/2 w-60 -translate-x-1/2 ${below ? "top-7" : "bottom-7"}`}
               >
-                <div className="rounded-xl border border-white/12 bg-[#0a0a16]/95 p-3 text-left shadow-[0_20px_60px_-20px_rgba(0,0,0,0.95)] backdrop-blur-xl">
+                <div className="rounded-xl border border-slate-200 bg-white/95 p-3 text-left shadow-[0_20px_60px_-20px_rgba(30,20,70,0.18)] backdrop-blur-xl">
                   <div className="mb-1 flex items-center gap-2">
                     {persona ? (
                       <span
@@ -95,14 +95,14 @@ export function HeatmapOverlay({
                     ) : (
                       <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${c.bg}`} />
                     )}
-                    <p className="truncate text-sm font-semibold text-foreground">{p.label}</p>
+                    <p className="truncate text-sm font-semibold text-slate-900">{p.label}</p>
                   </div>
                   {persona && (
                     <p className={`mb-1 text-[11px] font-medium ${c.text}`}>
                       {persona.name} · {persona.role}
                     </p>
                   )}
-                  <p className="text-xs leading-snug text-muted-foreground">{p.why}</p>
+                  <p className="text-xs leading-snug text-slate-500">{p.why}</p>
                 </div>
               </motion.div>
             )}

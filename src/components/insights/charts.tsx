@@ -23,14 +23,14 @@ import { verdictColor } from "@/lib/utils";
 
 const TOOLTIP = {
   contentStyle: {
-    background: "rgba(15,15,25,0.95)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    background: "rgba(255,255,255,0.97)",
+    border: "1px solid rgba(0,0,0,0.08)",
     borderRadius: 12,
     fontSize: 12,
-    color: "#e2e8f0",
+    color: "#0f172a",
   },
-  itemStyle: { color: "#e2e8f0" },
-  labelStyle: { color: "#6a6a72" },
+  itemStyle: { color: "#0f172a" },
+  labelStyle: { color: "#64748b" },
 };
 
 export function VerdictDonut({ data }: { data: Record<Verdict, number> }) {
@@ -63,21 +63,21 @@ export function RoleBar({ data }: { data: Insights["roleBreakdown"] }) {
     <div className="h-72">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chart} layout="vertical" margin={{ left: 8, right: 16 }}>
-          <XAxis type="number" domain={[0, 100]} tick={{ fill: "#6a6a72", fontSize: 11 }} axisLine={false} tickLine={false} />
+          <XAxis type="number" domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 11 }} axisLine={false} tickLine={false} />
           <YAxis
             type="category"
             dataKey="role"
             width={120}
-            tick={{ fill: "#cbd5e1", fontSize: 11 }}
+            tick={{ fill: "#475569", fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
-          <Tooltip {...TOOLTIP} cursor={{ fill: "rgba(255,255,255,0.04)" }} formatter={(v: any) => [`${v}%`, "Purchase intent"]} />
+          <Tooltip {...TOOLTIP} cursor={{ fill: "rgba(0,0,0,0.04)" }} formatter={(v: any) => [`${v}%`, "Purchase intent"]} />
           <Bar dataKey="purchaseProbability" radius={[0, 6, 6, 0]} barSize={16}>
             {chart.map((d) => (
               <Cell
                 key={d.role}
-                fill={d.purchaseProbability > 60 ? "#f2f2f4" : d.purchaseProbability > 45 ? "#a6a6ae" : "#6f6f77"}
+                fill={d.purchaseProbability > 60 ? "#0f172a" : d.purchaseProbability > 45 ? "#64748b" : "#94a3b8"}
               />
             ))}
           </Bar>
@@ -93,10 +93,10 @@ export function ConfusionRadar({ zones }: { zones: HeatmapZone[] }) {
     <div className="h-72">
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart data={chart} outerRadius="72%">
-          <PolarGrid stroke="rgba(255,255,255,0.12)" />
-          <PolarAngleAxis dataKey="zone" tick={{ fill: "#cbd5e1", fontSize: 10 }} />
+          <PolarGrid stroke="rgba(0,0,0,0.1)" />
+          <PolarAngleAxis dataKey="zone" tick={{ fill: "#475569", fontSize: 10 }} />
           <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
-          <Radar dataKey="confusion" stroke="#6f6f77" fill="#6f6f77" fillOpacity={0.35} />
+          <Radar dataKey="confusion" stroke="#475569" fill="#64748b" fillOpacity={0.25} />
           <Tooltip {...TOOLTIP} formatter={(v: any) => [`${v}/100`, "Confusion"]} />
         </RadarChart>
       </ResponsiveContainer>
@@ -105,14 +105,14 @@ export function ConfusionRadar({ zones }: { zones: HeatmapZone[] }) {
 }
 
 export function RiskGauge({ value }: { value: number }) {
-  const color = value > 66 ? "#6f6f77" : value > 40 ? "#a6a6ae" : "#f2f2f4";
+  const color = value > 66 ? "#0f172a" : value > 40 ? "#64748b" : "#94a3b8";
   const data = [{ name: "risk", value, fill: color }];
   return (
     <div className="relative h-56">
       <ResponsiveContainer width="100%" height="100%">
         <RadialBarChart innerRadius="72%" outerRadius="100%" data={data} startAngle={220} endAngle={-40}>
           <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
-          <RadialBar background={{ fill: "rgba(255,255,255,0.06)" }} dataKey="value" cornerRadius={20} />
+          <RadialBar background={{ fill: "rgba(0,0,0,0.06)" }} dataKey="value" cornerRadius={20} />
         </RadialBarChart>
       </ResponsiveContainer>
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">

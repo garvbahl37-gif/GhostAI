@@ -22,8 +22,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark ${inter.variable} ${mono.variable}`}>
-      <body className="min-h-screen font-sans">
+    <html lang="en" className={`${inter.variable} ${mono.variable}`}>
+      <head>
+        {/* HelveticaNow Display — used by the Mainframe-style hero */}
+        <link
+          rel="stylesheet"
+          href="https://db.onlinewebfonts.com/c/5ac3fe7c6abd2f62067f266d89671492?family=HelveticaNowDisplay-Medium"
+        />
+        <link
+          rel="stylesheet"
+          href="https://db.onlinewebfonts.com/c/1aa3377e489837a26d019bba501e779d?family=HelveticaNowDisplayW01-Rg"
+        />
+      </head>
+      <body className="min-h-screen">
         <Background />
         <AuthProvider>
           <Navbar />

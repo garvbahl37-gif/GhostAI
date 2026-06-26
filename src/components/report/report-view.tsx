@@ -64,7 +64,7 @@ function Bullets({ items }: { items: string[] }) {
   return (
     <ul className="space-y-2">
       {items.map((it, i) => (
-        <li key={i} className="flex gap-2.5 text-sm text-foreground/85">
+        <li key={i} className="flex gap-2.5 text-sm text-slate-600">
           <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-ghost-violet" />
           {it}
         </li>
@@ -147,7 +147,7 @@ export function ReportView({ runId }: { runId: string }) {
 
       <div className="space-y-5">
         <Section title="Executive Summary">
-          <p className="text-sm leading-relaxed text-foreground/90">{r.executiveSummary}</p>
+          <p className="text-sm leading-relaxed text-slate-600">{r.executiveSummary}</p>
           <div className="mt-3 rounded-xl bg-ghost-emerald/10 p-3 text-sm font-medium text-ghost-emerald">
             {r.projectedUplift}
           </div>
@@ -179,7 +179,7 @@ export function ReportView({ runId }: { runId: string }) {
         <Section title="Recommendations">
           <div className="space-y-3">
             {r.recommendations.map((rec, i) => (
-              <div key={i} className="rounded-xl bg-white/[0.03] p-4">
+              <div key={i} className="rounded-xl bg-slate-50 p-4">
                 <div className="flex items-start justify-between gap-3">
                   <p className="font-semibold">{rec.title}</p>
                   <div className="flex shrink-0 gap-1.5">

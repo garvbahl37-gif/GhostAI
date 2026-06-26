@@ -80,7 +80,7 @@ export function VisualRoast() {
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-xs text-muted-foreground">Try:</span>
             {SAMPLES.map((s) => (
-              <button key={s} type="button" onClick={() => { setUrl(s); roast(s); }} className="rounded-full bg-white/5 px-2.5 py-1 text-xs text-foreground/80 transition hover:bg-white/10">
+              <button key={s} type="button" onClick={() => { setUrl(s); roast(s); }} className="rounded-full bg-slate-50 px-2.5 py-1 text-xs text-slate-600 transition hover:bg-slate-100">
                 {s}
               </button>
             ))}
@@ -102,10 +102,10 @@ export function VisualRoast() {
             <CardContent className="flex flex-wrap items-center justify-between gap-4 p-5">
               <div className="max-w-2xl">
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">First impression</p>
-                <p className="mt-1 text-lg font-medium text-foreground/90">“{result.roast}”</p>
+                <p className="mt-1 text-lg font-medium text-slate-900">“{result.roast}”</p>
               </div>
               <div className="text-center">
-                <p className="font-mono text-4xl font-bold" style={{ color: result.clarityScore >= 66 ? "#f2f2f4" : result.clarityScore >= 40 ? "#a6a6ae" : "#6f6f77" }}>
+                <p className="font-mono text-4xl font-bold" style={{ color: result.clarityScore >= 66 ? "#0f172a" : result.clarityScore >= 40 ? "#64748b" : "#94a3b8" }}>
                   {result.clarityScore}
                 </p>
                 <p className="text-xs text-muted-foreground">clarity / 100</p>
@@ -117,7 +117,7 @@ export function VisualRoast() {
           <Card>
             <CardContent className="p-3">
               {/* view toggle */}
-              <div className="mb-3 flex w-fit items-center gap-1 rounded-xl border border-white/[0.06] bg-white/[0.03] p-1">
+              <div className="mb-3 flex w-fit items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1">
                 <ViewTab active={view === "annotated"} onClick={() => setView("annotated")} icon={<SquareDashedMousePointer className="h-3.5 w-3.5" />} label="Annotated" />
                 <ViewTab active={view === "heatmap"} onClick={() => setView("heatmap")} icon={<Flame className="h-3.5 w-3.5" />} label="Ghost Heatmap" />
               </div>
@@ -125,7 +125,7 @@ export function VisualRoast() {
               {view === "heatmap" ? (
                 <HeatmapOverlay screenshotUrl={result.screenshotUrl} points={heatmapPoints} />
               ) : (
-              <div className="relative w-full overflow-hidden rounded-xl ring-1 ring-white/10">
+              <div className="relative w-full overflow-hidden rounded-xl ring-1 ring-black/5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={result.screenshotUrl} alt="Screenshot of the analyzed page" className="block w-full" />
 
@@ -164,8 +164,8 @@ export function VisualRoast() {
                     className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
                     style={{ top: `${result.firstLook.y / 10}%`, left: `${result.firstLook.x / 10}%` }}
                   >
-                    <span className="absolute inline-flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-white/40" />
-                    <Crosshair className="relative h-6 w-6 -translate-x-1/2 -translate-y-1/2 text-white drop-shadow" />
+                    <span className="absolute inline-flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-slate-900/30" />
+                    <Crosshair className="relative h-6 w-6 -translate-x-1/2 -translate-y-1/2 text-slate-900 drop-shadow" />
                   </div>
                 )}
               </div>
@@ -225,7 +225,7 @@ function ViewTab({ active, onClick, icon, label }: { active: boolean; onClick: (
       type="button"
       onClick={onClick}
       className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-        active ? "bg-white/10 text-foreground ring-1 ring-white/15" : "text-muted-foreground hover:text-foreground"
+        active ? "bg-slate-100 text-slate-900 ring-1 ring-black/5" : "text-slate-500 hover:text-slate-900"
       }`}
     >
       {icon}

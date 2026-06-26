@@ -83,7 +83,7 @@ export function InsightsView({ runId }: { runId: string }) {
             {analysis?.title ?? hostOf(run.config.url)}
             {analysis && <span className="ml-2 text-base font-normal text-muted-foreground">{analysis.category}</span>}
           </h1>
-          <p className="mt-1 max-w-2xl text-foreground/80">{ins.headline}</p>
+          <p className="mt-1 max-w-2xl text-slate-600">{ins.headline}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link href={`/report/${runId}`}>
@@ -99,10 +99,10 @@ export function InsightsView({ runId }: { runId: string }) {
 
       {/* Metric tiles */}
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Metric label="Avg purchase intent" value={ins.avgPurchaseProbability} suffix="%" color="#f2f2f4" />
-        <Metric label="Avg confusion" value={ins.avgConfusion} suffix="%" color="#a6a6ae" />
-        <Metric label="Avg churn risk" value={ins.avgChurnRisk} suffix="%" color="#6f6f77" />
-        <Metric label="Est. conversion uplift" value={ins.estConversionUplift} suffix="%" color="#d6d6da" />
+        <Metric label="Avg purchase intent" value={ins.avgPurchaseProbability} suffix="%" color="#0f172a" />
+        <Metric label="Avg confusion" value={ins.avgConfusion} suffix="%" color="#475569" />
+        <Metric label="Avg churn risk" value={ins.avgChurnRisk} suffix="%" color="#64748b" />
+        <Metric label="Est. conversion uplift" value={ins.estConversionUplift} suffix="%" color="#334155" />
       </div>
 
       {/* Charts row */}
@@ -208,7 +208,7 @@ export function InsightsView({ runId }: { runId: string }) {
             <h3 className="mb-3 text-sm font-semibold">Top questions customers asked</h3>
             <div className="flex flex-wrap gap-2">
               {ins.topQuestions.map((q) => (
-                <span key={q} className="rounded-full bg-white/5 px-3 py-1.5 text-sm text-foreground/80">
+                <span key={q} className="rounded-full bg-slate-50 px-3 py-1.5 text-sm text-slate-600">
                   {q}
                 </span>
               ))}
@@ -232,17 +232,17 @@ export function InsightsView({ runId }: { runId: string }) {
         viewport={{ once: true }}
         className="mt-8 grid gap-3 sm:grid-cols-3"
       >
-        <Link href={`/report/${runId}`} className="flex items-center gap-3 rounded-2xl glass p-4 transition hover:bg-white/[0.06]">
+        <Link href={`/report/${runId}`} className="flex items-center gap-3 rounded-2xl glass p-4 transition hover:bg-slate-100">
           <FileText className="h-5 w-5 text-ghost-cyan" />
           <span className="text-sm font-semibold">Executive report</span>
           <ArrowRight className="ml-auto h-4 w-4 text-muted-foreground" />
         </Link>
-        <Link href="/arena" className="flex items-center gap-3 rounded-2xl glass p-4 transition hover:bg-white/[0.06]">
+        <Link href="/arena" className="flex items-center gap-3 rounded-2xl glass p-4 transition hover:bg-slate-100">
           <Swords className="h-5 w-5 text-ghost-amber" />
           <span className="text-sm font-semibold">Battle a competitor</span>
           <ArrowRight className="ml-auto h-4 w-4 text-muted-foreground" />
         </Link>
-        <Link href="/pricing-lab" className="flex items-center gap-3 rounded-2xl glass p-4 transition hover:bg-white/[0.06]">
+        <Link href="/pricing-lab" className="flex items-center gap-3 rounded-2xl glass p-4 transition hover:bg-slate-100">
           <Zap className="h-5 w-5 text-ghost-emerald" />
           <span className="text-sm font-semibold">Simulate a price change</span>
           <ArrowRight className="ml-auto h-4 w-4 text-muted-foreground" />

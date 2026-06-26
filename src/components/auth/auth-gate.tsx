@@ -27,7 +27,7 @@ export function AuthGate({
   if (loading) {
     return (
       <div className="grid min-h-[60vh] place-items-center">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Loader2 className="h-6 w-6 animate-spin text-slate-500" />
       </div>
     );
   }
@@ -38,14 +38,14 @@ export function AuthGate({
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a16]/70 p-8 text-center shadow-[0_30px_120px_-40px_rgba(0,0,0,0.9)] backdrop-blur-2xl"
+        className="relative w-full overflow-hidden rounded-3xl border border-slate-200 bg-white/70 p-8 text-center shadow-[0_30px_120px_-40px_rgba(30,20,70,0.18)] backdrop-blur-2xl"
       >
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-        <span className="mx-auto mb-5 grid h-14 w-14 place-items-center rounded-2xl border border-white/12 bg-white/[0.06]">
-          <Lock className="h-6 w-6 text-foreground" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-900/10 to-transparent" />
+        <span className="mx-auto mb-5 grid h-14 w-14 place-items-center rounded-2xl border border-slate-200 bg-slate-50">
+          <Lock className="h-6 w-6 text-slate-900" />
         </span>
         <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-        <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">{subtitle}</p>
+        <p className="mx-auto mt-2 max-w-sm text-sm text-slate-500">{subtitle}</p>
         <Button onClick={openAuth} size="lg" className="mt-6">
           Sign in or create account
           <ArrowRight className="h-4 w-4" />

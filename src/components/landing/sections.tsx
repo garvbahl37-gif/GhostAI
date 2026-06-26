@@ -4,10 +4,11 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Globe, Users, Activity, DollarSign, LifeBuoy, TrendingDown,
-  UserMinus, Swords, Clock, FileText, X, Check, ArrowRight, Sparkles,
+  UserMinus, Swords, Clock, FileText, X, Check, ArrowRight, ArrowUpRight,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { AGENTS } from "@/components/war-room/agent-meta";
+
+const HEAD = { fontFamily: "var(--font-heading)" };
 
 function reveal(i = 0) {
   return {
@@ -18,102 +19,114 @@ function reveal(i = 0) {
   };
 }
 
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-slate-400">{children}</p>;
+}
+
+/* ── This is not a chatbot ───────────────────────────────────────────────── */
 export function Differentiator() {
+  const bad = ["Wait for customers to ask", "Answer after the damage is done", "See one conversation at a time", "Can't predict churn or lost revenue"];
+  const good = ["Becomes hundreds of customers", "Finds problems before launch", "Simulates your whole market at once", "Predicts churn, conversion & revenue leaks"];
   return (
-    <section className="container py-20">
+    <section className="container py-28">
       <motion.div {...reveal()} className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold sm:text-4xl text-slate-900">
-          This is <span className="text-rose-500">not</span> a chatbot.
+        <Eyebrow>The difference</Eyebrow>
+        <h2 className="mt-4 text-4xl tracking-tight text-slate-900 sm:text-5xl" style={HEAD}>
+          This is not a chatbot.
         </h2>
-        <p className="mt-3 text-slate-500">
-          Every other AI tool waits for a customer to complain, then answers. Ghost Customer AI does the opposite —
-          it <span className="text-slate-900 font-medium">becomes the customer</span> and finds the problem first.
+        <p className="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed text-slate-500">
+          Every other AI tool waits for a customer to complain, then answers. GhostCustomer does the opposite — it
+          becomes the customer and finds the problem first.
         </p>
       </motion.div>
 
-      <div className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-2">
-        <motion.div {...reveal(0)} className="rounded-2xl border border-ghost-rose/20 bg-ghost-rose/5 p-5">
-          <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-rose-500">
+      <motion.div {...reveal(1)} className="mx-auto mt-14 grid max-w-3xl gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 sm:grid-cols-2">
+        <div className="bg-white p-7">
+          <p className="mb-4 flex items-center gap-2 text-sm font-medium text-slate-400">
             <X className="h-4 w-4" /> Reactive chatbots
           </p>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            {["Wait for customers to ask", "Answer after the damage is done", "See one conversation at a time", "Can't predict churn or lost revenue"].map((t) => (
-              <li key={t} className="flex gap-2 text-slate-500">
-                <X className="mt-0.5 h-4 w-4 shrink-0 text-rose-400" /> {t}
+          <ul className="space-y-2.5 text-sm text-slate-500">
+            {bad.map((t) => (
+              <li key={t} className="flex gap-2.5">
+                <X className="mt-0.5 h-4 w-4 shrink-0 text-slate-300" /> {t}
               </li>
             ))}
           </ul>
-        </motion.div>
-        <motion.div {...reveal(1)} className="rounded-2xl border border-ghost-emerald/20 bg-ghost-emerald/5 p-5">
-          <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-emerald-600">
-            <Check className="h-4 w-4" /> Ghost Customer AI
+        </div>
+        <div className="bg-white p-7">
+          <p className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-900">
+            <Check className="h-4 w-4" /> GhostCustomer
           </p>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            {["Becomes hundreds of customers", "Finds problems before launch", "Simulates your whole market at once", "Predicts churn, conversion & revenue leaks"].map((t) => (
-              <li key={t} className="flex gap-2 text-slate-500">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" /> {t}
+          <ul className="space-y-2.5 text-sm text-slate-600">
+            {good.map((t) => (
+              <li key={t} className="flex gap-2.5">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-slate-900" /> {t}
               </li>
             ))}
           </ul>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </section>
   );
 }
 
 const FEATURES = [
-  { icon: Globe, color: "#d6d6da", title: "Website Intelligence", desc: "Crawls and understands your site, pricing, FAQs, and trust signals." },
-  { icon: Users, color: "#8b5cf6", title: "Persona Generator", desc: "Creates 50–500 realistic customers across 10 archetypes." },
-  { icon: Activity, color: "#6366f1", title: "Customer Swarm", desc: "Each persona independently evaluates and scores your experience." },
-  { icon: DollarSign, color: "#f2f2f4", title: "Sales Agent", desc: "Acts as a buyer and finds unanswered objections and missing info." },
-  { icon: LifeBuoy, color: "#a6a6ae", title: "Support Stress Test", desc: "Throws hard tickets and edge cases at your FAQ and docs." },
-  { icon: TrendingDown, color: "#6f6f77", title: "Revenue Leak Detector", desc: "Quantifies hidden conversion blockers and their dollar impact." },
-  { icon: UserMinus, color: "#f472b6", title: "Churn Prediction", desc: "Forecasts which segments will leave — and exactly why." },
-  { icon: Swords, color: "#8a8a92", title: "Competitor Arena", desc: "Battles your site vs a rival across every customer segment." },
-  { icon: Clock, color: "#2dd4bf", title: "Pricing Time Machine", desc: "Simulates customer reactions to any price change." },
-  { icon: FileText, color: "#a78bfa", title: "Executive Report", desc: "Board-ready insights, recommendations, and projected uplift." },
+  { icon: Globe, title: "Website Intelligence", desc: "Crawls and understands your site, pricing, FAQs, and trust signals." },
+  { icon: Users, title: "Persona Generator", desc: "Creates 50–500 realistic customers across 10 archetypes." },
+  { icon: Activity, title: "Customer Swarm", desc: "Each persona independently evaluates and scores your experience." },
+  { icon: DollarSign, title: "Sales Agent", desc: "Acts as a buyer and finds unanswered objections and missing info." },
+  { icon: LifeBuoy, title: "Support Stress Test", desc: "Throws hard tickets and edge cases at your FAQ and docs." },
+  { icon: TrendingDown, title: "Revenue Leak Detector", desc: "Quantifies hidden conversion blockers and their dollar impact." },
+  { icon: UserMinus, title: "Churn Prediction", desc: "Forecasts which segments will leave — and exactly why." },
+  { icon: Swords, title: "Competitor Arena", desc: "Battles your site vs a rival across every customer segment." },
+  { icon: Clock, title: "Pricing Time Machine", desc: "Simulates customer reactions to any price change." },
+  { icon: FileText, title: "Executive Report", desc: "Board-ready insights, recommendations, and projected uplift." },
 ];
 
 export function Features() {
   return (
-    <section className="container py-20">
+    <section className="container py-28">
       <motion.div {...reveal()} className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold sm:text-4xl text-slate-900">Ten ways to find problems first</h2>
-        <p className="mt-3 text-slate-500">One simulation run powers every analysis below.</p>
+        <Eyebrow>Capabilities</Eyebrow>
+        <h2 className="mt-4 text-4xl tracking-tight text-slate-900 sm:text-5xl" style={HEAD}>
+          Ten ways to find problems first
+        </h2>
+        <p className="mt-4 text-[17px] text-slate-500">One simulation run powers every analysis below.</p>
       </motion.div>
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {FEATURES.map((f, i) => (
-          <motion.div key={f.title} {...reveal(i % 3)} className="group rounded-2xl bg-white border border-slate-200/80 p-5 shadow-sm transition hover:shadow-md hover:-translate-y-0.5 hover:border-violet-200/60">
-            <span className="grid h-11 w-11 place-items-center rounded-xl border border-slate-200/80 bg-slate-50 text-slate-500 transition group-hover:scale-110 group-hover:bg-violet-50 group-hover:border-violet-200 group-hover:text-violet-600">
-              <f.icon className="h-5 w-5" />
+
+      <motion.div {...reveal(1)} className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-5">
+        {FEATURES.map((f) => (
+          <div key={f.title} className="group flex flex-col bg-white p-5 transition-colors duration-200 hover:bg-slate-50/80">
+            <span className="grid h-9 w-9 place-items-center rounded-lg border border-slate-200 bg-white text-slate-700 transition-colors duration-200 group-hover:border-slate-900 group-hover:bg-slate-900 group-hover:text-white">
+              <f.icon className="h-[18px] w-[18px]" />
             </span>
-            <p className="mt-3 font-semibold text-slate-800">{f.title}</p>
-            <p className="mt-1 text-sm text-slate-500">{f.desc}</p>
-          </motion.div>
+            <p className="mt-3.5 text-[15px] font-medium leading-snug text-slate-900">{f.title}</p>
+            <p className="mt-1.5 text-[13px] leading-relaxed text-slate-500">{f.desc}</p>
+          </div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }
 
 export function AgentsShowcase() {
   return (
-    <section className="container py-20">
+    <section className="container py-28">
       <motion.div {...reveal()} className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold sm:text-4xl text-slate-900">
-          A coordinated <span className="bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent">multi-agent</span> brain
+        <Eyebrow>Architecture</Eyebrow>
+        <h2 className="mt-4 text-4xl tracking-tight text-slate-900 sm:text-5xl" style={HEAD}>
+          A coordinated multi-agent brain
         </h2>
-        <p className="mt-3 text-slate-500">
+        <p className="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed text-slate-500">
           Eight specialized agents — orchestrated with LangGraph — hand off work like a real research team.
         </p>
       </motion.div>
-      <div className="mx-auto mt-10 flex max-w-4xl flex-wrap items-center justify-center gap-3">
+
+      <div className="mx-auto mt-14 flex max-w-4xl flex-wrap items-center justify-center gap-2.5">
         {AGENTS.map((a, i) => (
-          <motion.div key={a.name} {...reveal(i)} className="flex items-center gap-2">
-            <div className="flex items-center gap-2.5 rounded-2xl bg-white border border-slate-200/80 px-4 py-3 shadow-sm">
-              <span className="grid h-9 w-9 place-items-center rounded-xl" style={{ background: `${a.color}15`, color: a.color }}>
-                <a.icon className="h-4 w-4" />
-              </span>
+          <motion.div key={a.name} {...reveal(i)} className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5 rounded-full border border-slate-200 bg-white px-4 py-2.5">
+              <span className="h-1.5 w-1.5 rounded-full" style={{ background: a.color }} />
               <span className="text-sm font-medium text-slate-700">{a.name}</span>
             </div>
             {i < AGENTS.length - 1 && <ArrowRight className="h-4 w-4 text-slate-300 max-md:hidden" />}
@@ -136,17 +149,21 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section id="how" className="container py-20">
+    <section id="how" className="container py-28">
       <motion.div {...reveal()} className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold sm:text-4xl text-slate-900">From URL to insight in 7 steps</h2>
+        <Eyebrow>The flow</Eyebrow>
+        <h2 className="mt-4 text-4xl tracking-tight text-slate-900 sm:text-5xl" style={HEAD}>
+          From URL to insight in 7 steps
+        </h2>
       </motion.div>
-      <div className="mx-auto mt-10 max-w-2xl space-y-3">
+
+      <div className="mx-auto mt-14 max-w-2xl divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white">
         {STEPS.map((step, i) => (
-          <motion.div key={step} {...reveal(i)} className="flex items-center gap-4 rounded-2xl bg-white border border-slate-200/80 p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-violet-200 bg-violet-50 font-mono text-sm font-bold text-violet-600">
+          <motion.div key={step} {...reveal(i)} className="flex items-center gap-5 px-6 py-5 transition-colors hover:bg-slate-50/80">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-slate-900 font-mono text-[13px] font-semibold text-white">
               {i + 1}
             </span>
-            <span className="font-medium text-slate-700">{step}</span>
+            <span className="font-medium text-slate-800">{step}</span>
           </motion.div>
         ))}
       </div>
@@ -156,26 +173,24 @@ export function HowItWorks() {
 
 export function FinalCTA() {
   return (
-    <section className="container py-24">
-      <motion.div
-        {...reveal()}
-        className="relative overflow-hidden rounded-3xl border border-violet-200/60 bg-gradient-to-br from-violet-50 via-indigo-50/50 to-blue-50/30 p-10 text-center sm:p-16 shadow-[0_30px_80px_-20px_rgba(124,58,237,0.12)]"
-      >
-        <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full bg-violet-400/20 blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-60 w-60 rounded-full bg-blue-400/15 blur-3xl" />
-        <div className="relative">
-          <h2 className="text-3xl font-bold sm:text-5xl text-slate-900">See your customers before they're real.</h2>
-          <p className="mx-auto mt-4 max-w-xl text-slate-500">
-            Run a full simulation in under a minute. No signup, no API key required — it works on the demo engine out
-            of the box.
-          </p>
-          <div className="mt-8 flex justify-center gap-3">
-            <Link href="/dashboard">
-              <Button size="lg" className="bg-violet-600 hover:bg-violet-700 text-white border-0 shadow-[0_4px_14px_rgba(124,58,237,0.25)] hover:shadow-[0_4px_20px_rgba(124,58,237,0.4)] transition-all duration-300">
-                <Sparkles className="h-4 w-4" /> Launch the swarm
-              </Button>
-            </Link>
-          </div>
+    <section className="container py-32">
+      <motion.div {...reveal()} className="mx-auto max-w-3xl text-center">
+        <Eyebrow>Get started</Eyebrow>
+        <h2 className="mt-5 text-4xl tracking-tight text-slate-900 sm:text-6xl" style={HEAD}>
+          See your customers before they&apos;re real.
+        </h2>
+        <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-slate-500">
+          Run a full simulation in under a minute. No signup, no API key required — it works on the demo engine out of
+          the box.
+        </p>
+        <div className="mt-9 flex justify-center">
+          <Link
+            href="/dashboard"
+            className="group inline-flex items-center gap-2 rounded-full bg-slate-900 px-7 py-3.5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-black"
+          >
+            Launch the swarm
+            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
         </div>
       </motion.div>
     </section>

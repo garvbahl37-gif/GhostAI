@@ -20,7 +20,7 @@ export function SimFeed({ sims }: { sims: SimulationResult[] }) {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="flex items-center gap-3 rounded-xl bg-white/[0.03] p-2.5"
+              className="flex items-center gap-3 rounded-xl bg-slate-50 p-2.5"
             >
               <PersonaGlyph name={s.personaName} accent={verdictColor(s.verdict)} size={34} />
               <div className="min-w-0 flex-1">
@@ -63,7 +63,7 @@ export function Discoveries({ leaks, objections }: { leaks: RevenueLeak[]; objec
               layout
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex items-start gap-2.5 rounded-xl bg-white/[0.03] p-2.5"
+              className="flex items-start gap-2.5 rounded-xl bg-slate-50 p-2.5"
             >
               {it.kind === "leak" ? (
                 <>

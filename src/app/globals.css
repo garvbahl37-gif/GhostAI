@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mainframe-style hero fonts + typewriter cursor */
+:root {
+  --font-heading: 'HelveticaNowDisplay-Medium', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'HelveticaNowDisplayW01-Rg', 'Helvetica Neue', Arial, sans-serif;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
 /* ============================================================================
    Black Graphite design system
    Layered graphite surfaces, silver typography, signal-colour accents only.
@@ -10,27 +26,27 @@
 
 @layer base {
   :root {
-    --background: 240 7% 3%;
-    /* #050506 */
-    --foreground: 240 10% 98%;
-    /* #FAFAFA */
-    --card: 240 6% 7.5%;
-    /* graphite surface */
-    --card-foreground: 240 10% 97%;
-    --primary: 240 10% 96%;
-    /* near-white primary */
-    --primary-foreground: 240 8% 6%;
-    --secondary: 240 5% 12%;
-    --secondary-foreground: 240 8% 92%;
-    --muted: 240 5% 14%;
-    --muted-foreground: 240 5% 56%;
-    /* #8A8A8A */
-    --accent: 240 6% 82%;
-    /* silver */
-    --accent-foreground: 240 10% 6%;
-    --border: 240 6% 17%;
-    --input: 240 6% 17%;
-    --ring: 240 6% 70%;
+    /* Light / white minimal theme (matches the Mainframe hero) */
+    --background: 240 20% 99%;
+    /* near-white */
+    --foreground: 240 10% 6%;
+    /* near-black */
+    --card: 0 0% 100%;
+    /* white surface */
+    --card-foreground: 240 10% 8%;
+    --primary: 240 10% 10%;
+    /* near-black primary (black buttons) */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 10% 96%;
+    --secondary-foreground: 240 10% 12%;
+    --muted: 240 10% 96%;
+    --muted-foreground: 240 5% 44%;
+    /* mid grey */
+    --accent: 240 10% 94%;
+    --accent-foreground: 240 10% 10%;
+    --border: 240 8% 90%;
+    --input: 240 8% 88%;
+    --ring: 240 6% 60%;
     --radius: 1.25rem;
   }
 
@@ -45,60 +61,63 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
     font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
     overflow-x: hidden;
-    background-color: #050506;
+    background-color: #fbfbfd;
     background-image:
-      radial-gradient(48rem 48rem at 12% -12%, rgba(255, 255, 255, 0.05), transparent 55%),
-      radial-gradient(40rem 40rem at 96% 0%, rgba(255, 255, 255, 0.03), transparent 55%);
+      radial-gradient(48rem 48rem at 12% -12%, rgba(124, 58, 237, 0.05), transparent 55%),
+      radial-gradient(40rem 40rem at 96% 0%, rgba(99, 102, 241, 0.04), transparent 55%);
     background-attachment: fixed;
   }
 
   ::selection {
-    background: rgba(255, 255, 255, 0.16);
-    color: #fff;
+    background: rgba(124, 58, 237, 0.18);
+    color: #0f172a;
   }
 
   h1,
   h2,
   h3 {
     text-wrap: balance;
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
   }
 }
 
 @layer components {
 
-  /* graphite glass per the design spec */
+  /* frosted white glass */
   .glass {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
-    @apply border border-white/[0.07] backdrop-blur-xl;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.6));
+    @apply border border-black/[0.06] backdrop-blur-xl;
   }
 
   .glass-strong {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-    @apply border border-white/[0.1] backdrop-blur-2xl;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+    @apply border border-black/[0.08] backdrop-blur-2xl;
   }
 
-  /* silver text gradient (no rainbow) */
+  /* ink text gradient */
   .gradient-text {
-    @apply bg-gradient-to-r from-white via-[#cfcfd4] to-[#7d7d86] bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 bg-clip-text text-transparent;
     background-size: 200% auto;
   }
 
   .text-glow {
-    text-shadow: 0 0 32px rgba(255, 255, 255, 0.18);
+    text-shadow: 0 0 32px rgba(124, 58, 237, 0.18);
   }
 
   .card-glow {
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      0 24px 60px -34px rgba(0, 0, 0, 0.85);
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 24px 60px -34px rgba(30, 20, 70, 0.18);
   }
 
   .grid-bg {
     background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
     background-size: 48px 48px;
   }
 
@@ -154,7 +173,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.12) 50%, transparent 70%);
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.22) 50%, transparent 70%);
     transform: translateX(-130%);
     transition: transform 0.7s ease;
   }
@@ -258,14 +277,14 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(240 5% 22%);
+  background: hsl(240 6% 80%);
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(240 5% 32%);
+  background: hsl(240 6% 68%);
   background-clip: content-box;
 }
 

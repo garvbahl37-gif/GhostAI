@@ -20,17 +20,17 @@ export function PhaseRail({ phase }: { phase: RunPhase }) {
               className={cn(
                 "flex items-center gap-2 rounded-xl border px-3 py-2 transition-colors",
                 status === "active"
-                  ? "border-white/20 bg-white/10"
+                  ? "border-slate-300 bg-slate-100"
                   : status === "done"
-                    ? "border-white/10 bg-white/[0.03]"
-                    : "border-white/5 bg-transparent opacity-50",
+                    ? "border-slate-200 bg-slate-50"
+                    : "border-slate-200 bg-transparent opacity-50",
               )}
             >
               <span
                 className="grid h-6 w-6 place-items-center rounded-lg"
                 style={{
-                  background: status === "idle" ? "rgba(255,255,255,0.06)" : `${agent.color}22`,
-                  color: status === "idle" ? "#6a6a72" : agent.color,
+                  background: status === "idle" ? "rgba(15,23,42,0.06)" : `${agent.color}22`,
+                  color: status === "idle" ? "#94a3b8" : agent.color,
                 }}
               >
                 {status === "done" ? <Check className="h-3.5 w-3.5" /> : <Icon className="h-3.5 w-3.5" />}
@@ -40,7 +40,7 @@ export function PhaseRail({ phase }: { phase: RunPhase }) {
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: agent.color }} />
               )}
             </motion.div>
-            {i < AGENTS.length - 1 && <span className="h-px w-3 bg-white/10 max-sm:hidden" />}
+            {i < AGENTS.length - 1 && <span className="h-px w-3 bg-slate-200 max-sm:hidden" />}
           </div>
         );
       })}

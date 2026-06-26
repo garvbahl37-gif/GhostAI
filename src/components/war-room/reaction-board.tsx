@@ -62,11 +62,11 @@ export function ReactionBoard({ personas, sims }: { personas: Persona[]; sims: S
       <div className="mb-3 flex items-center gap-2">
         <MessagesSquare className="h-4 w-4 text-ghost-violet" />
         <h3 className="text-sm font-semibold">Live Reaction Board</h3>
-        <span className="text-xs text-muted-foreground">— 4 ghosts react in real time</span>
+        <span className="text-xs text-slate-500">— 4 ghosts react in real time</span>
       </div>
 
       {seats.length === 0 ? (
-        <div className="grid h-40 place-items-center text-sm text-muted-foreground">
+        <div className="grid h-40 place-items-center text-sm text-slate-500">
           Waiting for the first customers to react…
         </div>
       ) : (
@@ -92,9 +92,9 @@ function ReactionCard({ seat }: { seat: Seat }) {
   }, [shown, current]);
 
   return (
-    <div className="flex h-52 flex-col overflow-hidden rounded-2xl border border-white/8 bg-white/[0.02]">
+    <div className="flex h-52 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
       {/* header */}
-      <div className="flex items-center gap-2.5 border-b border-white/8 px-3 py-2.5">
+      <div className="flex items-center gap-2.5 border-b border-slate-200 px-3 py-2.5">
         <span
           className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-base"
           style={{ background: `${persona.accent}26`, boxShadow: `0 0 16px -6px ${persona.accent}` }}
@@ -102,8 +102,8 @@ function ReactionCard({ seat }: { seat: Seat }) {
           {persona.emoji}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-semibold text-foreground">{persona.name}</p>
-          <p className="truncate text-[10px] text-muted-foreground">{persona.role}</p>
+          <p className="truncate text-xs font-semibold text-slate-900">{persona.name}</p>
+          <p className="truncate text-[10px] text-slate-500">{persona.role}</p>
         </div>
         <span
           className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold"
@@ -123,7 +123,7 @@ function ReactionCard({ seat }: { seat: Seat }) {
         {current && (
           <Bubble accent={persona.accent}>
             {current}
-            <span className="ml-0.5 inline-block h-3 w-px animate-pulse bg-foreground/70 align-middle" />
+            <span className="ml-0.5 inline-block h-3 w-px animate-pulse bg-slate-500 align-middle" />
           </Bubble>
         )}
         {!current && !allDone && <TypingDots />}
@@ -138,7 +138,7 @@ function Bubble({ accent, children }: { accent: string; children: React.ReactNod
       initial={{ opacity: 0, y: 6, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.18 }}
-      className="max-w-[92%] rounded-2xl rounded-tl-md px-3 py-2 text-xs leading-snug text-foreground/90"
+      className="max-w-[92%] rounded-2xl rounded-tl-md px-3 py-2 text-xs leading-snug text-slate-900"
       style={{ background: `${accent}1a`, border: `1px solid ${accent}2e` }}
     >
       {children}
@@ -148,11 +148,11 @@ function Bubble({ accent, children }: { accent: string; children: React.ReactNod
 
 function TypingDots() {
   return (
-    <div className="flex w-fit items-center gap-1 rounded-2xl rounded-tl-md bg-white/[0.05] px-3 py-2.5">
+    <div className="flex w-fit items-center gap-1 rounded-2xl rounded-tl-md bg-slate-100 px-3 py-2.5">
       {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
-          className="h-1.5 w-1.5 rounded-full bg-foreground/50"
+          className="h-1.5 w-1.5 rounded-full bg-slate-400"
           animate={{ y: [0, -3, 0], opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.15 }}
         />

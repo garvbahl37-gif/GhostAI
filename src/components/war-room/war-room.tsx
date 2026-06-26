@@ -280,7 +280,7 @@ export function WarRoom({ runId }: { runId: string }) {
         {/* Progress + phase rail */}
         <div className="mb-6 space-y-3 rounded-2xl glass p-4">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-foreground/80">{s.message}</span>
+            <span className="text-slate-600">{s.message}</span>
             <span className="font-mono text-muted-foreground">{Math.round(s.progress)}%</span>
           </div>
           <Progress value={s.progress} />

@@ -14,7 +14,7 @@ export interface Thought {
 export function AgentStream({ thoughts }: { thoughts: Thought[] }) {
   return (
     <div className="flex h-full flex-col rounded-2xl glass">
-      <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
+      <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-3">
         <Radio className="h-4 w-4 text-ghost-cyan animate-pulse" />
         <span className="text-sm font-semibold">Live agent reasoning</span>
         <span className="ml-auto font-mono text-xs text-muted-foreground">{thoughts.length} events</span>
@@ -32,7 +32,7 @@ export function AgentStream({ thoughts }: { thoughts: Thought[] }) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className="flex gap-2.5 rounded-xl bg-white/[0.03] p-2.5"
+                className="flex gap-2.5 rounded-xl bg-slate-50 p-2.5"
               >
                 <span
                   className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-lg"
@@ -44,7 +44,7 @@ export function AgentStream({ thoughts }: { thoughts: Thought[] }) {
                   <p className="text-[11px] font-semibold" style={{ color: meta?.color }}>
                     {t.agent}
                   </p>
-                  <p className="text-xs leading-snug text-foreground/85">{t.text}</p>
+                  <p className="text-xs leading-snug text-slate-600">{t.text}</p>
                 </div>
               </motion.div>
             );

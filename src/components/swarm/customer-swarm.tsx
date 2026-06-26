@@ -219,19 +219,19 @@ export function CustomerSwarm({
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-y-0 left-0 w-2/5" style={{ background: "linear-gradient(90deg, rgba(251,113,133,0.06), transparent)" }} />
           <div className="absolute inset-y-0 right-0 w-2/5" style={{ background: "linear-gradient(270deg, rgba(110,231,183,0.07), transparent)" }} />
-          <span className="absolute bottom-2 left-3 text-[10px] font-medium uppercase tracking-wider text-[#6f6f77]/70">Won&apos;t buy</span>
-          <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-wider text-muted-foreground/60">purchase intent →</span>
-          <span className="absolute bottom-2 right-3 text-[10px] font-medium uppercase tracking-wider text-[#f2f2f4]/80">Will buy</span>
+          <span className="absolute bottom-2 left-3 text-[10px] font-medium uppercase tracking-wider text-rose-600/80">Won&apos;t buy</span>
+          <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-wider text-slate-500">purchase intent →</span>
+          <span className="absolute bottom-2 right-3 text-[10px] font-medium uppercase tracking-wider text-emerald-600/90">Will buy</span>
         </div>
       )}
       <canvas ref={canvasRef} className="relative block" />
       {hover && (
         <div
-          className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-xl border border-white/12 bg-[#0c0c0e]/95 px-3 py-2 shadow-xl backdrop-blur"
+          className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-200 bg-white/95 px-3 py-2 shadow-xl backdrop-blur"
           style={{ left: hover.x, top: hover.y - 12, minWidth: 150 }}
         >
-          <p className="text-xs font-semibold text-white">{hover.node.name}</p>
-          <p className="text-[11px] text-muted-foreground">{hover.node.role}</p>
+          <p className="text-xs font-semibold text-slate-900">{hover.node.name}</p>
+          <p className="text-[11px] text-slate-500">{hover.node.role}</p>
           {hover.node.verdict && (
             <p className="mt-0.5 text-[11px] font-medium" style={{ color: hover.node.color }}>
               {hover.node.verdict}

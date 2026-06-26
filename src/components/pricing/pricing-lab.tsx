@@ -25,11 +25,11 @@ import { AnimatedNumber } from "@/components/shared/animated-number";
 function Delta({ label, value, suffix, goodWhenPositive = true }: { label: string; value: number; suffix: string; goodWhenPositive?: boolean }) {
   const positive = value >= 0;
   const good = goodWhenPositive ? positive : !positive;
-  const color = good ? "#f2f2f4" : "#6f6f77";
+  const color = good ? "#0f172a" : "#94a3b8";
   return (
     <Card>
       <CardContent className="p-4">
-        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="text-xs text-slate-500">{label}</p>
         <p className="mt-1 flex items-center gap-1 font-mono text-2xl font-bold" style={{ color }}>
           {positive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
           {positive ? "+" : ""}
@@ -75,7 +75,7 @@ export function PricingLab() {
         <h1 className="text-3xl font-bold sm:text-4xl">
           Change your price. <span className="gradient-text">See the future.</span>
         </h1>
-        <p className="mx-auto mt-2 max-w-xl text-muted-foreground">
+        <p className="mx-auto mt-2 max-w-xl text-slate-500">
           Simulate how every customer segment reacts to a price change — before you risk a single real customer.
         </p>
       </div>
@@ -86,7 +86,7 @@ export function PricingLab() {
             <Label>Current price ($/mo)</Label>
             <Input type="number" value={current} onChange={(e) => setCurrent(e.target.value)} />
           </div>
-          <ArrowRight className="mb-3 h-5 w-5 self-end justify-self-center text-muted-foreground max-sm:hidden" />
+          <ArrowRight className="mb-3 h-5 w-5 self-end justify-self-center text-slate-500 max-sm:hidden" />
           <div className="space-y-2">
             <Label>Proposed price ($/mo)</Label>
             <Input type="number" value={proposed} onChange={(e) => setProposed(e.target.value)} />
@@ -106,7 +106,7 @@ export function PricingLab() {
             <Delta label="Revenue change" value={result.expectedRevenueChange} suffix="%" />
             <Card>
               <CardContent className="p-4">
-                <p className="text-xs text-muted-foreground">Revenue-optimal price</p>
+                <p className="text-xs text-slate-500">Revenue-optimal price</p>
                 <p className="mt-1 font-mono text-2xl font-bold text-ghost-cyan">
                   $<AnimatedNumber value={result.optimalPrice} />
                 </p>
@@ -114,9 +114,9 @@ export function PricingLab() {
             </Card>
           </div>
 
-          <div className="rounded-2xl bg-gradient-to-r from-ghost-violet/15 to-ghost-cyan/10 p-5 ring-1 ring-white/10">
+          <div className="rounded-2xl bg-gradient-to-r from-ghost-violet/15 to-ghost-cyan/10 p-5 ring-1 ring-black/5">
             <p className="text-sm font-semibold text-ghost-cyan">Recommendation</p>
-            <p className="mt-1 text-foreground/90">{result.recommendation}</p>
+            <p className="mt-1 text-slate-900">{result.recommendation}</p>
           </div>
 
           <Card>
@@ -125,18 +125,18 @@ export function PricingLab() {
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={result.curve} margin={{ left: -10, right: 10 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                    <XAxis dataKey="price" tick={{ fill: "#6a6a72", fontSize: 11 }} tickFormatter={(v) => `$${v}`} />
-                    <YAxis yAxisId="left" tick={{ fill: "#6a6a72", fontSize: 11 }} domain={[0, 100]} />
-                    <YAxis yAxisId="right" orientation="right" tick={{ fill: "#6a6a72", fontSize: 11 }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(15,23,42,0.08)" />
+                    <XAxis dataKey="price" tick={{ fill: "#64748b", fontSize: 11 }} tickFormatter={(v) => `$${v}`} />
+                    <YAxis yAxisId="left" tick={{ fill: "#64748b", fontSize: 11 }} domain={[0, 100]} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fill: "#64748b", fontSize: 11 }} />
                     <Tooltip
-                      contentStyle={{ background: "rgba(15,15,25,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12 }}
+                      contentStyle={{ background: "rgba(255,255,255,0.97)", border: "1px solid rgba(15,23,42,0.1)", borderRadius: 12, fontSize: 12 }}
                       labelFormatter={(v) => `Price: $${v}`}
                     />
                     <Legend wrapperStyle={{ fontSize: 12 }} />
-                    <ReferenceLine x={result.proposedPrice} yAxisId="left" stroke="#a6a6ae" strokeDasharray="4 4" label={{ value: "proposed", fill: "#a6a6ae", fontSize: 10 }} />
-                    <ReferenceLine x={result.optimalPrice} yAxisId="left" stroke="#d6d6da" strokeDasharray="4 4" label={{ value: "optimal", fill: "#d6d6da", fontSize: 10 }} />
-                    <Line yAxisId="left" type="monotone" dataKey="conversion" name="Conversion %" stroke="#f2f2f4" strokeWidth={2} dot={false} />
+                    <ReferenceLine x={result.proposedPrice} yAxisId="left" stroke="#94a3b8" strokeDasharray="4 4" label={{ value: "proposed", fill: "#94a3b8", fontSize: 10 }} />
+                    <ReferenceLine x={result.optimalPrice} yAxisId="left" stroke="#64748b" strokeDasharray="4 4" label={{ value: "optimal", fill: "#64748b", fontSize: 10 }} />
+                    <Line yAxisId="left" type="monotone" dataKey="conversion" name="Conversion %" stroke="#0f172a" strokeWidth={2} dot={false} />
                     <Line yAxisId="right" type="monotone" dataKey="revenueIndex" name="Revenue index" stroke="#8b5cf6" strokeWidth={2} dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -149,11 +149,11 @@ export function PricingLab() {
               <p className="mb-3 text-sm font-semibold">How each segment reacts</p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {result.segmentReactions.map((s) => (
-                  <div key={s.role} className="flex items-start gap-3 rounded-xl bg-white/[0.03] p-3">
+                  <div key={s.role} className="flex items-start gap-3 rounded-xl bg-slate-50 p-3">
                     <Badge variant={s.willChurn ? "rose" : "emerald"}>{s.willChurn ? "Will churn" : "Stays"}</Badge>
                     <div>
                       <p className="text-sm font-medium">{s.role}</p>
-                      <p className="text-xs text-muted-foreground">{s.reaction}</p>
+                      <p className="text-xs text-slate-500">{s.reaction}</p>
                     </div>
                   </div>
                 ))}

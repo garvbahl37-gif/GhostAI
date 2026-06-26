@@ -77,7 +77,7 @@ export function AuthDialog() {
         >
           {/* backdrop */}
           <div
-            className="absolute inset-0 bg-black/75 backdrop-blur-md"
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-md"
             onClick={closeAuth}
             aria-hidden
           />
@@ -89,32 +89,32 @@ export function AuthDialog() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a16]/95 p-7 shadow-[0_30px_120px_-30px_rgba(0,0,0,0.95)] backdrop-blur-2xl"
+            className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white/95 p-7 shadow-[0_30px_120px_-30px_rgba(30,20,70,0.18)] backdrop-blur-2xl"
           >
             {/* top hairline glow */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-900/10 to-transparent" />
 
             <button
               onClick={closeAuth}
               aria-label="Close"
-              className="absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+              className="absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
             >
               <X className="h-4 w-4" />
             </button>
 
             {/* brand mark */}
             <div className="mb-5 flex flex-col items-center text-center">
-              <span className="relative mb-3 grid h-12 w-12 place-items-center rounded-2xl border border-white/12 bg-white/[0.06]">
-                <Ghost className="h-6 w-6 text-foreground" />
+              <span className="relative mb-3 grid h-12 w-12 place-items-center rounded-2xl border border-slate-200 bg-slate-50">
+                <Ghost className="h-6 w-6 text-slate-900" />
                 <span
                   className="absolute -inset-2 rounded-3xl opacity-60 blur-lg"
-                  style={{ background: "radial-gradient(circle, rgba(255,255,255,0.25), transparent 70%)" }}
+                  style={{ background: "radial-gradient(circle, rgba(30,20,70,0.1), transparent 70%)" }}
                 />
               </span>
               <h2 className="text-xl font-bold tracking-tight">
                 {isSignup ? "Create your account" : "Welcome back"}
               </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-sm text-slate-500">
                 {isSignup
                   ? "Start sending the customer swarm at your site."
                   : "Sign in to run simulations and save your reports."}
@@ -125,7 +125,7 @@ export function AuthDialog() {
               <div className="space-y-1.5">
                 <Label htmlFor="auth-email">Email</Label>
                 <div className="relative">
-                  <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                   <Input
                     id="auth-email"
                     type="email"
@@ -142,7 +142,7 @@ export function AuthDialog() {
               <div className="space-y-1.5">
                 <Label htmlFor="auth-password">Password</Label>
                 <div className="relative">
-                  <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                   <Input
                     id="auth-password"
                     type="password"
@@ -177,7 +177,7 @@ export function AuthDialog() {
               </Button>
             </form>
 
-            <p className="mt-5 text-center text-sm text-muted-foreground">
+            <p className="mt-5 text-center text-sm text-slate-500">
               {isSignup ? "Already have an account?" : "New to Ghost Customer?"}{" "}
               <button
                 type="button"
@@ -186,7 +186,7 @@ export function AuthDialog() {
                   setError("");
                   setInfo("");
                 }}
-                className="font-semibold text-foreground underline-offset-4 hover:underline"
+                className="font-semibold text-slate-900 underline-offset-4 hover:underline"
               >
                 {isSignup ? "Sign in" : "Create one"}
               </button>

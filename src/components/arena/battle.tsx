@@ -75,7 +75,7 @@ export function Battle() {
     <>
       <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none -z-10">
         <video src="/robo.mp4" preload="auto" autoPlay loop muted playsInline className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-slate-100" />
       </div>
       <div className="container max-w-5xl py-28">
         <div className="mb-8 text-center">
@@ -132,7 +132,7 @@ export function Battle() {
             <p className="text-sm text-muted-foreground">Verdict</p>
             <p className="mt-1 text-lg font-semibold">
               {result.winner === "tie" ? "It's a tie — segments are split." : `${result.winner === "you" ? result.you.title : result.competitor.title} wins.`}{" "}
-              <span className="text-foreground/70">{result.reason}</span>
+              <span className="text-slate-500">{result.reason}</span>
             </p>
             <div className="mt-4 flex justify-center">
               <Button variant="outline" onClick={downloadBattleCard} disabled={pdfLoading}>
@@ -150,13 +150,13 @@ export function Battle() {
                 <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
                     <RadarChart data={radarData} outerRadius="70%">
-                      <PolarGrid stroke="rgba(255,255,255,0.12)" />
-                      <PolarAngleAxis dataKey="dim" tick={{ fill: "#cbd5e1", fontSize: 10 }} />
+                      <PolarGrid stroke="rgba(15,23,42,0.12)" />
+                      <PolarAngleAxis dataKey="dim" tick={{ fill: "#64748b", fontSize: 10 }} />
                       <Radar dataKey="You" stroke="#d6d6da" fill="#d6d6da" fillOpacity={0.3} />
                       <Radar dataKey="Competitor" stroke="#6f6f77" fill="#6f6f77" fillOpacity={0.25} />
                       <Legend wrapperStyle={{ fontSize: 12 }} />
                       <Tooltip
-                        contentStyle={{ background: "rgba(15,15,25,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12 }}
+                        contentStyle={{ background: "rgba(255,255,255,0.95)", border: "1px solid rgba(15,23,42,0.12)", borderRadius: 12, fontSize: 12 }}
                       />
                     </RadarChart>
                   </ResponsiveContainer>
@@ -177,7 +177,7 @@ export function Battle() {
                         <span className="text-ghost-rose">{d.competitor}</span>
                       </span>
                     </div>
-                    <div className="flex h-2 overflow-hidden rounded-full bg-white/5">
+                    <div className="flex h-2 overflow-hidden rounded-full bg-slate-50">
                       <div className="bg-ghost-cyan" style={{ width: `${d.you / 2}%` }} />
                       <div className="ml-auto bg-ghost-rose" style={{ width: `${d.competitor / 2}%` }} />
                     </div>
@@ -193,7 +193,7 @@ export function Battle() {
               <p className="mb-3 text-sm font-semibold">Which customer prefers whom</p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {result.personaPreferences.map((p) => (
-                  <div key={p.role} className="flex items-start gap-3 rounded-xl bg-white/[0.03] p-3">
+                  <div key={p.role} className="flex items-start gap-3 rounded-xl bg-slate-50 p-3">
                     <Badge variant={p.prefers === "you" ? "cyan" : "rose"}>{p.prefers === "you" ? "You" : "Rival"}</Badge>
                     <div>
                       <p className="text-sm font-medium">{p.role}</p>

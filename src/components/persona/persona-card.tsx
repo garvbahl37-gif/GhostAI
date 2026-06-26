@@ -48,7 +48,7 @@ export function PersonaCard({
         </div>
       </div>
 
-      <p className="relative mt-3 line-clamp-2 text-xs italic text-foreground/70">“{persona.quote}”</p>
+      <p className="relative mt-3 line-clamp-2 text-xs italic text-slate-500">“{persona.quote}”</p>
 
       {sim ? (
         <div className="relative mt-3 space-y-2">

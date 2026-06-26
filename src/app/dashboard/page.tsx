@@ -61,13 +61,13 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold sm:text-4xl">
           Unleash the <span className="gradient-text">customer swarm</span>
         </h1>
-        <p className="mt-2 max-w-xl text-muted-foreground">
+        <p className="mt-2 max-w-xl text-slate-500">
           Drop in a website. Hundreds of AI customers will browse it, judge your pricing, ask hard questions, and reveal
           what's quietly costing you conversions — in about a minute.
         </p>
       </motion.div>
 
-      <Card className="conic-border mt-8 bg-[#0a0a14]/80 p-7">
+      <Card className="conic-border mt-8 bg-white p-7">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -78,7 +78,7 @@ export default function DashboardPage() {
           <div className="space-y-2">
             <Label htmlFor="url">Website URL</Label>
             <div className="relative">
-              <Globe className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Globe className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
               <Input
                 id="url"
                 value={url}
@@ -89,13 +89,13 @@ export default function DashboardPage() {
               />
             </div>
             <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-xs text-muted-foreground">Try:</span>
+              <span className="text-xs text-slate-500">Try:</span>
               {SAMPLES.map((s) => (
                 <button
                   key={s}
                   type="button"
                   onClick={() => setUrl(s)}
-                  className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-xs text-foreground/75 transition hover:border-white/20 hover:bg-white/[0.07] hover:text-foreground"
+                  className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-500 transition hover:border-slate-300 hover:bg-slate-100 hover:text-slate-900"
                 >
                   {s}
                 </button>
@@ -113,8 +113,8 @@ export default function DashboardPage() {
                   onClick={() => setCount(c)}
                   className={`rounded-xl border px-4 py-2 text-sm font-medium transition-all ${
                     count === c
-                      ? "border-white/20 bg-white/[0.1] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_6px_18px_-8px_rgba(0,0,0,0.6)]"
-                      : "border-white/[0.08] bg-white/[0.02] text-muted-foreground hover:border-white/15 hover:bg-white/[0.05] hover:text-foreground"
+                      ? "border-slate-300 bg-slate-100 text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_6px_18px_-8px_rgba(30,20,70,0.12)]"
+                      : "border-slate-200 bg-slate-50 text-slate-500 hover:border-slate-300 hover:bg-slate-100 hover:text-slate-900"
                   }`}
                 >
                   {c} ghosts
@@ -126,7 +126,7 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => setAdvanced((v) => !v)}
-            className="flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground"
+            className="flex items-center gap-1.5 text-sm text-slate-500 transition hover:text-slate-900"
           >
             {advanced ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             Advanced options
@@ -173,29 +173,29 @@ export default function DashboardPage() {
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         <a
           href="/arena"
-          className="group flex items-center gap-3 rounded-2xl border border-white/[0.06] glass p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/[0.14] hover:bg-white/[0.05]"
+          className="group flex items-center gap-3 rounded-2xl border border-slate-200 glass p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-100"
         >
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-ghost-amber/15 text-ghost-amber ring-1 ring-ghost-amber/20">
             <Swords className="h-5 w-5" />
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold">Competitor Battle Arena</p>
-            <p className="text-xs text-muted-foreground">Pit your site against a rival</p>
+            <p className="text-xs text-slate-500">Pit your site against a rival</p>
           </div>
-          <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground" />
+          <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-500 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-slate-900" />
         </a>
         <a
           href="/pricing-lab"
-          className="group flex items-center gap-3 rounded-2xl border border-white/[0.06] glass p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/[0.14] hover:bg-white/[0.05]"
+          className="group flex items-center gap-3 rounded-2xl border border-slate-200 glass p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-100"
         >
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-ghost-emerald/15 text-ghost-emerald ring-1 ring-ghost-emerald/20">
             <Zap className="h-5 w-5" />
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold">Pricing Time Machine</p>
-            <p className="text-xs text-muted-foreground">Simulate a price change</p>
+            <p className="text-xs text-slate-500">Simulate a price change</p>
           </div>
-          <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground" />
+          <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-500 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-slate-900" />
         </a>
       </div>
     </div>

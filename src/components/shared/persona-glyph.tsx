@@ -28,12 +28,12 @@ export function PersonaGlyph({
       style={{
         width: size,
         height: size,
-        background: "linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02))",
+        background: "linear-gradient(135deg, rgba(15,23,42,0.05), rgba(15,23,42,0.02))",
         border: `1px solid ${accent}40`,
-        boxShadow: `0 0 12px -4px ${accent}66, inset 0 1px 0 rgba(255,255,255,0.08)`,
+        boxShadow: `0 0 12px -4px ${accent}66, inset 0 1px 0 rgba(255,255,255,0.8)`,
       }}
     >
-      <span className="font-mono font-semibold text-foreground/90" style={{ fontSize: size * 0.32 }}>
+      <span className="font-mono font-semibold text-slate-900" style={{ fontSize: size * 0.32 }}>
         {initials(name)}
       </span>
     </span>
