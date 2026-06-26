@@ -7,10 +7,12 @@ import {
   HowItWorks,
   FinalCTA,
 } from "@/components/landing/sections";
+import LoadingScreen from "@/components/landing/loading-screen";
 
 export default function LandingPage() {
   return (
     <>
+      <LoadingScreen />
       <MainframeHero />
 
       {/* Landing content below the hero — opaque so it covers the fixed video on scroll */}

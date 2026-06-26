@@ -28,12 +28,13 @@ const PILLS = [
 const TYPEWRITER_TEXT =
   "Glad you stopped in. We meet your customers before reality does. So — what are we putting to the test?";
 
-/** Reveals `text` one character at a time after `startDelay`. */
-function useTypewriter(text: string, speed = 38, startDelay = 600) {
+/** Reveals `text` one character at a time, but only after `enabled` becomes true. */
+function useTypewriter(text: string, speed = 38, startDelay = 600, enabled = true) {
   const [displayed, setDisplayed] = useState("");
   const [done, setDone] = useState(false);
 
   useEffect(() => {
+    if (!enabled) return; // wait until loader signals done
     setDisplayed("");
     setDone(false);
     let i = 0;
@@ -52,7 +53,7 @@ function useTypewriter(text: string, speed = 38, startDelay = 600) {
       clearTimeout(start);
       clearInterval(interval);
     };
-  }, [text, speed, startDelay]);
+  }, [text, speed, startDelay, enabled]);
 
   return { displayed, done };
 }
@@ -66,8 +67,26 @@ export function MainframeHero() {
   const [pillsVisible, setPillsVisible] = useState(false);
   const [copied, setCopied] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // True once the video has its first frame decoded — used to fade away the
+  // grey fallback cover so there's no black flash while the video loads.
+  const [videoReady, setVideoReady] = useState(false);
+  // True once the loading screen dispatches 'ghostloader:complete'.
+  // Prevents the typewriter from running while the loader is covering the page.
+  const [loaderDone, setLoaderDone] = useState(false);
 
-  const { displayed, done } = useTypewriter(TYPEWRITER_TEXT);
+  // Listen for the loader's completion event; fall back to auto-start after
+  // 10 s so the hero still works on pages that don't mount a loading screen.
+  useEffect(() => {
+    const handler = () => setLoaderDone(true);
+    window.addEventListener("ghostloader:complete", handler, { once: true });
+    const fallback = setTimeout(() => setLoaderDone(true), 10_000);
+    return () => {
+      window.removeEventListener("ghostloader:complete", handler);
+      clearTimeout(fallback);
+    };
+  }, []);
+
+  const { displayed, done } = useTypewriter(TYPEWRITER_TEXT, 38, 400, loaderDone);
 
   // Mouse-scrub the video — buttery smooth. The mouse only updates a *target*
   // time; a requestAnimationFrame loop eases the playhead toward it and issues
@@ -193,6 +212,19 @@ export function MainframeHero() {
         preload="auto"
         className="fixed inset-0 z-0 h-full w-full object-cover"
         style={{ objectPosition: "70% center" }}
+        onLoadedData={() => setVideoReady(true)}
+      />
+
+      {/* ── Grey fallback cover — sits above the video (z-1) and fades away
+           once the first frame is ready, preventing the black-video flash ── */}
+      <div
+        className="fixed inset-0 z-[1] pointer-events-none"
+        style={{
+          backgroundColor: "#fbfbfd",
+          opacity: videoReady ? 0 : 1,
+          transition: "opacity 0.6s ease",
+        }}
+        aria-hidden="true"
       />
 
       {/* ── Navbar ── */}
