@@ -123,9 +123,9 @@ function CRTVisionMonitor() {
 
       {/* Label strip below the image */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 10, padding: "0 4px" }}>
-        <span style={{ fontFamily: "'Courier New',monospace", fontSize: 9, color: "rgba(13,13,13,0.45)", letterSpacing: "0.18em", textTransform: "uppercase" }}>GHOST VISION SYSTEM</span>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: "'Courier New',monospace", fontSize: 9, color: "rgba(13,13,13,0.45)", letterSpacing: "0.12em" }}>
-          <span style={{ display: "inline-block", width: 5, height: 5, borderRadius: "50%", background: "rgba(100,200,80,0.65)", boxShadow: "0 0 4px rgba(100,200,80,0.45)", animation: "gc-blink-block 2s ease-in-out infinite" }} />
+        <span style={{ fontFamily: "'Courier New',monospace", fontSize: 9, color: "rgba(13,13,13,0.7)", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 600 }}>GHOST VISION SYSTEM</span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: "'Courier New',monospace", fontSize: 9, color: "rgba(13,13,13,0.7)", letterSpacing: "0.12em", fontWeight: 600 }}>
+          <span style={{ display: "inline-block", width: 5, height: 5, borderRadius: "50%", background: "rgba(100,200,80,0.85)", boxShadow: "0 0 4px rgba(100,200,80,0.65)", animation: "gc-blink-block 2s ease-in-out infinite" }} />
           ACTIVE
         </span>
       </div>
@@ -290,17 +290,17 @@ function RoastPreview() {
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {ROAST_PREVIEW_NOTES.map((note) => (
           <div key={note.n} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px", background: "rgba(232,229,221,0.55)", border: "1px solid rgba(26,25,23,0.1)", borderRadius: 6, boxShadow: "0 1px 0 rgba(255,255,255,0.5) inset" }}>
-            <span style={{ fontFamily: "'Courier New',monospace", fontSize: 10, fontWeight: 700, color: "rgba(13,13,13,0.35)", letterSpacing: "0.06em", flexShrink: 0, marginTop: 2 }}>{note.n}</span>
+            <span style={{ fontFamily: "'Courier New',monospace", fontSize: 10, fontWeight: 700, color: "rgba(13,13,13,0.6)", letterSpacing: "0.06em", flexShrink: 0, marginTop: 2 }}>{note.n}</span>
             <div>
-              <p style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: 13, fontWeight: 500, color: "#0d0d0d", marginBottom: 3 }}>{note.title}</p>
-              <p style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: 11, color: "rgba(13,13,13,0.6)", lineHeight: 1.5 }}>{note.desc}</p>
+              <p style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: 13, fontWeight: 600, color: "#0d0d0d", marginBottom: 3 }}>{note.title}</p>
+              <p style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: 11, color: "rgba(13,13,13,0.85)", lineHeight: 1.5 }}>{note.desc}</p>
             </div>
           </div>
         ))}
 
         {/* Preview CTA */}
         <div style={{ padding: "14px 16px", background: "rgba(232,229,221,0.35)", border: "1px solid rgba(26,25,23,0.08)", borderRadius: 6 }}>
-          <p style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: 12, color: "rgba(13,13,13,0.55)", lineHeight: 1.5, marginBottom: 12 }}>
+          <p style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: 12, color: "rgba(13,13,13,0.85)", lineHeight: 1.5, marginBottom: 12 }}>
             This is just a preview. Run a full roast to get the complete analysis with annotated screenshot and actionable fixes.
           </p>
           <button style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: 13, fontWeight: 500, color: "#fff", background: "#0d0d0d", border: "1px solid #0d0d0d", borderRadius: 999, padding: "9px 20px", cursor: "pointer" }}>
@@ -337,7 +337,7 @@ export function VisualRoast() {
   // Shared label style
   const lbl: React.CSSProperties = {
     fontFamily: "'Courier New',monospace", fontSize: 10, fontWeight: 700,
-    letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(13,13,13,0.62)",
+    letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(13,13,13,0.85)",
     marginBottom: 8, display: "block",
   };
 
@@ -406,7 +406,7 @@ export function VisualRoast() {
                   <div>
                     <label htmlFor="roast-url" style={lbl}>Enter Website URL</label>
                     <div style={{ position: "relative" }}>
-                      <Globe style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", width: 14, height: 14, color: "rgba(13,13,13,0.5)", pointerEvents: "none" }} />
+                      <Globe style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", width: 14, height: 14, color: "rgba(13,13,13,0.75)", pointerEvents: "none" }} />
                       <input
                         id="roast-url"
                         type="text"
@@ -414,18 +414,19 @@ export function VisualRoast() {
                         onChange={(e) => setUrl(e.target.value)}
                         placeholder="yourcompany.com"
                         autoFocus
-                        style={{ fontFamily: "'Courier New',monospace", fontSize: 13, color: "#0d0d0d", background: "rgba(255,255,255,0.55)", border: "1px solid rgba(26,25,23,0.25)", borderRadius: 6, padding: "9px 14px 9px 36px", outline: "none", width: "100%", transition: "background 0.2s,border-color 0.2s", boxSizing: "border-box" }}
+                        className="placeholder:text-black/50"
+                        style={{ fontFamily: "'Courier New',monospace", fontSize: 13, color: "#0d0d0d", background: "rgba(255,255,255,0.75)", border: "1px solid rgba(26,25,23,0.35)", borderRadius: 6, padding: "9px 14px 9px 36px", outline: "none", width: "100%", transition: "background 0.2s,border-color 0.2s", boxSizing: "border-box" }}
                       />
                     </div>
                   </div>
 
                   {/* Sample pills */}
                   <div>
-                    <span style={{ fontFamily: "'Courier New',monospace", fontSize: 10, color: "rgba(13,13,13,0.55)", letterSpacing: "0.1em", marginBottom: 8, display: "block" }}>TRY EXAMPLES</span>
+                    <span style={{ fontFamily: "'Courier New',monospace", fontSize: 10, color: "rgba(13,13,13,0.75)", letterSpacing: "0.1em", marginBottom: 8, display: "block", fontWeight: 600 }}>TRY EXAMPLES</span>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
                       {SAMPLES.map((s) => (
                         <button key={s} type="button" onClick={() => { setUrl(s); roast(s); }}
-                          style={{ fontFamily: "'Courier New',monospace", fontSize: 11, color: "rgba(13,13,13,0.72)", background: "rgba(255,255,255,0.5)", border: "1px solid rgba(26,25,23,0.2)", borderRadius: 999, padding: "4px 13px", cursor: "pointer", transition: "all 0.18s" }}>
+                          style={{ fontFamily: "'Courier New',monospace", fontSize: 11, color: "rgba(13,13,13,0.9)", fontWeight: 500, background: "rgba(255,255,255,0.7)", border: "1px solid rgba(26,25,23,0.25)", borderRadius: 999, padding: "4px 13px", cursor: "pointer", transition: "all 0.18s" }}>
                           {s}
                         </button>
                       ))}
@@ -445,7 +446,7 @@ export function VisualRoast() {
                       {loading ? <Loader2 style={{ width: 14, height: 14, animation: "spin 1s linear infinite" }} /> : <span style={{ fontSize: 15 }}>◈</span>}
                       {loading ? "Looking…" : "Roast my UI"}
                     </button>
-                    <button type="button" style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "'Courier New',monospace", fontSize: 12, color: "rgba(13,13,13,0.62)", background: "none", border: "none", cursor: "pointer", padding: 0, letterSpacing: "0.04em" }}>
+                    <button type="button" style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "'Courier New',monospace", fontSize: 12, color: "rgba(13,13,13,0.85)", fontWeight: 500, background: "none", border: "none", cursor: "pointer", padding: 0, letterSpacing: "0.04em" }}>
                       Advanced options <span style={{ fontSize: 10 }}>▾</span>
                     </button>
                   </div>
@@ -471,11 +472,11 @@ export function VisualRoast() {
                   <card.Icon style={{ width: 15, height: 15, color: "rgba(13,13,13,0.6)" }} />
                 </div>
                 <div>
-                  <p style={{ fontFamily: "'Courier New',monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(13,13,13,0.62)", marginBottom: 6 }}>{card.label}</p>
-                  <p style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: 12, color: "rgba(13,13,13,0.65)", lineHeight: 1.5, marginBottom: 10 }}>{card.desc}</p>
-                  <Link href="#" style={{ fontFamily: "'Courier New',monospace", fontSize: 10, color: "rgba(13,13,13,0.5)", textDecoration: "none", transition: "color 0.18s" }}
-                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,0.9)")}
-                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,0.5)")}>
+                  <p style={{ fontFamily: "'Courier New',monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(13,13,13,0.85)", marginBottom: 6 }}>{card.label}</p>
+                  <p style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: 12, color: "rgba(13,13,13,0.85)", lineHeight: 1.5, marginBottom: 10 }}>{card.desc}</p>
+                  <Link href="#" style={{ fontFamily: "'Courier New',monospace", fontSize: 10, color: "rgba(13,13,13,0.75)", textDecoration: "none", transition: "color 0.18s", fontWeight: 600 }}
+                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,1)")}
+                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,0.75)")}>
                     {card.link}
                   </Link>
                 </div>
@@ -599,8 +600,8 @@ export function VisualRoast() {
               style={{ marginTop: 28 }}>
               {/* Section label */}
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-                <p style={{ fontFamily: "'Courier New',monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(13,13,13,0.55)" }}>Roast Preview</p>
-                <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg,rgba(0,0,0,0.12) 0%,transparent 100%)" }} />
+                <p style={{ fontFamily: "'Courier New',monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(13,13,13,0.85)" }}>Roast Preview</p>
+                <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg,rgba(0,0,0,0.18) 0%,transparent 100%)" }} />
               </div>
               <div style={{ background: "rgba(232,229,221,0.62)", border: "1px solid rgba(26,25,23,0.13)", borderRadius: 8, padding: "24px", boxShadow: "0 1px 0 rgba(255,255,255,0.55) inset", position: "relative" }}>
                 <RoastPreview />
@@ -610,13 +611,13 @@ export function VisualRoast() {
 
           {/* ── Footer ── */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.4 }}
-            style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12, marginTop: 36, paddingTop: 18, borderTop: "1px solid rgba(26,25,23,0.08)" }}>
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 20, fontFamily: "'Courier New',monospace", fontSize: 11, color: "rgba(13,13,13,0.58)", letterSpacing: "0.06em" }}>
+            style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12, marginTop: 36, paddingTop: 18, borderTop: "1px solid rgba(26,25,23,0.12)" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 20, fontFamily: "'Courier New',monospace", fontSize: 11, color: "rgba(13,13,13,0.85)", letterSpacing: "0.06em", fontWeight: 500 }}>
               <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "rgba(13,13,13,0.55)" }} />
+                <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "rgba(13,13,13,0.75)" }} />
                 System online
               </span>
-              <span>Need help? <a href="mailto:hello@ghostcustomer.ai" style={{ color: "rgba(13,13,13,0.7)", textDecoration: "underline", textUnderlineOffset: 3 }}>hello@ghostcustomer.ai</a></span>
+              <span>Need help? <a href="mailto:hello@ghostcustomer.ai" style={{ color: "rgba(13,13,13,1)", textDecoration: "underline", textUnderlineOffset: 3 }}>hello@ghostcustomer.ai</a></span>
               <span>Last run: Never</span>
             </div>
           </motion.div>
