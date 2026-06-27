@@ -70,13 +70,18 @@ export function MainframeHero() {
   // True once the video has its first frame decoded — used to fade away the
   // grey fallback cover so there's no black flash while the video loads.
   const [videoReady, setVideoReady] = useState(false);
-  // True once the loading screen dispatches 'ghostloader:complete'.
-  // Prevents the typewriter from running while the loader is covering the page.
-  const [loaderDone, setLoaderDone] = useState(false);
+  const [loaderDone, setLoaderDone] = useState(() => {
+    if (typeof window !== "undefined") {
+      return !!sessionStorage.getItem("ghostai_loading_complete");
+    }
+    return false;
+  });
 
   // Listen for the loader's completion event; fall back to auto-start after
   // 10 s so the hero still works on pages that don't mount a loading screen.
   useEffect(() => {
+    if (loaderDone) return; // Already done from sessionStorage
+
     const handler = () => setLoaderDone(true);
     window.addEventListener("ghostloader:complete", handler, { once: true });
     const fallback = setTimeout(() => setLoaderDone(true), 10_000);
@@ -84,7 +89,7 @@ export function MainframeHero() {
       window.removeEventListener("ghostloader:complete", handler);
       clearTimeout(fallback);
     };
-  }, []);
+  }, [loaderDone]);
 
   const { displayed, done } = useTypewriter(TYPEWRITER_TEXT, 38, 400, loaderDone);
 
