@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { UserMenu } from "@/components/auth/user-menu";
 
 // Mainframe-style scrub-video hero, adapted to Next.js and filled with
 // GhostCustomer's own content (brand, nav, messaging) per the brief.
@@ -29,7 +30,12 @@ const TYPEWRITER_TEXT =
   "Glad you stopped in. We meet your customers before reality does. So — what are we putting to the test?";
 
 /** Reveals `text` one character at a time, but only after `enabled` becomes true. */
-function useTypewriter(text: string, speed = 38, startDelay = 600, enabled = true) {
+function useTypewriter(
+  text: string,
+  speed = 38,
+  startDelay = 600,
+  enabled = true,
+) {
   const [displayed, setDisplayed] = useState("");
   const [done, setDone] = useState(false);
 
@@ -91,7 +97,12 @@ export function MainframeHero() {
     };
   }, [loaderDone]);
 
-  const { displayed, done } = useTypewriter(TYPEWRITER_TEXT, 38, 400, loaderDone);
+  const { displayed, done } = useTypewriter(
+    TYPEWRITER_TEXT,
+    38,
+    400,
+    loaderDone,
+  );
 
   // Mouse-scrub the video — buttery smooth. The mouse only updates a *target*
   // time; a requestAnimationFrame loop eases the playhead toward it and issues
@@ -106,7 +117,10 @@ export function MainframeHero() {
 
     // Warm the decode pipeline so the first scrub isn't janky (muted play→pause).
     const warm = () => {
-      video.play().then(() => video.pause()).catch(() => {});
+      video
+        .play()
+        .then(() => video.pause())
+        .catch(() => {});
       video.removeEventListener("loadeddata", warm);
     };
     video.addEventListener("loadeddata", warm);
@@ -120,7 +134,9 @@ export function MainframeHero() {
       }
       const delta = e.clientX - prevX.current;
       prevX.current = e.clientX;
-      const next = targetTime.current + (delta / window.innerWidth) * SENSITIVITY * v.duration;
+      const next =
+        targetTime.current +
+        (delta / window.innerWidth) * SENSITIVITY * v.duration;
       targetTime.current = Math.max(0, Math.min(v.duration, next));
     }
 
@@ -235,7 +251,9 @@ export function MainframeHero() {
       {/* ── Navbar ── */}
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-          scrolled ? "border-b border-slate-200/70 bg-white/80 backdrop-blur-xl" : "border-b border-transparent"
+          scrolled
+            ? "border-b border-slate-200/70 bg-white/80 backdrop-blur-xl"
+            : "border-b border-transparent"
         }`}
       >
         <div className="flex items-center justify-between px-5 py-4 sm:px-8">
@@ -248,7 +266,10 @@ export function MainframeHero() {
               GhostCustomer
               <span className="align-super text-[0.5em] font-normal">®</span>
             </span>
-            <span className="select-none text-[20px] leading-none text-black sm:text-[24px]" style={{ letterSpacing: "-0.02em" }}>
+            <span
+              className="select-none text-[20px] leading-none text-black sm:text-[24px]"
+              style={{ letterSpacing: "-0.02em" }}
+            >
               ✳︎
             </span>
           </Link>
@@ -256,39 +277,65 @@ export function MainframeHero() {
           {/* Desktop nav links (truly centered) */}
           <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 text-[15px] font-medium text-black md:flex lg:gap-9">
             {NAV.map((item) => (
-              <Link key={item.href} href={item.href} className="transition-opacity hover:opacity-50">
+              <Link
+                key={item.href}
+                href={item.href}
+                className="transition-opacity hover:opacity-50"
+              >
                 {item.label}
               </Link>
             ))}
           </nav>
 
-          {/* Desktop CTA */}
-          <Link
-            href="/dashboard"
-            className="hidden text-[15px] font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-50 md:block"
-          >
-            Launch
-          </Link>
+          {/* Actions & Mobile Toggle */}
+          <div className="flex items-center gap-4">
+            <UserMenu />
 
-          {/* Mobile hamburger */}
-          <button aria-label="Menu" onClick={() => setMenuOpen((v) => !v)} className="flex flex-col gap-[5px] md:hidden">
-            <span
-              className="h-[2px] w-6 bg-black transition-all duration-300"
-              style={menuOpen ? { transform: "translateY(7px) rotate(45deg)" } : undefined}
-            />
-            <span className="h-[2px] w-6 bg-black transition-all duration-300" style={menuOpen ? { opacity: 0 } : undefined} />
-            <span
-              className="h-[2px] w-6 bg-black transition-all duration-300"
-              style={menuOpen ? { transform: "translateY(-7px) rotate(-45deg)" } : undefined}
-            />
-          </button>
+            <Link
+              href="/dashboard"
+              className="hidden text-[15px] font-medium text-black underline underline-offset-4 transition-opacity hover:opacity-50 md:block"
+            >
+              Launch
+            </Link>
+
+            {/* Mobile hamburger */}
+            <button
+              aria-label="Menu"
+              onClick={() => setMenuOpen((v) => !v)}
+              className="flex flex-col gap-[5px] md:hidden"
+            >
+              <span
+                className="h-[2px] w-6 bg-black transition-all duration-300"
+                style={
+                  menuOpen
+                    ? { transform: "translateY(7px) rotate(45deg)" }
+                    : undefined
+                }
+              />
+              <span
+                className="h-[2px] w-6 bg-black transition-all duration-300"
+                style={menuOpen ? { opacity: 0 } : undefined}
+              />
+              <span
+                className="h-[2px] w-6 bg-black transition-all duration-300"
+                style={
+                  menuOpen
+                    ? { transform: "translateY(-7px) rotate(-45deg)" }
+                    : undefined
+                }
+              />
+            </button>
+          </div>
         </div>
       </header>
 
       {/* ── Mobile overlay ── */}
       <div
         className="fixed inset-0 z-[9] flex flex-col justify-center gap-8 bg-white/95 px-8 backdrop-blur-sm transition-opacity duration-300 md:hidden"
-        style={{ opacity: menuOpen ? 1 : 0, pointerEvents: menuOpen ? "auto" : "none" }}
+        style={{
+          opacity: menuOpen ? 1 : 0,
+          pointerEvents: menuOpen ? "auto" : "none",
+        }}
       >
         {NAV.map((item) => (
           <Link
@@ -309,29 +356,74 @@ export function MainframeHero() {
         </Link>
       </div>
 
-      {/* ── Hero ── */}
-      <section className="relative z-[1] flex h-screen flex-col justify-end overflow-hidden px-5 pb-12 sm:px-8 md:justify-center md:px-10 md:pb-0">
-        <div className="relative z-10 max-w-xl">
-          {/* Blurred intro label */}
-          <div
-            className="pointer-events-none mb-5 select-none sm:mb-6"
+      {/* ── Left scrim — ensures text stays readable over the video without
+           being perceptible as a design element (fades from solid → transparent) ── */}
+      <div
+        className="pointer-events-none fixed inset-0 z-[2]"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(235,235,235,0.92) 0%, rgba(235,235,235,0.72) 28%, rgba(235,235,235,0.22) 52%, transparent 68%)",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* ── Hero left section ── */}
+      <section
+        className="relative z-[3] flex h-screen flex-col justify-center overflow-hidden"
+        style={{
+          paddingLeft: "clamp(20px, 5.5vw, 80px)",
+          paddingRight: "20px",
+        }}
+      >
+        <div style={{ maxWidth: "500px", paddingTop: "72px" }}>
+          <h1
+            className="mf-anim"
             style={{
-              fontSize: "clamp(18px, 4vw, 26px)",
-              lineHeight: 1.3,
-              fontWeight: 400,
+              fontSize: "clamp(38px, 4.2vw, 62px)",
+              lineHeight: 1.03,
+              fontWeight: 600,
               color: "#000",
-              filter: "blur(4px)",
+              letterSpacing: "-0.03em",
+              marginBottom: "32px",
+              animationDelay: "70ms",
+              fontFamily: "var(--font-heading)",
             }}
           >
-            Hey there, meet your ghost customers,
+            Hey there,
             <br />
-            GhostCustomer&apos;s hyper-realistic AI persona swarm
-          </div>
+            meet your
+            <br />
+            <span style={{ opacity: 0.38 }}>ghost</span> customers.
+          </h1>
 
-          {/* Typewriter (reserve ~3 lines so the pills never jump while typing) */}
+          {/* Description — one clean paragraph, muted */}
           <p
-            className="mb-6 text-black sm:mb-7"
-            style={{ fontSize: "clamp(18px, 4vw, 26px)", lineHeight: 1.35, fontWeight: 400, minHeight: "4.1em" }}
+            className="mf-anim"
+            style={{
+              fontSize: "17px",
+              lineHeight: 1.65,
+              color: "#5a5a5a",
+              maxWidth: "390px",
+              marginBottom: "40px",
+              animationDelay: "150ms",
+            }}
+          >
+            GhostCustomer creates hyper-realistic AI personas that behave
+            exactly like your future customers—before real users ever do.
+          </p>
+
+          {/* Supporting editorial copy — typewriter, treated as prose */}
+          <p
+            className="mf-anim"
+            style={{
+              fontSize: "clamp(17px, 1.9vw, 21px)",
+              lineHeight: 1.55,
+              color: "#1a1a1a",
+              fontWeight: 400,
+              marginBottom: "52px",
+              minHeight: "3.3em",
+              animationDelay: "210ms",
+            }}
           >
             {displayed}
             {!done && (
@@ -342,43 +434,88 @@ export function MainframeHero() {
             )}
           </p>
 
-          {/* Action pills */}
+          {/* Primary CTA */}
           <div
-            className="flex flex-wrap gap-y-1"
+            className="mf-anim"
+            style={{ marginBottom: "28px", animationDelay: "290ms" }}
+          >
+            <Link href="/dashboard" className="mf-primary-btn">
+              Run a simulation
+            </Link>
+          </div>
+
+          {/* Secondary text actions — no pills, no borders */}
+          <div
+            className="mf-anim"
             style={{
-              opacity: pillsVisible ? 1 : 0,
-              transform: pillsVisible ? "translateY(0)" : "translateY(8px)",
-              transition: "opacity 0.4s ease, transform 0.4s ease",
+              display: "flex",
+              gap: "28px",
+              flexWrap: "wrap",
+              animationDelay: "350ms",
             }}
           >
-            {PILLS.map((p) => (
-              <Link
-                key={p.href}
-                href={p.href}
-                className="mx-[0.2em] mb-[0.4em] inline-flex items-center justify-center whitespace-nowrap rounded-full border border-black/10 bg-white px-4 py-[0.3em] text-[13px] text-black transition-colors duration-200 hover:bg-black hover:text-white sm:px-5 sm:text-[15px]"
-              >
-                {p.label}
+            {[
+              { label: "Roast my UI", href: "/roast" },
+              { label: "Battle a competitor", href: "/arena" },
+              { label: "See pricing impact", href: "/pricing-lab" },
+            ].map((item) => (
+              <Link key={item.href} href={item.href} className="mf-sec-btn">
+                {item.label}
               </Link>
             ))}
-
-            <button
-              onClick={copyEmail}
-              className="mx-[0.2em] mb-[0.4em] inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white bg-transparent px-4 py-[0.3em] text-[13px] text-white transition-colors duration-200 hover:bg-white hover:text-black sm:gap-3 sm:px-5 sm:text-[15px]"
-            >
-              <span>
-                Reach us: <span className="underline underline-offset-1">{EMAIL}</span>
-              </span>
-              {copied ? (
-                <span className="text-[11px]">copied</span>
-              ) : (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                </svg>
-              )}
-            </button>
           </div>
         </div>
+
+        {/* ── Scoped styles ─────────────────────────────────────────────── */}
+        <style>{`
+          /* Fade-up entrance — runs every mount (smooth on back-navigation) */
+          @keyframes mf-fade-up {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0px);  }
+          }
+
+          .mf-anim {
+            animation: mf-fade-up 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+          }
+
+          /* Primary black CTA */
+          .mf-primary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            color: #fff;
+            padding: 14px 30px;
+            border-radius: 999px;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+            transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity  160ms ease;
+            user-select: none;
+          }
+          .mf-primary-btn:hover  { transform: scale(1.025); opacity: 0.9; }
+          .mf-primary-btn:active { transform: scale(0.975); }
+
+          /* Secondary bare text links */
+          .mf-sec-btn {
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 1px;
+            transition: color 150ms ease, border-color 150ms ease;
+            user-select: none;
+          }
+          .mf-sec-btn:hover {
+            color: #000;
+            border-bottom-color: #000;
+          }
+
+          /* Premium text-selection color */
+          .mf-anim::selection { background: #e8e8e8; }
+        `}</style>
       </section>
     </div>
   );

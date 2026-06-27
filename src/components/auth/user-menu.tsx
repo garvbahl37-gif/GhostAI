@@ -30,7 +30,7 @@ export function UserMenu() {
     return (
       <button
         onClick={openAuth}
-        className="rounded-xl px-3.5 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+        className="rounded-xl px-3.5 py-2 text-sm font-medium text-black transition hover:bg-slate-100"
       >
         Sign in
       </button>

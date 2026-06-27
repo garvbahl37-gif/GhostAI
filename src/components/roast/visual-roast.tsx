@@ -133,99 +133,6 @@ function CRTVisionMonitor() {
   );
 }
 
-// ─── Navbar ───────────────────────────────────────────────────────────────────
-function RoastNavbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 12);
-    fn();
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-
-  return (
-    <header
-      style={{
-        position: "fixed", inset: "0 0 auto 0", zIndex: 50,
-        transition: "background 0.3s, border-color 0.3s",
-        borderBottom: scrolled ? "1px solid rgba(26,25,23,0.12)" : "1px solid transparent",
-        background: scrolled ? "rgba(194,191,184,0.85)" : "transparent",
-        backdropFilter: scrolled ? "blur(14px)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(14px)" : "none",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 32px" }}>
-        {/* Logo */}
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-          <span style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: "clamp(17px,2vw,21px)", fontWeight: 500, color: "#0d0d0d", letterSpacing: "-0.01em" }}>
-            GhostCustomer<sup style={{ fontSize: "0.48em", fontWeight: 400 }}>®</sup>
-          </span>
-          <span style={{ fontSize: "clamp(18px,2.2vw,23px)", color: "#0d0d0d", letterSpacing: "-0.02em", userSelect: "none" }}>✳︎</span>
-        </Link>
-
-        {/* Desktop center nav */}
-        <nav className="hidden md:flex" style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", display: "flex", alignItems: "center", gap: "clamp(20px,3.5vw,36px)", fontSize: 15, fontWeight: 500, fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif" }}>
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              style={{
-                color: "#0d0d0d", textDecoration: item.href === "/roast" ? "underline" : "none",
-                textUnderlineOffset: 4, textDecorationColor: "rgba(13,13,13,0.5)", transition: "opacity 0.2s",
-              }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.opacity = "0.45")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.opacity = "1")}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Right */}
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <UserMenu />
-          <Link
-            href="/dashboard"
-            className="hidden md:block"
-            style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: 15, fontWeight: 500, color: "#0d0d0d", textDecoration: "underline", textUnderlineOffset: 4, textDecorationColor: "rgba(13,13,13,0.5)", transition: "opacity 0.2s" }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.opacity = "0.45")}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.opacity = "1")}
-          >
-            Launch
-          </Link>
-          {/* Mobile hamburger */}
-          <button className="flex flex-col md:hidden" style={{ gap: 5 }} aria-label="Toggle menu" onClick={() => setMobileOpen((v) => !v)}>
-            <span style={{ height: 2, width: 24, background: "#0d0d0d", display: "block", transition: "all 0.3s", transform: mobileOpen ? "translateY(7px) rotate(45deg)" : undefined }} />
-            <span style={{ height: 2, width: 24, background: "#0d0d0d", display: "block", transition: "all 0.3s", opacity: mobileOpen ? 0 : 1 }} />
-            <span style={{ height: 2, width: 24, background: "#0d0d0d", display: "block", transition: "all 0.3s", transform: mobileOpen ? "translateY(-7px) rotate(-45deg)" : undefined }} />
-          </button>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.18 }}
-            style={{ background: "rgba(194,191,184,0.97)", borderTop: "1px solid rgba(26,25,23,0.1)", padding: "20px 32px" }}
-            className="md:hidden"
-          >
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {NAV.map((item) => (
-                <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
-                  style={{ fontFamily: "var(--font-heading),'Helvetica Neue',Arial,sans-serif", fontSize: 18, fontWeight: 500, color: "#0d0d0d", textDecoration: "none" }}>
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
-  );
-}
 
 // ─── Roast preview placeholder ────────────────────────────────────────────────
 function RoastPreview() {
@@ -369,7 +276,6 @@ export function VisualRoast() {
 
       {/* ── Page shell ── */}
       <div style={{ position: "relative", zIndex: 10, minHeight: "100vh" }}>
-        <RoastNavbar />
 
         <div style={{ maxWidth: 1180, margin: "0 auto", padding: "clamp(100px,14vw,128px) 32px 64px" }}>
 
