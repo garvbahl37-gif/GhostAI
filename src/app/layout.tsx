@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   description:
     "The AI that becomes your customer before your customer becomes your problem. Spin up hundreds of AI customers to find conversion blockers, churn risks, and revenue leaks before launch.",
   keywords: ["AI", "customer simulation", "multi-agent", "conversion", "churn", "revenue"],
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
   openGraph: {
     title: "Ghost Customer AI",
     description: "Watch hundreds of AI customers test your business before real ones do.",
