@@ -22,7 +22,12 @@ function calcTotalMs() {
 }
 
 export default function LoadingScreen() {
-  const [visible, setVisible]           = useState(true);
+  const [visible, setVisible]           = useState(() => {
+    if (typeof window !== "undefined") {
+      return !sessionStorage.getItem("ghostai_loading_complete");
+    }
+    return true;
+  });
   const [fading, setFading]             = useState(false);
   const [progress, setProgress]         = useState(0);
   const [visibleLines, setVisibleLines] = useState<string[]>([]);
@@ -66,7 +71,14 @@ export default function LoadingScreen() {
   // (The component stays mounted but renders null, so mount/unmount cleanup
   //  would never fire — that was the original bug causing permanent scroll lock.)
   useEffect(() => {
-    document.body.style.overflow = visible ? "hidden" : "";
+    if (visible) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [visible]);
 
   // ── Start typewriter after brief delay ────────────────────────────────────────
@@ -118,9 +130,14 @@ export default function LoadingScreen() {
       // Reset scroll to top before revealing the hero — prevents the
       // white gap caused by browser scroll-restoration running under the loader.
       window.scrollTo({ top: 0, behavior: "instant" });
+      
+      // Mark loading as complete in this session
+      sessionStorage.setItem("ghostai_loading_complete", "true");
+      
       // Signal the hero to start its typewriter now (before the loader fully
       // fades so the text is visibly typing as the loader disappears).
       window.dispatchEvent(new CustomEvent("ghostloader:complete"));
+      window.dispatchEvent(new Event("landing-loading-complete")); // For navbar
       setFading(true);
       setTimeout(() => setVisible(false), 900);
     }

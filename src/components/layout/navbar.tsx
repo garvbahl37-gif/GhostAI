@@ -19,7 +19,12 @@ export function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [hideForLandingLoading, setHideForLandingLoading] = useState(pathname === "/");
+  const [hideForLandingLoading, setHideForLandingLoading] = useState(() => {
+    if (typeof window !== "undefined") {
+      return pathname === "/" && !sessionStorage.getItem("ghostai_loading_complete");
+    }
+    return pathname === "/";
+  });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -34,10 +39,22 @@ export function Navbar() {
       return;
     }
 
+    if (sessionStorage.getItem("ghostai_loading_complete")) {
+      setHideForLandingLoading(false);
+      return;
+    }
+
     setHideForLandingLoading(true);
     const onLoadingComplete = () => setHideForLandingLoading(false);
+    
+    // Support both event types depending on which loader version is active
     window.addEventListener("landing-loading-complete", onLoadingComplete);
-    return () => window.removeEventListener("landing-loading-complete", onLoadingComplete);
+    window.addEventListener("ghostloader:complete", onLoadingComplete);
+    
+    return () => {
+      window.removeEventListener("landing-loading-complete", onLoadingComplete);
+      window.removeEventListener("ghostloader:complete", onLoadingComplete);
+    };
   }, [pathname]);
 
   // Close mobile menu on path changes
