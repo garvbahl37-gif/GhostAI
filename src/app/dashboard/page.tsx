@@ -608,8 +608,8 @@ export default function DashboardPage() {
     fontFamily: "'Courier New', Courier, monospace",
     fontSize: 13,
     color: "#0d0d0d",
-    background: "rgba(255,255,255,0.38)",
-    border: "1px solid rgba(26,25,23,0.18)",
+    background: "rgba(255,255,255,0.55)",
+    border: "1px solid rgba(26,25,23,0.25)",
     borderRadius: 6,
     padding: "9px 14px",
     outline: "none",
@@ -619,11 +619,11 @@ export default function DashboardPage() {
 
   const labelStyle: React.CSSProperties = {
     fontFamily: "'Courier New', Courier, monospace",
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: 700,
-    letterSpacing: "0.20em",
+    letterSpacing: "0.18em",
     textTransform: "uppercase",
-    color: "rgba(13,13,13,0.4)",
+    color: "rgba(13,13,13,0.65)",
     display: "flex",
     alignItems: "center",
     gap: 4,
@@ -780,7 +780,7 @@ export default function DashboardPage() {
                   style={{
                     fontFamily: "var(--font-heading), 'Helvetica Neue', Arial, sans-serif",
                     fontSize: 14,
-                    color: "rgba(13,13,13,0.45)",
+                    color: "rgba(13,13,13,0.72)",
                     lineHeight: 1.55,
                     marginBottom: 28,
                   }}
@@ -819,7 +819,7 @@ export default function DashboardPage() {
                           transform: "translateY(-50%)",
                           width: 14,
                           height: 14,
-                          color: "rgba(13,13,13,0.3)",
+                          color: "rgba(13,13,13,0.5)",
                           pointerEvents: "none",
                         }}
                       />
@@ -851,10 +851,10 @@ export default function DashboardPage() {
                           style={{
                             fontFamily: "'Courier New', Courier, monospace",
                             fontSize: 12,
-                            fontWeight: count === s ? 700 : 400,
-                            color: count === s ? "#fff" : "rgba(13,13,13,0.55)",
-                            background: count === s ? "#0d0d0d" : "rgba(255,255,255,0.35)",
-                            border: count === s ? "1px solid #0d0d0d" : "1px solid rgba(26,25,23,0.16)",
+                            fontWeight: count === s ? 700 : 500,
+                            color: count === s ? "#fff" : "rgba(13,13,13,0.75)",
+                            background: count === s ? "#0d0d0d" : "rgba(255,255,255,0.55)",
+                            border: count === s ? "1px solid #0d0d0d" : "1px solid rgba(26,25,23,0.25)",
                             borderRadius: 999,
                             padding: "6px 16px",
                             cursor: "pointer",
@@ -884,10 +884,10 @@ export default function DashboardPage() {
                           style={{
                             fontFamily: "'Courier New', Courier, monospace",
                             fontSize: 12,
-                            fontWeight: simMode === m ? 700 : 400,
-                            color: simMode === m ? "#fff" : "rgba(13,13,13,0.55)",
-                            background: simMode === m ? "#0d0d0d" : "rgba(255,255,255,0.35)",
-                            border: simMode === m ? "1px solid #0d0d0d" : "1px solid rgba(26,25,23,0.16)",
+                            fontWeight: simMode === m ? 700 : 500,
+                            color: simMode === m ? "#fff" : "rgba(13,13,13,0.75)",
+                            background: simMode === m ? "#0d0d0d" : "rgba(255,255,255,0.55)",
+                            border: simMode === m ? "1px solid #0d0d0d" : "1px solid rgba(26,25,23,0.25)",
                             borderRadius: 999,
                             padding: "6px 16px",
                             cursor: "pointer",
@@ -922,7 +922,7 @@ export default function DashboardPage() {
                         gap: 5,
                         fontFamily: "'Courier New', Courier, monospace",
                         fontSize: 12,
-                        color: "rgba(13,13,13,0.38)",
+                        color: "rgba(13,13,13,0.62)",
                         background: "none",
                         border: "none",
                         cursor: "pointer",
@@ -942,7 +942,7 @@ export default function DashboardPage() {
                         gap: 4,
                         fontFamily: "'Courier New', Courier, monospace",
                         fontSize: 11,
-                        color: "rgba(13,13,13,0.3)",
+                        color: "rgba(13,13,13,0.52)",
                         background: "none",
                         border: "none",
                         cursor: "pointer",
@@ -1125,12 +1125,12 @@ export default function DashboardPage() {
                       fontWeight: 700,
                       letterSpacing: "0.18em",
                       textTransform: "uppercase",
-                      color: "rgba(13,13,13,0.35)",
+                      color: "rgba(13,13,13,0.62)",
                     }}
                   >
                     {card.label}
                   </span>
-                  <Info style={{ width: 9, height: 9, color: "rgba(13,13,13,0.2)", flexShrink: 0 }} />
+                  <Info style={{ width: 9, height: 9, color: "rgba(13,13,13,0.35)", flexShrink: 0 }} />
                 </div>
 
                 {/* Value + icon */}
@@ -1151,7 +1151,7 @@ export default function DashboardPage() {
                     style={{
                       width: 22,
                       height: 22,
-                      color: "rgba(13,13,13,0.14)",
+                      color: "rgba(13,13,13,0.28)",
                       flexShrink: 0,
                       marginTop: 2,
                     }}
@@ -1163,7 +1163,7 @@ export default function DashboardPage() {
                   style={{
                     fontFamily: "'Courier New', Courier, monospace",
                     fontSize: 10,
-                    color: "rgba(13,13,13,0.4)",
+                    color: "rgba(13,13,13,0.65)",
                     marginBottom: 8,
                     letterSpacing: "0.02em",
                   }}
@@ -1176,7 +1176,7 @@ export default function DashboardPage() {
                   style={{
                     fontFamily: "var(--font-heading), 'Helvetica Neue', Arial, sans-serif",
                     fontSize: 11,
-                    color: "rgba(13,13,13,0.38)",
+                    color: "rgba(13,13,13,0.62)",
                     lineHeight: 1.5,
                     marginBottom: 12,
                   }}
@@ -1190,13 +1190,13 @@ export default function DashboardPage() {
                   style={{
                     fontFamily: "'Courier New', Courier, monospace",
                     fontSize: 10,
-                    color: "rgba(13,13,13,0.38)",
+                    color: "rgba(13,13,13,0.55)",
                     textDecoration: "none",
                     letterSpacing: "0.02em",
                     transition: "color 0.18s",
                   }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,0.75)")}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,0.38)")}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,0.9)")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,0.55)")}
                 >
                   {card.link}
                 </Link>
@@ -1228,8 +1228,8 @@ export default function DashboardPage() {
                 alignItems: "center",
                 gap: 20,
                 fontFamily: "'Courier New', Courier, monospace",
-                fontSize: 10,
-                color: "rgba(13,13,13,0.32)",
+                fontSize: 11,
+                color: "rgba(13,13,13,0.58)",
                 letterSpacing: "0.06em",
               }}
             >
@@ -1240,7 +1240,7 @@ export default function DashboardPage() {
                     width: 6,
                     height: 6,
                     borderRadius: "50%",
-                    background: "rgba(13,13,13,0.28)",
+                    background: "rgba(13,13,13,0.55)",
                   }}
                 />
                 System online
@@ -1254,8 +1254,8 @@ export default function DashboardPage() {
                 alignItems: "center",
                 gap: 5,
                 fontFamily: "'Courier New', Courier, monospace",
-                fontSize: 10,
-                color: "rgba(13,13,13,0.32)",
+                fontSize: 11,
+                color: "rgba(13,13,13,0.58)",
                 letterSpacing: "0.04em",
               }}
             >
@@ -1263,13 +1263,13 @@ export default function DashboardPage() {
               <a
                 href="mailto:hello@ghostcustomer.ai"
                 style={{
-                  color: "rgba(13,13,13,0.4)",
+                  color: "rgba(13,13,13,0.7)",
                   textDecoration: "underline",
                   textUnderlineOffset: 3,
                   transition: "color 0.18s",
                 }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,0.75)")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,0.4)")}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,1)")}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(13,13,13,0.7)")}
               >
                 hello@ghostcustomer.ai
               </a>
