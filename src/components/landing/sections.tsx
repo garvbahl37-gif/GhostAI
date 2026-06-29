@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -94,22 +95,37 @@ export function Features() {
         <p className="mt-4 text-[17px] text-slate-500">One simulation run powers every analysis below.</p>
       </motion.div>
 
-      <motion.div {...reveal(1)} className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-5">
-        {FEATURES.map((f) => (
-          <div key={f.title} className="group flex flex-col bg-white p-5 transition-colors duration-200 hover:bg-slate-50/80">
-            <span className="grid h-9 w-9 place-items-center rounded-lg border border-slate-200 bg-white text-slate-700 transition-colors duration-200 group-hover:border-slate-900 group-hover:bg-slate-900 group-hover:text-white">
+      <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {FEATURES.map((f, i) => (
+          <motion.div
+            key={f.title}
+            {...reveal(i % 5)}
+            className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_18px_40px_-16px_rgba(15,23,42,0.22)]"
+          >
+            {/* soft corner glow on hover */}
+            <span className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-slate-900/[0.04] opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 text-slate-700 ring-1 ring-inset ring-slate-200/80 transition-all duration-300 group-hover:from-slate-800 group-hover:to-slate-950 group-hover:text-white group-hover:ring-slate-900 group-hover:shadow-[0_6px_16px_-6px_rgba(15,23,42,0.5)]">
               <f.icon className="h-[18px] w-[18px]" />
             </span>
-            <p className="mt-3.5 text-[15px] font-medium leading-snug text-slate-900">{f.title}</p>
+            <p className="mt-4 text-[15px] font-semibold leading-snug tracking-tight text-slate-900">{f.title}</p>
             <p className="mt-1.5 text-[13px] leading-relaxed text-slate-500">{f.desc}</p>
-          </div>
+            <span className="pointer-events-none absolute right-4 top-4 h-1.5 w-1.5 rounded-full bg-slate-200 transition-colors duration-300 group-hover:bg-slate-900" />
+          </motion.div>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }
 
 export function AgentsShowcase() {
+  // A signal travels through the pipeline on a loop, lighting each agent as it
+  // "hands off" to the next — a live, repeating run of the swarm.
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setActive((a) => (a + 1) % (AGENTS.length + 1)), 950);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <section className="container py-28">
       <motion.div {...reveal()} className="mx-auto max-w-2xl text-center">
@@ -122,16 +138,60 @@ export function AgentsShowcase() {
         </p>
       </motion.div>
 
-      <div className="mx-auto mt-14 flex max-w-4xl flex-wrap items-center justify-center gap-2.5">
-        {AGENTS.map((a, i) => (
-          <motion.div key={a.name} {...reveal(i)} className="flex items-center gap-2.5">
-            <div className="flex items-center gap-2.5 rounded-full border border-slate-200 bg-white px-4 py-2.5">
-              <span className="h-1.5 w-1.5 rounded-full" style={{ background: a.color }} />
-              <span className="text-sm font-medium text-slate-700">{a.name}</span>
-            </div>
-            {i < AGENTS.length - 1 && <ArrowRight className="h-4 w-4 text-slate-300 max-md:hidden" />}
-          </motion.div>
-        ))}
+      <motion.div {...reveal(1)} className="mt-8 flex justify-center">
+        <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500 shadow-sm">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          </span>
+          Live pipeline
+        </span>
+      </motion.div>
+
+      <div className="mx-auto mt-10 flex max-w-4xl flex-wrap items-center justify-center gap-x-3 gap-y-4">
+        {AGENTS.map((a, i) => {
+          const isActive = i === active;
+          const isDone = i < active;
+          return (
+            <motion.div key={a.name} {...reveal(i)} className="flex items-center gap-3">
+              <motion.div
+                animate={{ scale: isActive ? 1.06 : 1, y: isActive ? -1 : 0 }}
+                transition={{ type: "spring", stiffness: 320, damping: 22 }}
+                className={`relative flex items-center gap-2.5 rounded-full border px-4 py-2.5 transition-colors duration-300 ${
+                  isActive
+                    ? "border-slate-900 bg-slate-900 text-white shadow-[0_10px_30px_-10px_rgba(15,23,42,0.55)]"
+                    : isDone
+                      ? "border-slate-200 bg-slate-50 text-slate-500"
+                      : "border-slate-200 bg-white text-slate-700"
+                }`}
+              >
+                {isActive && (
+                  <motion.span
+                    className="pointer-events-none absolute -inset-px rounded-full ring-2 ring-slate-900/10"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+                <a.icon className={`h-3.5 w-3.5 transition-colors duration-300 ${isActive ? "text-white" : isDone ? "text-slate-400" : "text-slate-400"}`} />
+                <span className="text-sm font-medium">{a.name}</span>
+                {isActive && (
+                  <span className="relative ml-0.5 flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-80" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
+                  </span>
+                )}
+              </motion.div>
+              {i < AGENTS.length - 1 && (
+                <ArrowRight
+                  className={`h-4 w-4 transition-colors duration-300 max-md:hidden ${
+                    i < active ? "text-slate-900" : "text-slate-300"
+                  }`}
+                />
+              )}
+            </motion.div>
+          );
+        })}
       </div>
     </section>
   );
