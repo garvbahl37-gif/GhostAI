@@ -61,12 +61,12 @@ export function ReactionBoard({ personas, sims }: { personas: Persona[]; sims: S
     <div className="rounded-2xl glass p-4">
       <div className="mb-3 flex items-center gap-2">
         <MessagesSquare className="h-4 w-4 text-ghost-violet" />
-        <h3 className="text-sm font-semibold">Live Reaction Board</h3>
-        <span className="text-xs text-slate-500">— 4 ghosts react in real time</span>
+        <h3 className="text-sm font-bold text-slate-900">Live Reaction Board</h3>
+        <span className="text-xs text-slate-800 font-semibold">— 4 ghosts react in real time</span>
       </div>
 
       {seats.length === 0 ? (
-        <div className="grid h-40 place-items-center text-sm text-slate-500">
+        <div className="grid h-40 place-items-center text-sm text-slate-800 font-semibold">
           Waiting for the first customers to react…
         </div>
       ) : (
@@ -103,7 +103,7 @@ function ReactionCard({ seat }: { seat: Seat }) {
         </span>
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-semibold text-slate-900">{persona.name}</p>
-          <p className="truncate text-[10px] text-slate-500">{persona.role}</p>
+          <p className="truncate text-[10px] text-slate-800 font-semibold">{persona.role}</p>
         </div>
         <span
           className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold"

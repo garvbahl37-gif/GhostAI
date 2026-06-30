@@ -87,12 +87,12 @@ function AutoFixPanel({ leak, context }: { leak: RevenueLeak; context?: FixConte
 
       {fix && open && (
         <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="mt-3 space-y-3">
-          <p className="text-xs italic text-slate-500">{fix.rationale}</p>
+          <p className="text-xs italic text-slate-800 font-medium">{fix.rationale}</p>
           {fix.variants.map((v, idx) => (
             <div key={idx} className="rounded-2xl border border-slate-200/70 bg-white/60 p-3.5">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-xs font-semibold text-slate-800">{v.heading}</p>
-                <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-500">
+                <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-bold text-slate-800">
                   {v.kind}
                 </span>
               </div>
@@ -101,7 +101,7 @@ function AutoFixPanel({ leak, context }: { leak: RevenueLeak; context?: FixConte
               <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
                 <div className="rounded-xl border border-slate-200/70 bg-slate-50/70 p-2.5">
                   <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400">Before</p>
-                  <p className="text-xs text-slate-500 line-through decoration-slate-300">{leak.cause}</p>
+                  <p className="text-xs text-slate-800 font-medium line-through decoration-slate-400">{leak.cause}</p>
                 </div>
                 <div
                   className="rounded-xl border p-2.5"
@@ -197,7 +197,7 @@ function Stat({ value, label, color }: { value: string; label: string; color: st
       <p className="text-lg font-semibold tracking-tight" style={{ color, fontFamily: "var(--font-heading)" }}>
         {value}
       </p>
-      <p className="mt-0.5 text-[10px] text-slate-500">{label}</p>
+      <p className="mt-0.5 text-[10px] text-slate-800 font-semibold">{label}</p>
     </div>
   );
 }
@@ -228,7 +228,7 @@ export function RevenueLeakCard({ leak, i, context }: { leak: RevenueLeak; i: nu
         </div>
         <StatusPill s={leak.severity} />
       </div>
-      <p className="mt-2.5 text-sm leading-relaxed text-slate-600">{leak.cause}</p>
+      <p className="mt-2.5 text-sm leading-relaxed text-slate-900 font-medium">{leak.cause}</p>
       <div className="mt-3.5 grid grid-cols-3 gap-2 text-center">
         <Stat value={`${leak.estConversionLoss}%`} label="conv. at risk" color={PALETTE.warmOrange} />
         <Stat value={`${leak.affectedPct}%`} label="customers hit" color={PALETTE.warmAmber} />
@@ -253,14 +253,14 @@ export function ChurnCard({ churn, i }: { churn: ChurnRisk; i: number }) {
           </span>
           <div>
             <p className="font-semibold leading-snug text-slate-900">{churn.segment}</p>
-            <p className="text-xs text-slate-500">{churn.category}</p>
+            <p className="text-xs text-slate-800 font-semibold">{churn.category}</p>
           </div>
         </div>
         <span className="text-xl font-semibold tracking-tight" style={{ color: PALETTE.deepNavy, fontFamily: "var(--font-heading)" }}>
           {churn.riskPct}%
         </span>
       </div>
-      <p className="mt-2.5 text-sm leading-relaxed text-slate-600">{churn.reason}</p>
+      <p className="mt-2.5 text-sm leading-relaxed text-slate-900 font-medium">{churn.reason}</p>
       <FixNote>{churn.fix}</FixNote>
     </Shell>
   );
@@ -276,7 +276,7 @@ export function ObjectionCard({ obj, i }: { obj: SalesObjection; i: number }) {
         </div>
         <StatusPill s={obj.severity} />
       </div>
-      <p className="mt-2.5 text-sm leading-relaxed text-slate-600">{obj.impact}</p>
+      <p className="mt-2.5 text-sm leading-relaxed text-slate-900 font-medium">{obj.impact}</p>
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
         <span
           className="rounded-full border px-2.5 py-0.5 text-[11px] font-medium"
@@ -289,7 +289,7 @@ export function ObjectionCard({ obj, i }: { obj: SalesObjection; i: number }) {
           {obj.answeredOnSite ? "Answered on site" : "Not answered"}
         </span>
         {obj.affectedRoles.slice(0, 3).map((r) => (
-          <span key={r} className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-medium text-slate-500">
+          <span key={r} className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-bold text-slate-800">
             {r}
           </span>
         ))}
@@ -308,7 +308,7 @@ export function SupportGapCard({ gap, i }: { gap: SupportGap; i: number }) {
         </div>
         <StatusPill s={gap.severity} />
       </div>
-      <p className="mt-2.5 text-sm leading-relaxed text-slate-600">{gap.risk}</p>
+      <p className="mt-2.5 text-sm leading-relaxed text-slate-900 font-medium">{gap.risk}</p>
       <div className="mt-3.5 grid grid-cols-2 gap-4 text-xs">
         <Meter label="FAQ coverage" value={gap.faqCoverage} color={PALETTE.softTeal} />
         <Meter label="Doc quality" value={gap.docQuality} color={PALETTE.softIndigo} />
@@ -320,7 +320,7 @@ export function SupportGapCard({ gap, i }: { gap: SupportGap; i: number }) {
 function Meter({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div>
-      <div className="mb-1 flex justify-between text-slate-500">
+      <div className="mb-1 flex justify-between text-slate-800 font-bold">
         <span>{label}</span>
         <span className="tabular-nums">{value}%</span>
       </div>

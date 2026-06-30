@@ -108,7 +108,7 @@ function KpiCard({
       <p className="mt-5 text-[34px] font-semibold leading-none tracking-tight text-slate-900" style={HEAD}>
         <AnimatedNumber value={value} suffix={suffix} />
       </p>
-      <p className="mt-1.5 text-sm text-slate-500">{label}</p>
+      <p className="mt-1.5 text-sm text-slate-800 font-semibold">{label}</p>
       <div className="mt-3 h-9">
         <Sparkline data={spark} color={accent} />
       </div>
@@ -120,7 +120,7 @@ function KpiCard({
 function Panel({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={cn("ceramic lift rounded-[26px] p-6", className)}>
-      <p className="text-sm font-medium text-slate-500">{title}</p>
+      <p className="text-sm font-semibold text-slate-900">{title}</p>
       <div className="mt-4">{children}</div>
     </div>
   );
@@ -163,7 +163,7 @@ export function InsightsView({ runId }: { runId: string }) {
       <div className="relative flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center">
         <WarmBackdrop />
         <p className="text-lg font-semibold text-slate-900">No insights found for this run.</p>
-        <p className="max-w-md text-sm text-slate-500">
+        <p className="max-w-md text-sm text-slate-800 font-semibold">
           The run may have expired from the demo cache. Start a fresh simulation to generate insights.
         </p>
         <Link
@@ -196,14 +196,14 @@ export function InsightsView({ runId }: { runId: string }) {
         {/* Header */}
         <motion.div {...reveal(0)} className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-2xl">
-            <span className="glass-lg inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
+            <span className="glass-lg inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-800">
               <span className="h-1.5 w-1.5 rounded-full" style={{ background: PALETTE.mutedEmerald }} />
               Customer Intelligence
             </span>
             <h1 className="mt-4 text-[34px] font-semibold leading-[1.05] tracking-tight text-slate-900 sm:text-[42px]" style={HEAD}>
               {analysis?.title ?? hostOf(run.config.url)}
             </h1>
-            <p className="mt-3 text-[17px] leading-relaxed text-slate-500">{ins.headline}</p>
+            <p className="mt-3 text-[17px] leading-relaxed text-slate-900 font-semibold">{ins.headline}</p>
           </div>
           <div className="flex flex-wrap gap-2.5">
             <Link
@@ -248,8 +248,8 @@ export function InsightsView({ runId }: { runId: string }) {
                       />
                     </>
                   )}
-                  <s.icon className={cn("h-4 w-4 transition-colors", active ? "text-slate-900" : "text-slate-400")} />
-                  <span className={cn("whitespace-nowrap transition-colors", active ? "font-medium text-slate-900" : "text-slate-500")}>
+                  <s.icon className={cn("h-4 w-4 transition-colors", active ? "text-slate-950" : "text-slate-600")} />
+                  <span className={cn("whitespace-nowrap transition-colors", active ? "font-bold text-slate-950" : "text-slate-800 font-semibold")}>
                     {s.label}
                   </span>
                   {count != null && (
@@ -334,7 +334,7 @@ export function InsightsView({ runId }: { runId: string }) {
                 {section === "sales" && (
                   <div className="grid gap-6 lg:grid-cols-2">
                     <div>
-                      <h3 className="mb-3 text-sm font-medium text-slate-500">Unanswered buying questions</h3>
+                      <h3 className="mb-3 text-sm font-bold text-slate-900">Unanswered buying questions</h3>
                       <div className="space-y-4">
                         {ins.salesObjections.map((o, i) => (
                           <ObjectionCard key={o.question} obj={o} i={i} />
@@ -342,7 +342,7 @@ export function InsightsView({ runId }: { runId: string }) {
                       </div>
                     </div>
                     <div>
-                      <h3 className="mb-3 text-sm font-medium text-slate-500">Support stress test</h3>
+                      <h3 className="mb-3 text-sm font-bold text-slate-900">Support stress test</h3>
                       <div className="space-y-4">
                         {ins.supportGaps.map((g, i) => (
                           <SupportGapCard key={g.scenario} gap={g} i={i} />
@@ -356,12 +356,12 @@ export function InsightsView({ runId }: { runId: string }) {
                   <div className="space-y-6">
                     <Heatmap zones={ins.heatmap} />
                     <div className="ceramic rounded-[26px] p-6">
-                      <h3 className="mb-3 text-sm font-medium text-slate-500">Top questions customers asked</h3>
+                      <h3 className="mb-3 text-sm font-bold text-slate-900">Top questions customers asked</h3>
                       <div className="flex flex-wrap gap-2">
                         {ins.topQuestions.map((q) => (
                           <span
                             key={q}
-                            className="rounded-full border border-white/60 bg-white/55 px-3 py-1.5 text-sm text-slate-600"
+                            className="rounded-full border border-white/60 bg-white/55 px-3 py-1.5 text-sm text-slate-900 font-semibold"
                           >
                             {q}
                           </span>
@@ -405,5 +405,5 @@ function CtaCard({ href, icon: Icon, label, accent }: { href: string; icon: Luci
 }
 
 function Empty({ children }: { children: React.ReactNode }) {
-  return <div className="ceramic rounded-[26px] p-10 text-center text-sm text-slate-500">{children}</div>;
+  return <div className="ceramic rounded-[26px] p-10 text-center text-sm text-slate-800 font-bold">{children}</div>;
 }

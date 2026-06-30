@@ -41,17 +41,17 @@ export function AgentStream({ thoughts }: { thoughts: Thought[] }) {
                   <Icon className="h-3.5 w-3.5" />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[11px] font-semibold" style={{ color: meta?.color }}>
+                  <p className="text-[11px] font-bold" style={{ color: meta?.color }}>
                     {t.agent}
                   </p>
-                  <p className="text-xs leading-snug text-slate-600">{t.text}</p>
+                  <p className="text-xs leading-snug text-slate-900 font-medium">{t.text}</p>
                 </div>
               </motion.div>
             );
           })}
         </AnimatePresence>
         {thoughts.length === 0 && (
-          <p className="px-2 py-8 text-center text-sm text-muted-foreground">Waiting for the swarm to wake up…</p>
+          <p className="px-2 py-8 text-center text-sm text-slate-800 font-semibold">Waiting for the swarm to wake up…</p>
         )}
       </div>
     </div>

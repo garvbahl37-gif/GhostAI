@@ -375,9 +375,9 @@ export function WarRoom({ runId }: { runId: string }) {
               {done && <Badge variant="emerald">Complete</Badge>}
               {s.status === "error" && <Badge variant="rose">Error</Badge>}
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {host ? <>Simulating customers for <span className="font-mono text-foreground">{host}</span></> : "Customer simulation"}
-              {s.analysis && <> · {s.analysis.category}</>}
+            <p className="mt-1 text-sm text-slate-800 font-medium">
+              {host ? <>Simulating customers for <span className="font-mono text-black font-semibold">{host}</span></> : "Customer simulation"}
+              {s.analysis && <span className="text-slate-900 font-semibold"> · {s.analysis.category}</span>}
             </p>
           </div>
           {done && (
@@ -403,9 +403,9 @@ export function WarRoom({ runId }: { runId: string }) {
 
         {/* Progress + phase rail */}
         <div className="mb-6 space-y-3 rounded-2xl glass p-4">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-600">{s.message}</span>
-            <span className="font-mono text-muted-foreground">{Math.round(s.progress)}%</span>
+          <div className="flex items-center justify-between text-sm font-semibold">
+            <span className="text-slate-900">{s.message}</span>
+            <span className="font-mono text-slate-900">{Math.round(s.progress)}%</span>
           </div>
           <Progress value={s.progress} />
           <PhaseRail phase={s.phase} />
@@ -453,9 +453,9 @@ export function WarRoom({ runId }: { runId: string }) {
             className="mt-6 flex flex-col items-center justify-between gap-4 rounded-2xl glass p-6 sm:flex-row"
           >
             <div>
-              <p className="text-lg font-semibold">{s.insights.headline}</p>
-              <p className="text-sm text-muted-foreground">
-                Estimated <span className="text-ghost-emerald">+{s.insights.estConversionUplift}%</span> conversion uplift if the top fixes ship.
+              <p className="text-lg font-bold text-slate-900">{s.insights.headline}</p>
+              <p className="text-sm text-slate-800 font-medium">
+                Estimated <span className="text-emerald-700 font-bold">+{s.insights.estConversionUplift}%</span> conversion uplift if the top fixes ship.
               </p>
             </div>
             <Link href={`/insights/${runId}`}>

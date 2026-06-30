@@ -24,10 +24,10 @@ export function SimFeed({ sims }: { sims: SimulationResult[] }) {
             >
               <PersonaGlyph name={s.personaName} accent={verdictColor(s.verdict)} size={34} />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-medium">
-                  {s.personaName} <span className="text-muted-foreground">· {s.role}</span>
+                <p className="truncate text-xs font-semibold text-slate-900">
+                  {s.personaName} <span className="text-slate-800 font-medium">· {s.role}</span>
                 </p>
-                <p className="truncate text-[11px] text-muted-foreground">{s.topObjection}</p>
+                <p className="truncate text-[11px] text-slate-800 font-medium">{s.topObjection}</p>
               </div>
               <span
                 className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
@@ -38,7 +38,7 @@ export function SimFeed({ sims }: { sims: SimulationResult[] }) {
             </motion.div>
           ))}
         </AnimatePresence>
-        {recent.length === 0 && <p className="py-6 text-center text-xs text-muted-foreground">No verdicts yet…</p>}
+        {recent.length === 0 && <p className="py-6 text-center text-xs text-slate-800 font-medium">No verdicts yet…</p>}
       </div>
     </div>
   );
@@ -69,8 +69,8 @@ export function Discoveries({ leaks, objections }: { leaks: RevenueLeak[]; objec
                 <>
                   <TrendingDown className="mt-0.5 h-4 w-4 shrink-0" style={{ color: severityColor(it.l.severity) }} />
                   <div className="min-w-0">
-                    <p className="text-xs font-semibold">{it.l.title}</p>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="text-xs font-bold text-slate-900">{it.l.title}</p>
+                    <p className="text-[11px] text-slate-800 font-semibold">
                       ~{it.l.estConversionLoss}% conversion at risk · {it.l.affectedPct}% of customers
                     </p>
                   </div>
@@ -79,15 +79,15 @@ export function Discoveries({ leaks, objections }: { leaks: RevenueLeak[]; objec
                 <>
                   <HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-ghost-amber" />
                   <div className="min-w-0">
-                    <p className="text-xs font-semibold">“{it.o.question}”</p>
-                    <p className="text-[11px] text-muted-foreground">Unanswered on the site</p>
+                    <p className="text-xs font-bold text-slate-900">“{it.o.question}”</p>
+                    <p className="text-[11px] text-slate-800 font-semibold">Unanswered on the site</p>
                   </div>
                 </>
               )}
             </motion.div>
           ))}
         </AnimatePresence>
-        {items.length === 0 && <p className="py-6 text-center text-xs text-muted-foreground">Scanning for issues…</p>}
+        {items.length === 0 && <p className="py-6 text-center text-xs text-slate-800 font-medium">Scanning for issues…</p>}
       </div>
     </div>
   );

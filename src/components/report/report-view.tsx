@@ -77,11 +77,11 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function Bullets({ items }: { items: string[] }) {
-  if (!items.length) return <p className="text-sm text-muted-foreground">None.</p>;
+  if (!items.length) return <p className="text-sm text-slate-600">None.</p>;
   return (
     <ul className="space-y-2">
       {items.map((it, i) => (
-        <li key={i} className="flex gap-2.5 text-sm text-slate-600">
+        <li key={i} className="flex gap-2.5 text-sm text-slate-900 font-medium">
           <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-ghost-violet" />
           {it}
         </li>
@@ -166,9 +166,10 @@ export function ReportView({ runId }: { runId: string }) {
 
       <div className="space-y-5">
         <Section title="Executive Summary">
-          <p className="text-sm leading-relaxed text-slate-600">{r.executiveSummary}</p>
-          <div className="mt-3 rounded-xl bg-ghost-emerald/10 p-3 text-sm font-medium text-ghost-emerald">
-            {r.projectedUplift}
+          <p className="text-sm leading-relaxed text-slate-900 font-medium">{r.executiveSummary}</p>
+          <div className="mt-3.5 rounded-xl border border-black/10 bg-black/[0.03] p-3 text-sm font-bold text-slate-900 flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-[#10b981] animate-pulse shrink-0" />
+            <span>{r.projectedUplift}</span>
           </div>
         </Section>
 
@@ -200,13 +201,13 @@ export function ReportView({ runId }: { runId: string }) {
             {r.recommendations.map((rec, i) => (
               <div key={i} className="rounded-xl bg-slate-50 p-4">
                 <div className="flex items-start justify-between gap-3">
-                  <p className="font-semibold">{rec.title}</p>
+                  <p className="font-semibold text-slate-900">{rec.title}</p>
                   <div className="flex shrink-0 gap-1.5">
                     <Badge variant="muted">Effort: {rec.effort}</Badge>
                     <Badge variant="emerald">Impact: {rec.impact}</Badge>
                   </div>
                 </div>
-                <p className="mt-1.5 text-sm text-muted-foreground">{rec.detail}</p>
+                <p className="mt-1.5 text-sm text-slate-800 font-medium">{rec.detail}</p>
               </div>
             ))}
           </div>

@@ -8,6 +8,7 @@ import {
   FinalCTA,
 } from "@/components/landing/sections";
 import LoadingScreen from "@/components/landing/loading-screen";
+import { Footer } from "@/components/layout/footer";
 
 export default function LandingPage() {
   return (
@@ -23,9 +24,7 @@ export default function LandingPage() {
         <AgentsShowcase />
         <HowItWorks />
         <FinalCTA />
-        <footer className="border-t border-slate-200 py-8 text-center text-xs text-slate-400">
-          Ghost Customer AI · Multi-agent customer simulation · Built with Next.js, LangGraph &amp; Gemini
-        </footer>
+        <Footer />
       </div>
     </>
   );

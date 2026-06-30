@@ -19,7 +19,7 @@ function Tile({
   return (
     <div className="relative overflow-hidden rounded-2xl glass p-4">
       <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full blur-2xl opacity-30" style={{ background: color }} />
-      <div className="relative flex items-center gap-2 text-xs text-muted-foreground">
+      <div className="relative flex items-center gap-2 text-xs text-slate-800 font-bold">
         <span style={{ color }}>{icon}</span>
         {label}
       </div>
