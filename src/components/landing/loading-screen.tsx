@@ -5,39 +5,19 @@ import { useState, useEffect, useRef } from "react";
 // ─── Boot sequence lines ──────────────────────────────────────────────────────
 const BOOT_LINES = [
   "> booting customer intelligence...",
-  "> scanning user behavior...",
+  "> scanning user behaviour...",
   "> preparing simulation engine...",
 ];
 
-// ─── Typing speed (ms per character) ─────────────────────────────────────────
-const CHAR_SPEED = 6;    // ms per character
-const LINE_GAP   = 30;   // pause between lines (ms)
-
-function calcTotalMs() {
-  let t = 80; // initial delay
-  for (const l of BOOT_LINES) {
-    t += LINE_GAP + l.length * CHAR_SPEED + 30;
-  }
-  return t + 80; // settle
-}
-
 export default function LoadingScreen() {
-  const [visible, setVisible]           = useState(() => {
+  const [visible, setVisible] = useState(() => {
     if (typeof window !== "undefined") {
       return !sessionStorage.getItem("ghostai_loading_complete");
     }
     return true;
   });
-  const [fading, setFading]             = useState(false);
-  const [progress, setProgress]         = useState(0);
-  const [visibleLines, setVisibleLines] = useState<string[]>([]);
-  const [typingLine, setTypingLine]     = useState("");
-  const [lineIdx, setLineIdx]           = useState(0);
-  const [charIdx, setCharIdx]           = useState(0);
-  const [started, setStarted]           = useState(false);
-  // True once every line has been pushed to visibleLines
-  const [allLinesDone, setAllLinesDone] = useState(false);
-  const waitForVideoRef = useRef<(() => void) | null>(null);
+  const [fading, setFading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   // ── Grain canvas ─────────────────────────────────────────────────────────────
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -67,9 +47,6 @@ export default function LoadingScreen() {
   }, []);
 
   // ── Lock body scroll only while the loader is visible ────────────────────────
-  // Keyed on `visible` so it releases the moment visible → false.
-  // (The component stays mounted but renders null, so mount/unmount cleanup
-  //  would never fire — that was the original bug causing permanent scroll lock.)
   useEffect(() => {
     if (visible) {
       document.body.style.overflow = "hidden";
@@ -81,63 +58,21 @@ export default function LoadingScreen() {
     };
   }, [visible]);
 
-  // ── Start typewriter after brief delay ────────────────────────────────────────
+  // ── SNAPPY Progress and Fadeout logic ─────────────────────────────────────────
   useEffect(() => {
-    const startTimer = setTimeout(() => setStarted(true), 80);
-    return () => clearTimeout(startTimer);
-  }, []);
-
-  // ── Typewriter: one character at a time, then push line ──────────────────────
-  useEffect(() => {
-    if (!started) return;
-    if (lineIdx >= BOOT_LINES.length) return;
-
-    const line = BOOT_LINES[lineIdx];
-    if (charIdx < line.length) {
-      const t = setTimeout(() => setCharIdx((c) => c + 1), CHAR_SPEED);
-      return () => clearTimeout(t);
-    } else {
-      const t = setTimeout(() => {
-        const nextIdx = lineIdx + 1;
-        setVisibleLines((prev) => [...prev, line]);
-        setTypingLine("");
-        setCharIdx(0);
-        setLineIdx(nextIdx);
-        if (nextIdx >= BOOT_LINES.length) {
-          setAllLinesDone(true);
-        }
-      }, LINE_GAP + 30); // must match calcTotalMs (+30)
-      return () => clearTimeout(t);
-    }
-  }, [started, lineIdx, charIdx]);
-
-  useEffect(() => {
-    if (lineIdx < BOOT_LINES.length) {
-      setTypingLine(BOOT_LINES[lineIdx].slice(0, charIdx));
-    }
-  }, [charIdx, lineIdx]);
-
-  // ── Progress bar ──────────────────────────────────────────────────────────────
-  useEffect(() => {
-    const total = calcTotalMs();
-    const tick  = 40;
+    // Drive the progress bar from 0% to 100% over exactly 1800ms (1.8s)
+    const total = 1800;
+    const tick  = 25;
     let elapsed = 0;
 
-    // Called once the boot sequence finishes — waits for the hero video's
-    // first frame before fading, so there's no black flash between loader
-    // unmount and the video painting its first frame.
     function triggerFadeout() {
-      // Reset scroll to top before revealing the hero — prevents the
-      // white gap caused by browser scroll-restoration running under the loader.
       window.scrollTo({ top: 0, behavior: "instant" });
-      
-      // Mark loading as complete in this session
       sessionStorage.setItem("ghostai_loading_complete", "true");
       
-      // Signal the hero to start its typewriter now (before the loader fully
-      // fades so the text is visibly typing as the loader disappears).
+      // Start the typewriter on the landing page immediately
       window.dispatchEvent(new CustomEvent("ghostloader:complete"));
       window.dispatchEvent(new Event("landing-loading-complete")); // For navbar
+      
       setFading(true);
       setTimeout(() => setVisible(false), 900);
     }
@@ -146,14 +81,12 @@ export default function LoadingScreen() {
       const video = document.querySelector("video") as HTMLVideoElement | null;
 
       if (video && video.readyState >= 2) {
-        // First frame already available — fade immediately
         triggerFadeout();
         return;
       }
 
       if (video) {
-        // Video element found but not yet ready — listen for loadeddata
-        const fallback = setTimeout(triggerFadeout, 5000);
+        const fallback = setTimeout(triggerFadeout, 200);
         video.addEventListener(
           "loadeddata",
           () => {
@@ -165,32 +98,7 @@ export default function LoadingScreen() {
         return;
       }
 
-      // Video element not in DOM yet (race condition) — poll for it
-      let polls = 0;
-      const poll = setInterval(() => {
-        polls++;
-        const v = document.querySelector("video") as HTMLVideoElement | null;
-        if (v) {
-          clearInterval(poll);
-          if (v.readyState >= 2) {
-            triggerFadeout();
-          } else {
-            const fallback = setTimeout(triggerFadeout, 5000);
-            v.addEventListener(
-              "loadeddata",
-              () => {
-                clearTimeout(fallback);
-                triggerFadeout();
-              },
-              { once: true }
-            );
-          }
-        } else if (polls > 30) {
-          // Polled 3 seconds with no video found — give up and fade out
-          clearInterval(poll);
-          triggerFadeout();
-        }
-      }, 100);
+      triggerFadeout();
     }
 
     const t = setInterval(() => {
@@ -198,31 +106,39 @@ export default function LoadingScreen() {
       const raw   = Math.min(elapsed / total, 1);
       const eased = 1 - Math.pow(1 - raw, 2.5);
       setProgress(Math.floor(eased * 100));
+      
       if (elapsed >= total) {
         clearInterval(t);
         setProgress(100);
-        // Store waitForVideo so the allLinesDone effect can call it if lines
-        // finish after the progress bar (or call it directly if already done).
-        waitForVideoRef.current = waitForVideo;
+        
+        // Brief 100ms visual settle before starting fade-out
+        setTimeout(waitForVideo, 100);
       }
     }, tick);
+
     return () => clearInterval(t);
   }, []);
 
-  // Fire the fadeout only once BOTH the progress bar has finished AND all
-  // lines have been typed — whichever completes last wins.
-  useEffect(() => {
-    if (allLinesDone && waitForVideoRef.current) {
-      // Small pause so the last line is readable, then check video readiness
-      const hold = setTimeout(() => {
-        waitForVideoRef.current?.();
-        waitForVideoRef.current = null;
-      }, 600);
-      return () => clearTimeout(hold);
-    }
-  }, [allLinesDone]);
-
   if (!visible) return null;
+
+  // ── Calculate Typewriter content dynamically from progress (0 - 100) ──────────
+  const totalChars = BOOT_LINES.reduce((sum, line) => sum + line.length, 0);
+  const charsToShow = Math.floor((progress / 100) * totalChars);
+
+  const visibleLines: string[] = [];
+  let typingLine = "";
+  let charsLeft = charsToShow;
+
+  for (const line of BOOT_LINES) {
+    if (charsLeft >= line.length) {
+      visibleLines.push(line);
+      charsLeft -= line.length;
+    } else {
+      typingLine = line.slice(0, charsLeft);
+      charsLeft = 0;
+      break;
+    }
+  }
 
   return (
     <div
@@ -273,7 +189,7 @@ export default function LoadingScreen() {
               {line}
             </div>
           ))}
-          {lineIdx < BOOT_LINES.length && typingLine && (
+          {visibleLines.length < BOOT_LINES.length && (
             <div className="gc-loader__line gc-loader__line--active">
               {typingLine}
               <span className="gc-loader__block-cursor" aria-hidden="true" />
