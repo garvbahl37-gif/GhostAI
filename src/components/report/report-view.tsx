@@ -11,6 +11,23 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BrandedSpinner } from "@/components/shared/cinematic-loader";
 
+/* ── Warm "liquid glass" page backdrop (overrides the cool global bg) ──────── */
+function WarmBackdrop() {
+  return (
+    <div aria-hidden className="fixed inset-0 -z-10 no-print">
+      <div className="absolute inset-0 bg-[#ECEAE6]" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(60rem 46rem at 50% -12%, rgba(255,255,255,0.7), transparent 62%), radial-gradient(46rem 38rem at 88% 4%, rgba(124,132,184,0.06), transparent 60%), radial-gradient(44rem 40rem at 4% 100%, rgba(95,154,134,0.05), transparent 60%)",
+        }}
+      />
+      <div className="absolute inset-0 grain-warm opacity-[0.05] mix-blend-multiply" />
+    </div>
+  );
+}
+
 function toMarkdown(r: ExecutiveReport, title: string): string {
   const li = (a: string[]) => a.map((x) => `- ${x}`).join("\n");
   return `# Ghost Customer AI — Executive Report
@@ -114,7 +131,9 @@ export function ReportView({ runId }: { runId: string }) {
   }
 
   return (
-    <div className="container max-w-4xl py-24">
+    <>
+      <WarmBackdrop />
+      <div className="container max-w-4xl py-24">
       <div className="no-print mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Link href={`/insights/${runId}`}>
@@ -194,5 +213,6 @@ export function ReportView({ runId }: { runId: string }) {
         </Section>
       </div>
     </div>
-  );
+  </>
+);
 }

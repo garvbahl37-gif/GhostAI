@@ -123,6 +123,55 @@ function reducer(s: State, action: Action): State {
   }
 }
 
+// ─── Film grain canvas ────────────────────────────────────────────────────────
+function FilmGrainCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    let raf = 0;
+
+    function drawGrain() {
+      if (!canvas || !ctx) return;
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const img = ctx.createImageData(canvas.width, canvas.height);
+      for (let i = 0; i < img.data.length; i += 4) {
+        const v = Math.random() * 255;
+        img.data[i]     = v;
+        img.data[i + 1] = v;
+        img.data[i + 2] = v;
+        img.data[i + 3] = Math.random() * 28; // slightly more visible than loader
+      }
+      ctx.putImageData(img, 0, 0);
+      raf = requestAnimationFrame(drawGrain);
+    }
+
+    drawGrain();
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      style={{
+        position: "fixed",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        zIndex: 1,
+        mixBlendMode: "multiply",
+        opacity: 0.48,
+      }}
+    />
+  );
+}
+
 export function WarRoom({ runId }: { runId: string }) {
   const router = useRouter();
   const [s, dispatch] = useReducer(reducer, initial);
@@ -232,7 +281,82 @@ export function WarRoom({ runId }: { runId: string }) {
         {showLoader && <CinematicLoader progress={s.progress} label={s.message} />}
       </AnimatePresence>
 
-      <div className="container max-w-7xl py-24">
+      {/* ── Background: matches loading-screen exactly ── */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          backgroundColor: "#c4c1ba",
+          backgroundImage:
+            "radial-gradient(ellipse 150% 150% at 50% 46%, #ccc9c2 0%, #bcb9b2 52%, #aaa79f 100%)",
+        }}
+      />
+
+      {/* Vignette */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 2,
+          background:
+            "radial-gradient(ellipse 110% 110% at 50% 50%, transparent 38%, rgba(0,0,0,0.28) 100%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Scanlines */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 3,
+          backgroundImage:
+            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)",
+          pointerEvents: "none",
+          animation: "gc-scan-drift 14s linear infinite",
+        }}
+      />
+
+      {/* Film grain canvas */}
+      <FilmGrainCanvas />
+
+      {/* Corner marks (like loader) */}
+      {(["tl","tr","bl","br"] as const).map((pos) => (
+        <div
+          key={pos}
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            zIndex: 4,
+            width: 18,
+            height: 18,
+            pointerEvents: "none",
+            opacity: 0.3,
+            ...(pos === "tl" ? { top: 20, left: 20, borderTop: "1.5px solid #1a1917", borderLeft: "1.5px solid #1a1917" }  : {}),
+            ...(pos === "tr" ? { top: 20, right: 20, borderTop: "1.5px solid #1a1917", borderRight: "1.5px solid #1a1917" } : {}),
+            ...(pos === "bl" ? { bottom: 20, left: 20, borderBottom: "1.5px solid #1a1917", borderLeft: "1.5px solid #1a1917" }  : {}),
+            ...(pos === "br" ? { bottom: 20, right: 20, borderBottom: "1.5px solid #1a1917", borderRight: "1.5px solid #1a1917" } : {}),
+          }}
+        />
+      ))}
+
+      {/* ── Global style injections ── */}
+      <style>{`
+        @keyframes gc-scan-drift {
+          0%   { background-position: 0 0;    }
+          100% { background-position: 0 40px; }
+        }
+        @keyframes gc-blink-block {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0; }
+        }
+      `}</style>
+
+      <div className="container max-w-7xl py-24" style={{ position: "relative", zIndex: 10 }}>
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
