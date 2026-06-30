@@ -220,7 +220,7 @@ export function CustomerSwarm({
           <div className="absolute inset-y-0 left-0 w-2/5" style={{ background: "linear-gradient(90deg, rgba(251,113,133,0.06), transparent)" }} />
           <div className="absolute inset-y-0 right-0 w-2/5" style={{ background: "linear-gradient(270deg, rgba(110,231,183,0.07), transparent)" }} />
           <span className="absolute bottom-2 left-3 text-[10px] font-medium uppercase tracking-wider text-rose-600/80">Won&apos;t buy</span>
-          <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-wider text-slate-500">purchase intent →</span>
+          <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] font-bold uppercase tracking-wider text-slate-900">purchase intent →</span>
           <span className="absolute bottom-2 right-3 text-[10px] font-medium uppercase tracking-wider text-emerald-600/90">Will buy</span>
         </div>
       )}

@@ -22,14 +22,14 @@ export interface AgentMeta {
 // Monochrome graphite scale with two restrained signal accents
 // (Revenue Leak = red, Insight = blue) — matches the "OpenAI reasoning trace" feel.
 export const AGENTS: AgentMeta[] = [
-  { name: "Website Analyzer", short: "Analyzer", icon: Globe, color: "#e5e5e7", phases: ["analyzing"] },
-  { name: "Persona Generator", short: "Personas", icon: Users, color: "#d4d4d8", phases: ["generating_personas"] },
-  { name: "Customer Simulator", short: "Swarm", icon: Activity, color: "#c8c8cc", phases: ["simulating"] },
-  { name: "Sales Agent", short: "Sales", icon: DollarSign, color: "#bcbcc4", phases: ["sales_support"] },
-  { name: "Support Agent", short: "Support", icon: LifeBuoy, color: "#b0b0b8", phases: ["sales_support"] },
-  { name: "Revenue Leak Agent", short: "Revenue", icon: TrendingDown, color: "#6f6f77", phases: ["revenue_churn"] },
-  { name: "Insight Agent", short: "Insights", icon: Sparkles, color: "#d6d6da", phases: ["synthesizing"] },
-  { name: "Report Generator", short: "Report", icon: FileText, color: "#d4d4d8", phases: ["reporting"] },
+  { name: "Website Analyzer", short: "Analyzer", icon: Globe, color: "#27272a", phases: ["analyzing"] },
+  { name: "Persona Generator", short: "Personas", icon: Users, color: "#3f3f46", phases: ["generating_personas"] },
+  { name: "Customer Simulator", short: "Swarm", icon: Activity, color: "#52525b", phases: ["simulating"] },
+  { name: "Sales Agent", short: "Sales", icon: DollarSign, color: "#3f3f46", phases: ["sales_support"] },
+  { name: "Support Agent", short: "Support", icon: LifeBuoy, color: "#4b5563", phases: ["sales_support"] },
+  { name: "Revenue Leak Agent", short: "Revenue", icon: TrendingDown, color: "#991b1b", phases: ["revenue_churn"] },
+  { name: "Insight Agent", short: "Insights", icon: Sparkles, color: "#1e3a8a", phases: ["synthesizing"] },
+  { name: "Report Generator", short: "Report", icon: FileText, color: "#18181b", phases: ["reporting"] },
 ];
 
 export const AGENT_BY_NAME: Record<AgentName, AgentMeta> = Object.fromEntries(

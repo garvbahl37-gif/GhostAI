@@ -53,7 +53,7 @@ export function SwarmGrid({
           </span>
           <span className="text-sm font-semibold">Live customer swarm</span>
         </div>
-        <span className="font-mono text-xs text-slate-500">
+        <span className="font-mono text-xs text-slate-900 font-semibold">
           {personas.length}/{total} active
         </span>
       </div>
@@ -63,9 +63,9 @@ export function SwarmGrid({
       {/* live verdict tallies */}
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 border-t border-slate-200 px-4 py-2.5">
         {LEGEND.map((l) => (
-          <span key={l.label} className="flex items-center gap-1.5 text-xs text-slate-500">
-            <span className="h-2 w-2 rounded-full" style={{ background: l.color, boxShadow: `0 0 8px ${l.color}` }} />
-            <span className="font-mono font-semibold" style={{ color: l.color }}>
+          <span key={l.label} className="flex items-center gap-1.5 text-xs text-slate-800 font-semibold">
+            <span className="h-2.5 w-2.5 rounded-full border border-black/15 shrink-0" style={{ background: l.color, boxShadow: `0 0 8px ${l.color}` }} />
+            <span className="font-mono font-bold text-slate-950">
               {counts[l.verdict]}
             </span>
             {l.label}
