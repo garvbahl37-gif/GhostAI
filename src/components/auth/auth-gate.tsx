@@ -2,14 +2,15 @@
 
 import { motion } from "framer-motion";
 import { Lock, Loader2, ArrowRight } from "lucide-react";
-import { useAuth } from "@/components/auth/auth-context";
+import { SignInButton, useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
 /**
  * Wrap protected page content. Behaviour:
- *  - auth not configured  -> render children (the demo stays fully open)
- *  - configured + signed-in -> render children
- *  - configured + signed-out -> a polished "sign in to continue" panel
+ *  - Clerk still loading  -> a quiet spinner
+ *  - signed in            -> render children
+ *  - signed out           -> a polished "sign in to continue" panel that opens
+ *                            the Clerk modal
  */
 export function AuthGate({
   children,
@@ -20,17 +21,17 @@ export function AuthGate({
   title?: string;
   subtitle?: string;
 }) {
-  const { user, loading, configured, openAuth } = useAuth();
+  const { isLoaded, isSignedIn } = useUser();
 
-  if (!configured || user) return <>{children}</>;
-
-  if (loading) {
+  if (!isLoaded) {
     return (
       <div className="grid min-h-[60vh] place-items-center">
         <Loader2 className="h-6 w-6 animate-spin text-slate-500" />
       </div>
     );
   }
+
+  if (isSignedIn) return <>{children}</>;
 
   return (
     <div className="container flex min-h-[70vh] max-w-xl items-center justify-center py-28">
@@ -46,10 +47,12 @@ export function AuthGate({
         </span>
         <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
         <p className="mx-auto mt-2 max-w-sm text-sm text-slate-500">{subtitle}</p>
-        <Button onClick={openAuth} size="lg" className="mt-6">
-          Sign in or create account
-          <ArrowRight className="h-4 w-4" />
-        </Button>
+        <SignInButton mode="modal">
+          <Button size="lg" className="mt-6">
+            Sign in or create account
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </SignInButton>
       </motion.div>
     </div>
   );

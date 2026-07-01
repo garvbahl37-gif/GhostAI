@@ -19,7 +19,6 @@ import {
   FileText,
 } from "lucide-react";
 import { AuthGate } from "@/components/auth/auth-gate";
-import { UserMenu } from "@/components/auth/user-menu";
 import { cn } from "@/lib/utils";
 
 // ─── Types ────────────────────────────────────────────────────────────────────

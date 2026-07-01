@@ -17,7 +17,6 @@ import Link from "next/link";
 import Image from "next/image";
 import type { VisionRoast } from "@/lib/types";
 import { HeatmapOverlay, regionsToHeatmap } from "@/components/roast/heatmap-overlay";
-import { UserMenu } from "@/components/auth/user-menu";
 import { cn } from "@/lib/utils";
 
 // ─── Constants ────────────────────────────────────────────────────────────────

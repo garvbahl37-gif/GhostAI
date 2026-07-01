@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { UserMenu } from "@/components/auth/user-menu";
+import { AuthButtons } from "@/components/auth/auth-buttons";
 
 // Mainframe-style scrub-video hero, adapted to Next.js and filled with
 // GhostCustomer's own content (brand, nav, messaging) per the brief.
@@ -289,7 +289,7 @@ export function MainframeHero() {
 
           {/* Actions & Mobile Toggle */}
           <div className="flex items-center gap-4">
-            <UserMenu />
+            <AuthButtons />
 
             <Link
               href="/dashboard"

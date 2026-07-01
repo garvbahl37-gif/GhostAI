@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.5.12",
     "@google/generative-ai": "^0.21.0",
     "@react-pdf/renderer": "^4.5.1",
     "@supabase/ssr": "^0.12.0",

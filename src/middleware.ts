@@ -1,3 +1,4 @@
+import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -21,13 +22,26 @@ function applyCors(res: NextResponse, origin: string | null): NextResponse {
   return res;
 }
 
-export function middleware(req: NextRequest) {
+// Clerk session handling for every route + the existing /api CORS policy.
+// Routes are gated on the client (SignedIn / SignedOut / <AuthGate>), so the
+// middleware only needs to attach Clerk's auth context — no auth.protect() here.
+export default clerkMiddleware((_auth, req: NextRequest) => {
+  const isApi = req.nextUrl.pathname.startsWith("/api");
   const origin = req.headers.get("origin");
-  // Preflight
-  if (req.method === "OPTIONS") {
+
+  if (isApi && req.method === "OPTIONS") {
     return applyCors(new NextResponse(null, { status: 204 }), origin);
   }
-  return applyCors(NextResponse.next(), origin);
-}
 
-export const config = { matcher: "/api/:path*" };
+  const res = NextResponse.next();
+  return isApi ? applyCors(res, origin) : res;
+});
+
+export const config = {
+  matcher: [
+    // Run on everything except Next internals and static assets…
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // …and always on API routes.
+    "/(api|trpc)(.*)",
+  ],
+};
